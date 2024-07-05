@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Auth.API.Controllers
 {
     [ApiController]
-    public class ApiController : ControllerBase
+    [Route("api/[controller]")]
+    public abstract class ApiController : ControllerBase
     {
         protected IActionResult Problem(List<Error> errors)
         {

@@ -3,6 +3,7 @@ using Auth.Application.Commands.Refresh;
 using Auth.Application.Commands.SignIn;
 using Auth.Application.Commands.SignUp;
 using Auth.Application.Commands.VerifyEmail;
+using Auth.Application.Queries.GetAccountById;
 using Auth.Domain.Entities;
 using InnoClinic.Contracts.Authentication.Requests;
 using InnoClinic.Contracts.Authentication.Responses;
@@ -13,7 +14,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Auth.API.Controllers
 {
-    [Route("api/[controller]")]
     public class AuthorizationController : ApiController
     {
         private readonly IMediator _mediator;
@@ -27,7 +27,7 @@ namespace Auth.API.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet("SignIn")]
+        [HttpPost("sign-in")]
         public async Task<IActionResult> SignIn(SignInRequest request)
         {
             var command = _mapper.Map<SignInCommand>(request);
@@ -43,7 +43,7 @@ namespace Auth.API.Controllers
                 errors => Problem(errors));
         }
 
-        [HttpGet("SignUp")]
+        [HttpPost("sign-up")]
         public async Task<IActionResult> SignUp(SignUpRequest request)
         {
             var command = _mapper.Map<SignUpCommand>(request);
@@ -59,7 +59,7 @@ namespace Auth.API.Controllers
                 errors => Problem(errors));
         }
 
-        [HttpGet("Sign-out")]
+        [HttpPost("sign-out")]
         public async Task<IActionResult> SignOut()
         {
             Response.Cookies.Delete("refresh");
@@ -103,6 +103,16 @@ namespace Auth.API.Controllers
 
             return verificationResult.Match(
                 response => Ok(response),
+                errors => Problem(errors));
+        }
+
+        [HttpGet("account/{id:int}")]
+        public async Task<IActionResult> GetAccountInformation(int id)
+        {
+            var result = await _mediator.Send(new GetAccountByIdQuery(id));
+
+            return result.Match(
+                response => Ok(_mapper.Map<AccountResponse>(response)),
                 errors => Problem(errors));
         }
     }

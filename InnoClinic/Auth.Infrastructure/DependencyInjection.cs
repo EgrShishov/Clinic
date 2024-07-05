@@ -1,46 +1,45 @@
-﻿using Auth.Application.Common;
-using Auth.Infrastructure.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Auth.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
+using Auth.Infrastructure.EmaiService;
+using Auth.Application.Common.Abstractions;
+using Auth.Infrastructure.Persistence.Repository;
 
 namespace Auth.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, ConfigurationManager configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            var jwtSettings = new JwtSettings();
-            configuration.Bind(JwtSettings.SectionName, jwtSettings);
-
-            services.AddSingleton<ITokenGenerator, TokenGenerator>()
-             .AddAuthentication(defaultScheme: JwtBearerDefaults.AuthenticationScheme)
-             .AddJwtBearer(opt =>
-                 opt.TokenValidationParameters = new TokenValidationParameters()
-                 {
-                     ValidateIssuer = true,
-                     ValidateLifetime = true,
-                     ValidateIssuerSigningKey = true,
-                     ValidIssuer = jwtSettings.Issuer,
-                     ValidAudience = jwtSettings.Audience,
-                     IssuerSigningKey = new SymmetricSecurityKey(
-                         Encoding.UTF8.GetBytes(jwtSettings.Secret)
-                    )
-                 });
+            services.AddPersistense(configuration);
+            services.AddEmailService(configuration);
 
             return services;
         }
 
-        public static IServiceCollection AddPersistense(this IServiceCollection services, ConfigurationManager configuration)
+        public static IServiceCollection AddEmailService(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AuthDbContext>(
-                       options =>
-                       options.UseNpgsql(
-                               configuration.GetConnectionString("AuthorizationDb")));
+            EmailSettings emailSettings = new EmailSettings();
+            configuration.Bind(EmailSettings.SectionName, emailSettings);
+
+            services.AddSingleton<IEmailSender, EmailSender>();
+            return services;
+        }
+
+        public static IServiceCollection AddPersistence(this IServiceCollection services)
+        {
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            return services;
+        }
+
+        public static IServiceCollection AddPersistense(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddPersistence()
+                    .AddDbContext<AuthDbContext>(
+                           options =>
+                               options.UseNpgsql(
+                                   configuration.GetConnectionString("AuthorizationDb")));
             return services;
         }
     }

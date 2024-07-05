@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Dc0xKrkAZ6VJHFgmRLOYRkuFEJLYKLvuqqFAzQInGGxJAL6D2RbrdpRdFW9HNslNFAhasd1BysJ9ZIG4Ii/4mg==",
+  "dgSpecHash": "igYuVUDwTFCRr0bJroX5bEZRHjuDk8yJqZVDoOVbfpJlOl9O/hPtK1LkGL/9wVaQjEeC8GHIwwNiiO2YobSXrg==",
   "success": true,
   "projectFilePath": "C:\\InnoClinic\\InnoClinic\\Officies.Infrastructure\\Officies.Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -17,10 +17,10 @@
     "C:\\Users\\Егор\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\2.0.0\\microsoft.extensions.logging.abstractions.2.0.0.nupkg.sha512",
     "C:\\Users\\Егор\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
     "C:\\Users\\Егор\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
-    "C:\\Users\\Егор\\.nuget\\packages\\mongodb.bson\\2.26.0\\mongodb.bson.2.26.0.nupkg.sha512",
-    "C:\\Users\\Егор\\.nuget\\packages\\mongodb.driver\\2.26.0\\mongodb.driver.2.26.0.nupkg.sha512",
-    "C:\\Users\\Егор\\.nuget\\packages\\mongodb.driver.core\\2.26.0\\mongodb.driver.core.2.26.0.nupkg.sha512",
-    "C:\\Users\\Егор\\.nuget\\packages\\mongodb.libmongocrypt\\1.9.0\\mongodb.libmongocrypt.1.9.0.nupkg.sha512",
+    "C:\\Users\\Егор\\.nuget\\packages\\mongodb.bson\\2.27.0\\mongodb.bson.2.27.0.nupkg.sha512",
+    "C:\\Users\\Егор\\.nuget\\packages\\mongodb.driver\\2.27.0\\mongodb.driver.2.27.0.nupkg.sha512",
+    "C:\\Users\\Егор\\.nuget\\packages\\mongodb.driver.core\\2.27.0\\mongodb.driver.core.2.27.0.nupkg.sha512",
+    "C:\\Users\\Егор\\.nuget\\packages\\mongodb.libmongocrypt\\1.10.0\\mongodb.libmongocrypt.1.10.0.nupkg.sha512",
     "C:\\Users\\Егор\\.nuget\\packages\\sharpcompress\\0.30.1\\sharpcompress.0.30.1.nupkg.sha512",
     "C:\\Users\\Егор\\.nuget\\packages\\snappier\\1.0.0\\snappier.1.0.0.nupkg.sha512",
     "C:\\Users\\Егор\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",

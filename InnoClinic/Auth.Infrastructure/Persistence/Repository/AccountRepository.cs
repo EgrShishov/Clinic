@@ -1,4 +1,5 @@
 ﻿using Auth.Infrastructure.Persistence.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Auth.Infrastructure.Persistence.Repository
 {
@@ -6,32 +7,38 @@ namespace Auth.Infrastructure.Persistence.Repository
     {
         public async Task<Account> AddAsync(Account account, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var newAccount = await dbContext.Accounts.AddAsync(account, cancellationToken);
+            return newAccount.Entity;
         }
 
         public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var account = await dbContext.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+            if (account != null)
+            {
+                dbContext.Entry(account).State = EntityState.Deleted;
+            }
         }
 
         public async Task<Account> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await dbContext.Accounts.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Account> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await dbContext.Accounts.FirstOrDefaultAsync(x => x.Email == email);
         }
 
         public async Task<Account> GetByNameAsync(string name, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await dbContext.Accounts.FirstOrDefaultAsync(x => x.UserName == name);
         }
 
         public async Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var account = await dbContext.Accounts.FirstOrDefaultAsync(x => x.Email == email);
+            return account != null;
         }
     }
 }

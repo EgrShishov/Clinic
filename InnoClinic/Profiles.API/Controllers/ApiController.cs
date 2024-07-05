@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using ErrorOr;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Profiles.API.Controllers
 {
     [ApiController]
-    public class ApiController : ControllerBase
+    public abstract class ApiController : ControllerBase
     {
         protected IActionResult Problem(List<Error> errors)
         {

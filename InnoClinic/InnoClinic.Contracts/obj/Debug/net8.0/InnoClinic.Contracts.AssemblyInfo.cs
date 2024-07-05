@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("InnoClinic.Contracts")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+903ed37a62f307acdd4fc76df0115ed78cc8eee4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+30ca3d7d540887e19fa30c47e0b49f705cc20418")]
 [assembly: System.Reflection.AssemblyProductAttribute("InnoClinic.Contracts")]
 [assembly: System.Reflection.AssemblyTitleAttribute("InnoClinic.Contracts")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
