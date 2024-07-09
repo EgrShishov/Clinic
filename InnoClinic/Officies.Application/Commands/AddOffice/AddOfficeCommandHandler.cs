@@ -1,6 +1,4 @@
-﻿
-namespace Officies.Application.Commands.AddOffice
-  public class AddOfficeCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<AddOfficeCommand, ErrorOr<Unit>>
+﻿public class AddOfficeCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<AddOfficeCommand, ErrorOr<Unit>>
 {
     public async Task<ErrorOr<Unit>> Handle(AddOfficeCommand request, CancellationToken cancellationToken)
     {

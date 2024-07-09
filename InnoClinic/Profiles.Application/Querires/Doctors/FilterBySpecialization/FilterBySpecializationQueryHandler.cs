@@ -1,14 +1,9 @@
-﻿
-namespace Profiles.Application.Querires.Doctors.FilterBySpecialization
+﻿public class FilterBySpecializationQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<FilterBySpecializationQuery, ErrorOr<List<Doctor>>>
 {
-    public class FilterBySpecializationQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<FilterBySpecializationQuery, ErrorOr<List<Doctor>>>
+    public async Task<ErrorOr<List<Doctor>>> Handle(FilterBySpecializationQuery request, CancellationToken cancellationToken)
     {
-        public async Task<ErrorOr<List<Doctor>>> Handle(FilterBySpecializationQuery request, CancellationToken cancellationToken)
-        {
-            var doctors = await unitOfWork.DoctorsRepository.FilterBySpecializationAsync(request.SpecializationId, request.PageNumber, request.PageSize);
-            // checking specializationId
-            return doctors;
-        }
+        var doctors = await unitOfWork.DoctorsRepository.FilterBySpecializationAsync(request.SpecializationId, request.PageNumber, request.PageSize);
+        // checking specializationId
+        return doctors;
     }
-
 }

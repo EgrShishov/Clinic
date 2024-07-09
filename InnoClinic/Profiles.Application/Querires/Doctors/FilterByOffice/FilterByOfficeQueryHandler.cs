@@ -1,17 +1,13 @@
-﻿
-namespace Profiles.Application.Querires.Doctors.FilterByOffice
+﻿public class FilterByOfficeQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<FilterByOfficeQuery, ErrorOr<List<Doctor>>>
 {
-    public class FilterByOfficeQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<FilterByOfficeQuery, ErrorOr<List<Doctor>>>
+    public async Task<ErrorOr<List<Doctor>>> Handle(FilterByOfficeQuery request, CancellationToken cancellationToken)
     {
-        public async Task<ErrorOr<List<Doctor>>> Handle(FilterByOfficeQuery request, CancellationToken cancellationToken)
+        var doctors = await unitOfWork.DoctorsRepository.FilterByOfficeAsync(request.OfficeId, request.PageNumber, request.PageSize);
+        if (doctors is null)
         {
-            var doctors = await unitOfWork.DoctorsRepository.FilterByOfficeAsync(request.OfficeId, request.PageNumber, request.PageSize);
-            if (doctors is null)
-            {
-                return Errors.Doctors.NotFound;
-            }
-
-            return doctors;
+            return Errors.Doctors.NotFound;
         }
+
+        return doctors;
     }
 }

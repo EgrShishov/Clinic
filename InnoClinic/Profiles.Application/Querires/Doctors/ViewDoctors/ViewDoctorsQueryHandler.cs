@@ -1,16 +1,12 @@
-﻿
-namespace Profiles.Application.Querires.Doctors.ViewDoctors
+﻿public class ViewDoctorsQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<ViewDoctorsQuery, ErrorOr<List<Doctor>>>
 {
-    public class ViewDoctorsQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<ViewDoctorsQuery, ErrorOr<List<Doctor>>>
+    public async Task<ErrorOr<List<Doctor>>> Handle(ViewDoctorsQuery request, CancellationToken cancellationToken)
     {
-        public async Task<ErrorOr<List<Doctor>>> Handle(ViewDoctorsQuery request, CancellationToken cancellationToken)
+        var doctors = await unitOfWork.DoctorsRepository.GetListDoctorsAsync(request.PageNumber, request.PageSize);
+        if (doctors is null)
         {
-            var doctors = await unitOfWork.DoctorsRepository.GetListDoctorsAsync(request.PageNumber, request.PageSize);
-            if (doctors is null)
-            {
-                return Errors.Doctors.NotFound;
-            }
-            return doctors;
+            return Errors.Doctors.NotFound;
         }
+        return doctors;
     }
 }

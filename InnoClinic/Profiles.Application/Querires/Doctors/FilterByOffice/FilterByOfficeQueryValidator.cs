@@ -1,8 +1,3 @@
-﻿
-
-namespace Profiles.Application.Querires.Doctors.FilterByOffice
+﻿public class FilterByOfficeQueryValidator : AbstractValidator<FilterByOfficeQuery>
 {
-    internal class FilterByOfficeQueryValidator
-    {
-    }
 }

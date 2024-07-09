@@ -1,13 +1,9 @@
-﻿
-namespace Profiles.Domain.Entities
+﻿public enum ProfileStatus
 {
-    public enum ProfileStatus
-    {
-        AtWork,
-        OnVacation,
-        SickDay, 
-        SickLeave, 
-        SelfIsolation, 
-        LeaveWithoutPay
-    }
+    AtWork,
+    OnVacation,
+    SickDay,
+    SickLeave,
+    SelfIsolation,
+    LeaveWithoutPay
 }

@@ -1,0 +1,2 @@
+﻿public sealed record SpecializationInfoResponse(
+    );

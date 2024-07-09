@@ -10,3 +10,4 @@ C:\InnoClinic\InnoClinic\InnoClinic.Contracts\obj\Debug\net8.0\InnoClinic.Contra
 C:\InnoClinic\InnoClinic\InnoClinic.Contracts\obj\Debug\net8.0\refint\InnoClinic.Contracts.dll
 C:\InnoClinic\InnoClinic\InnoClinic.Contracts\obj\Debug\net8.0\InnoClinic.Contracts.pdb
 C:\InnoClinic\InnoClinic\InnoClinic.Contracts\obj\Debug\net8.0\ref\InnoClinic.Contracts.dll
+C:\InnoClinic\InnoClinic\InnoClinic.Contracts\obj\Debug\net8.0\InnoClinic.Contracts.csproj.AssemblyReference.cache

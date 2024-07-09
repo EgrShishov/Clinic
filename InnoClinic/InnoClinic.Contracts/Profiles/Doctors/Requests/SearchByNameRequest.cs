@@ -1,7 +1,1 @@
-﻿
-namespace InnoClinic.Contracts.Profiles.Doctors.Requests
-{
-    public class SearchByNameRequest
-    {
-    }
-}
+﻿public sealed record SearchByNameRequest(string FirstName, string LastName, string MiddleName);

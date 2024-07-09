@@ -1,13 +1,8 @@
-﻿using Profiles.Domain.Entities;
-
-namespace InnoProfileslinic.Domain.Entities
+﻿public class Receptionist : Entity
 {
-    public class Receptionist : Entity
-    {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string MiddleName { get; set; }
-        public int AccountId { get; set; }
-        public string OfficeId { get; set; }
-    }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string MiddleName { get; set; }
+    public int AccountId { get; set; }
+    public string OfficeId { get; set; }
 }

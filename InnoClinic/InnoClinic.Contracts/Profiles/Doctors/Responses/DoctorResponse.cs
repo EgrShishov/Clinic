@@ -1,6 +1,2 @@
-﻿
-namespace InnoClinic.Contracts.Profiles.Doctors.Responses
-{
-    public sealed record DoctorResponse(
-        );
-}
+﻿public sealed record DoctorResponse(
+    );

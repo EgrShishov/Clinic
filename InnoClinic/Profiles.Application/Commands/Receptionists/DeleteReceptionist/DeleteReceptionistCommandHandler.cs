@@ -1,7 +1,4 @@
-﻿
-namespace Profiles.Application.Commands.Receptionists.DeleteReceptionist
-{
-    public class DeleteReceptionistCommandHandler(IUnitOfWork unitOfWork)
+﻿    public class DeleteReceptionistCommandHandler(IUnitOfWork unitOfWork)
         : IRequestHandler<DeleteReceptionistCommand, ErrorOr<Unit>>
     {
         public async Task<ErrorOr<Unit>> Handle(DeleteReceptionistCommand request, CancellationToken cancellationToken)
@@ -30,4 +27,3 @@ namespace Profiles.Application.Commands.Receptionists.DeleteReceptionist
             }
         }
     }
-}

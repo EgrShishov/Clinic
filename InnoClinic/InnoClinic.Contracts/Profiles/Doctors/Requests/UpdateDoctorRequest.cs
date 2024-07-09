@@ -1,6 +1,1 @@
-﻿namespace InnoClinic.Contracts.Profiles.Doctors.Requests
-{
-    public class UpdateDoctorRequest
-    {
-    }
-}
+﻿public sealed record UpdateDoctorRequest();
