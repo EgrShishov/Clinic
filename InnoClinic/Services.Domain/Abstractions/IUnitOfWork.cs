@@ -1,10 +1,10 @@
 ﻿public interface IUnitOfWork : IDisposable
 {
-    ISpecializationsRepository Specializations { get; }
-    IServicesRepository Services { get; }
-    IServiceCategoryRepository Categories { get; }
-    Task<int> SaveChangesAsync();
-    Task BeginTransactionAsync();
-    Task CommitTransactionAsync();
-    Task RollbackTransactionAsync();
+    public ISpecializationsRepository Specializations { get; }
+    public IServicesRepository Services { get; }
+    public IServiceCategoryRepository Categories { get; }
+    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+    public Task BeginTransactionAsync(CancellationToken cancellationToken = default);
+    public Task CommitTransactionAsync(CancellationToken cancellationToken = default);
+    public Task RollbackTransactionAsync(CancellationToken cancellationToken = default);
 }
