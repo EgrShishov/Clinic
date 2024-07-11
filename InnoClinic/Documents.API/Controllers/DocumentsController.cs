@@ -1,18 +1,46 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 public class DocumentsController : ApiController
 {
-    private readonly IMediator _mediator;
+    private readonly IBlobStorageService _storageService;
 
-    public DocumentsController(IMediator mediator)
+    public DocumentsController(IBlobStorageService storageService)
     {
-        _mediator = mediator;
+        _storageService = storageService;
     }
 
-    [HttpGet("download/{id:guid}")]
-    public async Task<IActionResult> DownloadFile(Guid fileId)
+    [HttpGet("{container}/{id:guid}")]
+    public async Task<IActionResult> DownloadFile(string container, Guid fileId)
     {
-        throw new NotImplementedException();
+        var response = await _storageService.DownloadAsync(fileId, container);
+
+        if (response == null)
+        {
+            return NoContent();
+        }
+
+        return File(response.stream, response.contentType, response.filename);
+    }
+
+    [HttpPost("{container}/{blob}")]
+    public async Task<IActionResult> UploadFile(IFormFile file, string container)
+    {
+        var stream = new MemoryStream();
+        await file.CopyToAsync(stream);
+
+        var id = await _storageService.UploadAsync(stream, Request.ContentType, container);
+        
+        if (!id.HasValue)
+        {
+            return Problem();
+        }
+        return Ok(id);
+    }
+
+    [HttpDelete("{container}/{id:guid}")]
+    public async Task<IActionResult> DeleteFile(string container, Guid fileId)
+    {
+        await _storageService.DeleteAsync(fileId, container);
+        return NoContent();
     }
 }

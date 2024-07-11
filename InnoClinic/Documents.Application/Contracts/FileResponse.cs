@@ -1,1 +1,1 @@
-﻿public record FileResponse(Stream stream, string contentType);
+﻿public record FileResponse(Stream stream, string contentType, string filename);
