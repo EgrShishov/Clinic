@@ -1,4 +1,4 @@
-﻿public class SelectDateAndTimeSlotCommandHandler(IUnitOfWork unitOfWork, ITimeSlotGenerator timeSlotGenerator) 
+﻿public class SelectDateAndTimeSlotCommandHandler(IUnitOfWork unitOfWork, ITimeSlotsGenerator timeSlotGenerator) 
     : IRequestHandler<SelectDateAndTimeSlotCommand, ErrorOr<List<TimeSlot>>>
 {
     public async Task<ErrorOr<List<TimeSlot>>> Handle(SelectDateAndTimeSlotCommand request, CancellationToken cancellationToken)

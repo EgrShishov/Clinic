@@ -1,4 +1,4 @@
-﻿public class TimeSlotGenerator : ITimeSlotGenerator
+﻿public class TimeSlotsGenerator : ITimeSlotsGenerator
 {
     public List<TimeSlot> GenerateSlots(DateTime appointmentDate, int duration, int serviceCategory)
     {
