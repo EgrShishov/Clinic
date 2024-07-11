@@ -6,6 +6,7 @@ public static class DependencyInjection
     {
         services.AddMediatR(conf => conf.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly))
                 .AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
+        services.AddTransient<ITimeSlotsGenerator, TimeSlotsGenerator>();
         return services;
     }
 }
