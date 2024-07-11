@@ -6,7 +6,7 @@
         {
             Complaints = request.Complaints,
             Conclusion = request.Conclusion,
-            Date = request.Date,
+            Date = request.Date.Value,
             Recommendations = request.Recommendations
         };
 

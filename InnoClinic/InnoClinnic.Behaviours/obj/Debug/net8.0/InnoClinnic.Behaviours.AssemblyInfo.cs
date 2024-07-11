@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("InnoClinnic.Behaviours")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+38e0e5463ce4e06a293b69d10d3fdb8c6fb88044")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e822266d6cd2b695bc2657fbcf150214d5aa76d5")]
 [assembly: System.Reflection.AssemblyProductAttribute("InnoClinnic.Behaviours")]
 [assembly: System.Reflection.AssemblyTitleAttribute("InnoClinnic.Behaviours")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

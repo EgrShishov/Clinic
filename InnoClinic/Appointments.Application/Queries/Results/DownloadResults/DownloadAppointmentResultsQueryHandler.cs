@@ -1,7 +1,7 @@
-﻿public class DownloadAppointmentResultsCommandHandler(IUnitOfWork unitOfWork, IPDFDocumentGenerator documentGenerator)
-: IRequestHandler<DownloadAppointmentResultsCommand, ErrorOr<byte[]>>
+﻿public class DownloadAppointmentResultsQueryHandler(IUnitOfWork unitOfWork, IPDFDocumentGenerator documentGenerator)
+: IRequestHandler<DownloadAppointmentResultsQuery, ErrorOr<byte[]>>
 {
-    public async Task<ErrorOr<byte[]>> Handle(DownloadAppointmentResultsCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<byte[]>> Handle(DownloadAppointmentResultsQuery request, CancellationToken cancellationToken)
     {
         var results = await unitOfWork.ResultsRepository.GetResultsByIdAsync(request.ResultsId);
         if (results is null)
@@ -19,12 +19,12 @@
         var pdfRequest = new GeneratePDFResultsRequest
         {
             Date = results.Date,
-            Complaints = results.Complaints,
-            DateOfBirth = dateOfBirth,
-            Conclusion = results.Conclusion,
-            Recommendations = results.Recommendations,
             DoctorName = doctorsName,
             PatientName = patientsName,
+            DateOfBirth = dateOfBirth,
+            Complaints = results.Complaints,
+            Conclusion = results.Conclusion,
+            Recommendations = results.Recommendations,
             ServiceName = servicesName,
             Specialization = specialization
         };

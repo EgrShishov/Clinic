@@ -7,4 +7,3 @@
         RuleFor(x => x.Recommendations).NotEmpty().WithMessage("Please, enter the recommendations");
     }
 }
-}

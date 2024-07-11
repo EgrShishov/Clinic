@@ -7,21 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\Appointments\RescheduleAppointment\" />
-    <Folder Include="Commands\Appointments\SelectDateAndTimeSlot\" />
-    <Folder Include="Commands\Results\CreateAppointmentResult\" />
-    <Folder Include="Commands\Results\EditAppointmentsResult\" />
-    <Folder Include="Commands\Results\DownloadResults\" />
-    <Folder Include="Common\Abstractions\" />
-    <Folder Include="Queries\Appointments\ViewAppointmentHistory\" />
-    <Folder Include="Queries\Appointments\ViewAppointmentList\" />
-    <Folder Include="Queries\Appointments\ViewAppointmentSchedule\" />
-    <Folder Include="Queries\Results\ViewResultsByDoctor\" />
-    <Folder Include="Queries\Results\ViewResultsByPatient\" />
-    <Folder Include="Queries\Results\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="ErrorOr" Version="2.0.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="MediatR" Version="12.3.0" />

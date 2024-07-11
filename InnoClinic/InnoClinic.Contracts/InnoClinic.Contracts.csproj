@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Appointments\" />
+    <Folder Include="Appointments\Requests\" />
+    <Folder Include="Appointments\Responses\" />
   </ItemGroup>
 
 </Project>

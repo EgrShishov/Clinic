@@ -1,10 +1,10 @@
 ﻿public sealed record CreateAppointmentsResultCommand(
-    DateTime Date,
-    string PatientFullName,
-    DateTime DateofBirth,
-    string DoctorFullName,
-    string Specialization,
-    string ServiceName,
+    DateTime? Date,
+    int PatientId,
+    DateTime? DateofBirth,
+    int DoctorId,
+    int SpecializationId,
+    int ServiceId,
     string Complaints,
     string Conclusion,
     string Recommendations) : IRequest<ErrorOr<Results>>
