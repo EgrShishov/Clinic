@@ -1,5 +1,4 @@
-﻿using Auth.Application.Common.Abstractions;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using System.IdentityModel.Tokens.Jwt;
 
 public class RefreshTokenCommandHandler(UserManager<Account> userManager, ITokenGenerator tokenGenerator)
