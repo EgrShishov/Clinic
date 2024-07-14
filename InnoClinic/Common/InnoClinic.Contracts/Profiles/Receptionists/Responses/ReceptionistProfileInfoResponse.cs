@@ -1,5 +1,6 @@
-﻿public sealed record ReceptionistResponse(
+﻿public record ReceptionistProfileInfoResponse(
         int id,
+        byte[] Photo,
         string FirstName,
         string LastName,
         string MiddleName,

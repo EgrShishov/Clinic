@@ -1,5 +1,4 @@
-﻿using Auth.Application.Common.Abstractions;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 public class SignInCommandHandler(
     IMediator mediator,
@@ -27,6 +26,9 @@ public class SignInCommandHandler(
 
         var accessToken = tokenService.GenerateAccessToken(account);
         var refreshToken = tokenService.GenerateRefreshToken(account);
+
+        account.RefreshToken = refreshToken;
+        await manager.UpdateAsync(account);
 
         var roles = await manager.GetRolesAsync(account);
         var role = roles.Contains("Doctor") ? "Doctor" :

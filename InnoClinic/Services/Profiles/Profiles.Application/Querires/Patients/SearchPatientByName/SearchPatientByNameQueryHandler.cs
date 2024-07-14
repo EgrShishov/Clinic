@@ -1,14 +1,28 @@
-﻿public class SearchPatientByNameQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<SearchPatientByNameQuery, ErrorOr<List<Patient>>>
+﻿public class SearchPatientByNameQueryHandler(IUnitOfWork unitOfWork) 
+    : IRequestHandler<SearchPatientByNameQuery, ErrorOr<List<PatientListResponse>>>
 {
-    public async Task<ErrorOr<List<Patient>>> Handle(SearchPatientByNameQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<List<PatientListResponse>>> Handle(SearchPatientByNameQuery request, CancellationToken cancellationToken)
     {
-        var patient = await unitOfWork.PatientsRepository
+        var patients = await unitOfWork.PatientsRepository
                     .SearchPatientByNameAsync(request.FirstName, request.LastName, request.MiddleName);
-        if (patient is null)
+        if (patients is null)
         {
             return Errors.Patients.NotFound;
         }
 
-        return patient;
+        var patientList = new List<PatientListResponse>(0);
+        foreach (var patient in patients)
+        {
+            patientList.Add(new PatientListResponse
+            {
+                Id = patient.Id,
+                FirstName = patient.FirstName,
+                LastName = patient.LastName,
+                MiddleName = patient.MiddleName,
+                PhoneNumber = //account.PhoneNumber
+            });
+        }
+
+        return patientList;
     }
 }

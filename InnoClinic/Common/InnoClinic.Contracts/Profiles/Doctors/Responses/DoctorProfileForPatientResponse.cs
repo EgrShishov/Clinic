@@ -2,11 +2,11 @@
     string FirstName,
     string LastName,
     string MiddleName,
-    int PhotoId,
-    int SpecializationId,
+    byte[] Photo,
+    string Specialization,
     int Experience,
     string City,
     string Street,
     string HouseNumber,
-    string OfficeNumber
-    );
+    string OfficeNumber,
+    List<SpecializationInfoResponse> specializations);

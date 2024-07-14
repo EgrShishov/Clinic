@@ -1,6 +1,4 @@
-﻿using Auth.Application.Common.Abstractions;
-using Auth.Application.Queries.GenerateEmailConfirmationLink;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 public class SignUpCommandHandler(
         IMediator mediator,
@@ -37,6 +35,9 @@ public class SignUpCommandHandler(
 
         var accessToken = tokenGenerator.GenerateAccessToken(account);
         var refreshToken = tokenGenerator.GenerateRefreshToken(account);
+
+        account.RefreshToken = refreshToken;
+        await manager.UpdateAsync(account);
 
         var roles = await manager.GetRolesAsync(account);
         var role = roles.Contains("Doctor") ? "Doctor" :

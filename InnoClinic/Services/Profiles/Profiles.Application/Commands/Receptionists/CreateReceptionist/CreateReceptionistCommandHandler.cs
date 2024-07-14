@@ -1,7 +1,7 @@
 ﻿public class CreateReceptionistCommandHandler(IUnitOfWork unitOfWork, IEmailSender emailService, IIdentityService identityService) 
-    : IRequestHandler<CreateReceptionistCommand, ErrorOr<Receptionist>>
+    : IRequestHandler<CreateReceptionistCommand, ErrorOr<CreateReceptionistProfileResponse>>
 {
-    public async Task<ErrorOr<Receptionist>> Handle(CreateReceptionistCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<CreateReceptionistProfileResponse>> Handle(CreateReceptionistCommand request, CancellationToken cancellationToken)
     {
         await unitOfWork.BeginTransactionAsync(cancellationToken);
 
@@ -23,7 +23,10 @@
             var newReceptionist = await unitOfWork.ReceptionistsRepository.AddReceptionistAsync(receptionist);
             await unitOfWork.CompleteAsync(cancellationToken);
             await unitOfWork.CommitTransactionAsync(cancellationToken);
-            return newReceptionist;
+            return new CreateReceptionistProfileResponse(
+                newReceptionist.Id,
+                newReceptionist.AccountId,
+                request.Email);
         }
         catch (Exception)
         {

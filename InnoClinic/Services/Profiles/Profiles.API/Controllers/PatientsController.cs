@@ -64,7 +64,7 @@ public class PatientsController : ApiController
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetPatientProfile(int id)
     {
-        var result = await _mediator.Send(new ViewPatientByIdQuery(id));
+        var result = await _mediator.Send(new ViewPatientProfileQuery(id));
 
         if (result.IsError)
         {

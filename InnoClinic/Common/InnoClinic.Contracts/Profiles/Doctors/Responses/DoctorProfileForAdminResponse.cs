@@ -1,4 +1,5 @@
-﻿public sealed record DoctorProfileResponse(
+﻿public sealed record DoctorProfileForAdminResponse(
+    byte[] Photo,
     string FirstName,
     string LastName,
     string MiddleName,
@@ -8,5 +9,5 @@
     string City,
     string Street,
     string HouseNumber,
-    string OfficeNumber
-    );
+    string OfficeNumber,
+    string Status);

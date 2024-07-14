@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-
-public sealed record CreateReceptionistRequest(
-    IFormFile Photo,
+﻿public record CreateReceptionistRequest(
+    byte[] Photo,
     string FirstName,
     string LastName,
     string MiddleName,

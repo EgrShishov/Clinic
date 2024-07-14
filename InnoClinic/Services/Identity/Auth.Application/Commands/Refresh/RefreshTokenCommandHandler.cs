@@ -19,7 +19,7 @@ public class RefreshTokenCommandHandler(UserManager<Account> userManager, IToken
         }
 
         var account = await userManager.FindByEmailAsync(email);
-        if (account == null || !account.RefreshTokens.Any(rt => rt == request.RefreshToken))
+        if (account == null || !string.IsNullOrEmpty(account.RefreshToken))
         {
             return Errors.Authentication.InvalidToken;
         }
@@ -27,8 +27,8 @@ public class RefreshTokenCommandHandler(UserManager<Account> userManager, IToken
         var newAccessToken = tokenGenerator.GenerateAccessToken(account);
         var newRefreshToken = tokenGenerator.GenerateRefreshToken(account);
 
-        account.RefreshTokens.Remove(request.RefreshToken);
-        account.RefreshTokens.Add(newRefreshToken);
+        account.RefreshToken = newRefreshToken;
+        await userManager.UpdateAsync(account);
 
         return new RefreshTokenResponse(newAccessToken, newRefreshToken);
     }

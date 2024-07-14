@@ -1,1 +1,1 @@
-﻿public sealed record SearchByNameRequest(string FirstName, string LastName, string MiddleName);
+﻿public record SearchByNameRequest(string FirstName, string LastName, string MiddleName);

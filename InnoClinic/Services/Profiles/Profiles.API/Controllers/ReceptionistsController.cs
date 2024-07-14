@@ -22,7 +22,7 @@ public class ReceptionistsController : ApiController
         var result = await _mediator.Send(command);
 
         return result.Match(
-            value => Ok(_mapper.Map<ReceptionistResponse>(value)),
+            value => Ok(_mapper.Map<ReceptionistProfileInfoResponse>(value)),
             errors => Problem(errors));
     }
 
@@ -33,7 +33,7 @@ public class ReceptionistsController : ApiController
         var result = await _mediator.Send(command);
 
         return result.Match(
-            value => Ok(_mapper.Map<ReceptionistResponse>(value)),
+            value => Ok(_mapper.Map<ReceptionistProfileInfoResponse>(value)),
             errors => Problem(errors));
     }
 
@@ -53,10 +53,10 @@ public class ReceptionistsController : ApiController
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetReceptionist(int id)
     {
-        var result = await _mediator.Send(new ViewReceptionistByIdQuery(id));
+        var result = await _mediator.Send(new ViewReceptionistProfileQuery(id));
 
         return result.Match(
-            value => Ok(_mapper.Map<ReceptionistResponse>(value)),
+            value => Ok(_mapper.Map<ReceptionistProfileInfoResponse>(value)),
             errors => Problem(errors));
     }
 
@@ -66,7 +66,7 @@ public class ReceptionistsController : ApiController
         var result = await _mediator.Send(new ViewAllReceptionistsQuery(pageNumber, pageSize));
 
         return result.Match(
-            value => Ok(_mapper.Map<List<ReceptionistResponse>>(value)),
+            value => Ok(_mapper.Map<List<ReceptionistProfileInfoResponse>>(value)),
             errors => Problem(errors));
     }
 }
