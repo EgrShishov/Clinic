@@ -7,5 +7,6 @@
     int SpecializationId,
     int OfficeId,
     int CareerStartYear,
-    ProfileStatus Status
+    ProfileStatus Status,
+    byte[] Photo
 ) : IRequest<ErrorOr<Doctor>>;

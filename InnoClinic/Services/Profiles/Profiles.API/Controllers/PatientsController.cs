@@ -25,9 +25,7 @@ public class PatientsController : ApiController
         {
             return BadRequest(result.FirstError.Description);
         }
-
-        var response = result.Value.Adapt<PatientProfileResponse>();
-        return Ok(response);
+        return Ok(result.Value);
     }
 
     [Authorize(Roles = "Patient, Receptionist")]
@@ -42,8 +40,7 @@ public class PatientsController : ApiController
             return BadRequest(result.FirstError.Description);
         }
 
-        var response = result.Value.Adapt<PatientProfileResponse>();
-        return Ok(response);
+        return Ok(result.Value);
     }
 
     [Authorize(Roles = "Receptionist")]
@@ -71,7 +68,7 @@ public class PatientsController : ApiController
             return BadRequest(result.FirstError.Description);
         }
 
-        return Ok(_mapper.Map<PatientProfileResponse>(result.Value));
+        return Ok(result.Value);
     }
 
     [Authorize(Roles = "Receptionist")]
@@ -85,7 +82,7 @@ public class PatientsController : ApiController
             return BadRequest(result.FirstError.Description);
         }
 
-        return Ok(_mapper.Map<PatientProfileResponse>(result.Value));
+        return Ok(result.Value);
     }
 
     [Authorize(Roles = "Receptionist")]
@@ -99,8 +96,6 @@ public class PatientsController : ApiController
             return BadRequest(result.FirstError.Description);
         }
 
-        return Ok(_mapper.Map<List<PatientProfileResponse>>(result.Value));
+        return Ok(result.Value);
     }
-
-
 }

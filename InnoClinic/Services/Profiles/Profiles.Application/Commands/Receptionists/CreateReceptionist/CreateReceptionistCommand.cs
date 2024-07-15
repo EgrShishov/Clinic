@@ -4,6 +4,6 @@
     string MiddleName,
     string Email,
     string OfficeId,
-    string PhotoUrl) : IRequest<ErrorOr<CreateReceptionistProfileResponse>>
+    byte[] Photo) : IRequest<ErrorOr<CreateReceptionistProfileResponse>>
 {
 }

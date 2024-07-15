@@ -1,5 +1,4 @@
 ﻿public record UpdateDoctorRequest(
-    int DoctorProfileId,
     byte[] Photo,
     string FirstName,
     string LastName,
