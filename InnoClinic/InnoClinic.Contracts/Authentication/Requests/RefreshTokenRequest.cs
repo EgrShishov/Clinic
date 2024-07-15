@@ -1,5 +1,2 @@
 ﻿
-namespace InnoClinic.Contracts.Authentication.Requests
-{
-    public record RefreshTokenRequest(string accessToken, string refreshToken);
-}
+public record RefreshTokenRequest(string accessToken, string refreshToken);

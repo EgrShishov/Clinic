@@ -1,97 +1,105 @@
-﻿using Auth.API.Exrtensions;
-using Auth.Application.Commands;
-using Auth.Domain.Entities;
-using InnoClinic.Contracts.Authentication.Requests;
-using InnoClinic.Contracts.Authentication.Responses;
-using MapsterMapper;
-using MediatR;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Auth.API.Controllers
+public class AuthorizationController : ApiController
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AuthorizationController : ControllerBase
+    private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
+    private readonly UserManager<Account> _userManager;
+
+    public AuthorizationController(IMediator mediator, IMapper mapper, UserManager<Account> userManager)
     {
-        private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
-        private readonly UserManager<Account> _userManager;
+        _mediator = mediator;
+        _mapper = mapper;
+        _userManager = userManager;
+    }
 
-        public AuthorizationController(IMediator mediator, IMapper mapper, UserManager<Account> userManager)
-        {
-            _mediator = mediator;
-            _mapper = mapper;
-            _userManager = userManager;
-        }
+    [HttpPost("sign-in")]
+    public async Task<IActionResult> SignIn(SignInRequest request)
+    {
+        var command = _mapper.Map<SignInCommand>(request);
+        var signInResult = await _mediator.Send(command);
 
-        [HttpGet("SignIn")]
-        public async Task<IActionResult> SignIn(SignInRequest request)
-        {
-            var command = _mapper.Map<SignInCommand>(request);
-            var signInResult = await _mediator.Send(command);
-
-            return signInResult.Match(
-                response => 
-                {
-                    Response.Cookies.Append("access", response.accessToken);
-                    Response.Cookies.Append("refresh", response.refreshToken);
-                    return Ok(_mapper.Map<AuthorizationResponse>(response));
-                },
-                errors => Problem(errors[0].ToString()));
-        }
-
-        [HttpGet("SignUp")]
-        public async Task<IActionResult> SignUp(SignUpRequest request)
-        {
-            var command = _mapper.Map<SignUpCommand>(request);
-            var signUpResult = await _mediator.Send(command);
-
-            return signUpResult.Match(
-                response => 
-                {
-                    Response.Cookies.Append("access", response.accessToken);
-                    Response.Cookies.Append("refresh", response.refreshToken);
-                    return Ok(_mapper.Map<AuthorizationResponse>(response));
-                },
-                errors => Problem(errors[0].ToString()));
-        }
-
-        [HttpGet("Sign-out")]
-        public async Task<IActionResult> SignOut()
-        {
-            Response.Cookies.Delete("refresh");
-            return NoContent();
-        }
-
-        [HttpPost("refresh")]
-        public async Task<IActionResult> Refresh(RefreshTokenRequest request)
-        {
-            int accountId = User.GetUserId();
-            var account = await _userManager.FindByIdAsync(accountId.ToString());
-
-            if(account is null)
+        return signInResult.Match(
+            response => 
             {
-                return NotFound();
-            }
+                Response.Cookies.Append("access", response.accessToken);
+                Response.Cookies.Append("refresh", response.refreshToken);
+                return Ok(_mapper.Map<AuthorizationResponse>(response));
+            },
+            errors => Problem(errors));
+    }
 
-            var refreshTokenResult = await _mediator.Send(new RefreshTokenCommand(request.accessToken, request.refreshToken));
-            if (refreshTokenResult.IsError)
+    [HttpPost("sign-up")]
+    public async Task<IActionResult> SignUp(SignUpRequest request)
+    {
+        var command = _mapper.Map<SignUpCommand>(request);
+        var signUpResult = await _mediator.Send(command);
+
+        return signUpResult.Match(
+            response => 
             {
-                return BadRequest(refreshTokenResult.FirstError);
-            }
+                Response.Cookies.Append("access", response.accessToken);
+                Response.Cookies.Append("refresh", response.refreshToken);
+                return Ok(_mapper.Map<AuthorizationResponse>(response));
+            },
+            errors => Problem(errors));
+    }
 
-            account.RefreshTokens.Add(request.refreshToken);
-            await _userManager.UpdateAsync(account);
+    [HttpPost("sign-out")]
+    public async Task<IActionResult> SignOut()
+    {
+        Response.Cookies.Delete("refresh");
+        return NoContent();
+    }
 
-            return refreshTokenResult.Match(
-                response =>
-                {
-                    Response.Cookies.Delete("access");
-                    Response.Cookies.Append("access", response.accessToken);
-                    return Ok(_mapper.Map<AuthorizationResponse>(response));
-                },
-                errors => Problem(errors[0].ToString()));
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh(RefreshTokenRequest request)
+    {
+        int accountId = User.GetUserId();
+        var account = await _userManager.FindByIdAsync(accountId.ToString());
+
+        if(account is null)
+        {
+            return NotFound();
         }
+
+        var refreshTokenResult = await _mediator.Send(new RefreshTokenCommand(request.accessToken, request.refreshToken));
+        if (refreshTokenResult.IsError)
+        {
+            return BadRequest(refreshTokenResult.FirstError);
+        }
+
+        account.RefreshTokens.Add(request.refreshToken);
+        await _userManager.UpdateAsync(account);
+
+        return refreshTokenResult.Match(
+            response =>
+            {
+                Response.Cookies.Delete("access");
+                Response.Cookies.Append("access", response.accessToken);
+                return Ok(_mapper.Map<AuthorizationResponse>(response));
+            },
+            errors => Problem(errors));
+    }
+
+    [HttpGet("verify")]
+    public async Task<IActionResult> VerifyEmail(string link)
+    {
+        var verificationResult = await _mediator.Send(new VerifyEmailCommand(link));
+
+        return verificationResult.Match(
+            response => Ok(response),
+            errors => Problem(errors));
+    }
+
+    [HttpGet("account/{id:int}")]
+    public async Task<IActionResult> GetAccountInformation(int id)
+    {
+        var result = await _mediator.Send(new GetAccountByIdQuery(id));
+
+        return result.Match(
+            response => Ok(_mapper.Map<AccountResponse>(response)),
+            errors => Problem(errors));
     }
 }

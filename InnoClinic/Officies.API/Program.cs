@@ -1,6 +1,3 @@
-using Officies.Application;
-using Officies.Infrastructure;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructure(builder.Configuration)

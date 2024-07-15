@@ -1,12 +1,10 @@
-using Auth.Application;
-using Auth.Infrastructure;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructure(builder.Configuration)
-    .AddApplication();
+    .AddApplication(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -31,13 +29,6 @@ foreach (var role in roles)
         await roleManager.CreateAsync(new IdentityRole(role));
     }
 }
-
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("Doctor", policy => policy.RequireRole("Doctor"));
-    options.AddPolicy("Patient", policy => policy.RequireRole("Patient"));
-    options.AddPolicy("Receptionist", policy => policy.RequireRole("Receptionist"));
-});
 
 app.UseHttpsRedirection();
 

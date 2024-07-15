@@ -1,47 +1,52 @@
-﻿using Auth.Application.Common;
-using Auth.Infrastructure.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Auth.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Auth.Infrastructure
+public static class DependencyInjection
 {
-    public static class DependencyInjection
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, ConfigurationManager configuration)
+        services.AddPersistense(configuration);
+        services.AddEmailService(configuration);
+        services.AddRoles();
+
+        return services;
+    }
+
+    public static IServiceCollection AddEmailService(this IServiceCollection services, IConfiguration configuration)
+    {
+        EmailSettings emailSettings = new EmailSettings();
+        configuration.Bind(EmailSettings.SectionName, emailSettings);
+
+        services.AddSingleton<IEmailSender, EmailSender>();
+        return services;
+    }
+
+    public static IServiceCollection AddPersistence(this IServiceCollection services)
+    {
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        return services;
+    }
+
+    public static IServiceCollection AddPersistense(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddPersistence()
+                .AddDbContext<AuthDbContext>(
+                        options =>
+                            options.UseNpgsql(
+                                configuration.GetConnectionString("AuthorizationDb")));
+        return services;
+    }
+
+    public static IServiceCollection AddRoles(this IServiceCollection services)
+    {
+        services.AddAuthorization(options =>
         {
-            var jwtSettings = new JwtSettings();
-            configuration.Bind(JwtSettings.SectionName, jwtSettings);
+            options.AddPolicy("Doctor", policy => policy.RequireRole("Doctor"));
+            options.AddPolicy("Patient", policy => policy.RequireRole("Patient"));
+            options.AddPolicy("Receptionist", policy => policy.RequireRole("Receptionist"));
+        });
 
-            services.AddSingleton<ITokenGenerator, TokenGenerator>()
-             .AddAuthentication(defaultScheme: JwtBearerDefaults.AuthenticationScheme)
-             .AddJwtBearer(opt =>
-                 opt.TokenValidationParameters = new TokenValidationParameters()
-                 {
-                     ValidateIssuer = true,
-                     ValidateLifetime = true,
-                     ValidateIssuerSigningKey = true,
-                     ValidIssuer = jwtSettings.Issuer,
-                     ValidAudience = jwtSettings.Audience,
-                     IssuerSigningKey = new SymmetricSecurityKey(
-                         Encoding.UTF8.GetBytes(jwtSettings.Secret)
-                    )
-                 });
-
-            return services;
-        }
-
-        public static IServiceCollection AddPersistense(this IServiceCollection services, ConfigurationManager configuration)
-        {
-            services.AddDbContext<AuthDbContext>(
-                       options =>
-                       options.UseNpgsql(
-                               configuration.GetConnectionString("AuthorizationDb")));
-            return services;
-        }
+        return services;
     }
 }
