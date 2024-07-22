@@ -19,6 +19,7 @@ public static class DependencyInjection
                 {
                     client.BaseAddress = new Uri(configuration.GetSection("ServicesAPI").Value);
                 });
+        services.AddEmail(configuration);
         return services;
     }    
     public static IServiceCollection AddPersistence(this IServiceCollection services)
@@ -35,4 +36,12 @@ public static class DependencyInjection
         return services;
     }
 
+    public static IServiceCollection AddEmail(this IServiceCollection services, IConfiguration configuration)
+    {
+        var emailSettings = new EmailSettings();
+        configuration.Bind(EmailSettings.SectionName, emailSettings);
+
+        services.AddTransient<IEmailSender, EmailSender>();
+        return services;
+    }
 }

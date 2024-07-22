@@ -5,13 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 public class PatientsController : ApiController
 {
     private readonly IMediator _mediator;
-    private readonly ILogger _logger;
     private readonly IMapper _mapper;
 
-    public PatientsController(IMediator mediator, ILogger logger, IMapper mapper)
+    public PatientsController(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator;
-        _logger = logger;
         _mapper = mapper;
     }
 

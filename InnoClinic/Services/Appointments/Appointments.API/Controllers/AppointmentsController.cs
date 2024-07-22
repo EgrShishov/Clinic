@@ -97,6 +97,4 @@
             rescheduledAppointment => Ok(_mapper.Map<AppointmentHistoryResponse>(rescheduledAppointment)),
             errors => Problem(errors));
     }
-
-
 }
