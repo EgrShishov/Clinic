@@ -1,2 +1,3 @@
-﻿global using Microsoft.Data.SqlClient;
-global using Dapper;
+﻿global using Dapper;
+global using MassTransit;
+global using Microsoft.Data.SqlClient;

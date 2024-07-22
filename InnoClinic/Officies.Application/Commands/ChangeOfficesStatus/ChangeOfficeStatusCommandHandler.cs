@@ -1,6 +1,4 @@
-﻿using Officies.Domain.Common.Errors;
-
-public class ChangeOfficesStatusCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<ChangeOfficesStatusCommand, ErrorOr<Unit>>
+﻿public class ChangeOfficesStatusCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<ChangeOfficesStatusCommand, ErrorOr<Unit>>
 {
     public async Task<ErrorOr<Unit>> Handle(ChangeOfficesStatusCommand request, CancellationToken cancellationToken)
     {
