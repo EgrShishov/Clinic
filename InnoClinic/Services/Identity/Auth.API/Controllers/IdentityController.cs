@@ -1,17 +1,37 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-public class AuthorizationController : ApiController
+public class IdentityController : ApiController
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
     private readonly UserManager<Account> _userManager;
 
-    public AuthorizationController(IMediator mediator, IMapper mapper, UserManager<Account> userManager)
+    public IdentityController(IMediator mediator, IMapper mapper, UserManager<Account> userManager)
     {
         _mediator = mediator;
         _mapper = mapper;
         _userManager = userManager;
+    }
+
+    [HttpGet("verify")]
+    public async Task<IActionResult> VerifyEmail(int id, string link)
+    {
+        var verificationResult = await _mediator.Send(new VerifyEmailCommand(id, link));
+
+        return verificationResult.Match(
+            response => Ok(response),
+            errors => Problem(errors));
+    }
+
+    [HttpGet("account/{id:int}")]
+    public async Task<IActionResult> GetAccountInformation(int id)
+    {
+        var result = await _mediator.Send(new GetAccountByIdQuery(id));
+
+        return result.Match(
+            response => Ok(_mapper.Map<AccountResponse>(response)),
+            errors => Problem(errors));
     }
 
     [HttpPost("sign-in")]
@@ -70,7 +90,7 @@ public class AuthorizationController : ApiController
             return BadRequest(refreshTokenResult.FirstError);
         }
 
-        account.RefreshTokens.Add(request.refreshToken);
+        account.RefreshToken = request.refreshToken;
         await _userManager.UpdateAsync(account);
 
         return refreshTokenResult.Match(
@@ -83,23 +103,27 @@ public class AuthorizationController : ApiController
             errors => Problem(errors));
     }
 
-    [HttpGet("verify")]
-    public async Task<IActionResult> VerifyEmail(string link)
+    [HttpPost("create-account")]
+    public async Task<IActionResult> CreateAccount(CreateAccountRequest request)
     {
-        var verificationResult = await _mediator.Send(new VerifyEmailCommand(link));
+        var id = User.GetUserId();
+        var command = _mapper.Map<CreateAccountCommand>((id, request));
+        var response = await _mediator.Send(command);
 
-        return verificationResult.Match(
-            response => Ok(response),
+        return response.Match(
+            account => Ok(response),
             errors => Problem(errors));
     }
 
-    [HttpGet("account/{id:int}")]
-    public async Task<IActionResult> GetAccountInformation(int id)
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdateAccount(UpdateAccountRequest request)
     {
-        var result = await _mediator.Send(new GetAccountByIdQuery(id));
+        var id = User.GetUserId();
+        var command = _mapper.Map<UpdateAccountCommand>((id, request));
+        var response = await _mediator.Send(command);
 
-        return result.Match(
-            response => Ok(_mapper.Map<AccountResponse>(response)),
+        return response.Match(
+            account => Ok(response),
             errors => Problem(errors));
     }
 }

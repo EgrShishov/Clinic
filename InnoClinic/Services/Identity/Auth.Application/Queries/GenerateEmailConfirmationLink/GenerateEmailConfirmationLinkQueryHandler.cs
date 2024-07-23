@@ -12,7 +12,7 @@ public class GenerateEmailConfirmationLinkQueryHandler(
         var confirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(request.Account);
 
         var baseUrl = configuration["AppSettings:BaseUrl"];
-        var emailConfirmationLink = $"{baseUrl}/api/account/confirm-email?userId={request.Account.Id}&token={Uri.EscapeDataString(confirmationToken)}";
+        var emailConfirmationLink = $"{baseUrl}/confirm-email?AccountId={request.Account.Id}&Token={Uri.EscapeDataString(confirmationToken)}";
         return emailConfirmationLink;
     }
 }

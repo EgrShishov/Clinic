@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/identity")]
 public abstract class ApiController : ControllerBase
 {
     protected IActionResult Problem(List<Error> errors)

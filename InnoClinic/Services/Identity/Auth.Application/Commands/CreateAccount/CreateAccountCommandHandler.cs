@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-public class SignUpCommandHandler(
+public class CreateAccountCommandHandler(
         IMediator mediator,
         IUnitOfWork unitOfWork,
         IEmailSender emailSender,
         UserManager<Account> manager,
         ITokenGenerator tokenGenerator
-        )
-        : IRequestHandler<SignUpCommand, ErrorOr<AuthorizationResponse>>
+        ) : IRequestHandler<CreateAccountCommand, ErrorOr<CreateAccountResponse>>
 {
-    public async Task<ErrorOr<AuthorizationResponse>> Handle(SignUpCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<CreateAccountResponse>> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
     {
         if (await unitOfWork.AccountRepository.EmailExistsAsync(request.Email))
         {
@@ -25,15 +24,12 @@ public class SignUpCommandHandler(
         {
             Email = request.Email,
             PhoneNumber = request.PhoneNumber,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = request.ReceptionistId
         };
 
         var addedAccount = await unitOfWork.AccountRepository.AddAsync(account);
-        var roleResult = await manager.AddToRoleAsync(account, request.Role);
-        if (!roleResult.Succeeded)
-        {
-            return Error.Failure(roleResult.Errors.First().Description);
-        }
+        await manager.AddToRoleAsync(account, request.Role);
 
         var confirmationLink = await mediator.Send(new GenerateEmailConfirmationLinkQuery(account));
         await emailSender.SendEmailAsync(request.Email, "Confirm your email", confirmationLink.Value);
@@ -42,12 +38,17 @@ public class SignUpCommandHandler(
         var refreshToken = tokenGenerator.GenerateRefreshToken(account);
 
         account.RefreshToken = refreshToken;
-        var updatingAccountResult = await manager.UpdateAsync(account);
-        if (!updatingAccountResult.Succeeded)
-        {
-            return Error.Failure(updatingAccountResult.Errors.First().Description);
-        }
+        await manager.UpdateAsync(account);
 
-        return new AuthorizationResponse(accessToken, refreshToken, request.Role);
+        await manager.AddToRoleAsync(account, request.Role);
+
+        return new CreateAccountResponse(
+            addedAccount.PhoneNumber,
+            addedAccount.Email,
+            addedAccount.PhotoId,
+            addedAccount.CreatedAt,
+            addedAccount.CreatedBy,
+            accessToken, 
+            refreshToken);
     }
 }

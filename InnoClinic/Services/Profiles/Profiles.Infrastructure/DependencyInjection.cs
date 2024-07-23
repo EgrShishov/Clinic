@@ -7,6 +7,10 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddPersistence(configuration);
+        services.AddHttpClient<IAccountService, AccountService>(client =>
+        {
+            client.BaseAddress = new Uri(configuration.GetSection("IdentityService").Value);
+        });
         return services;
     }
 

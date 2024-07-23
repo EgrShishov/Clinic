@@ -4,4 +4,4 @@
     int ServiceId,
     int OfficeId,
     DateTime AppointmentDate,
-    TimeSpan TimeSlot)
+    TimeSpan TimeSlot);

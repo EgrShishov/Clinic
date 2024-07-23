@@ -1,1 +1,1 @@
-﻿public record SignUpRequest(string email, string password, string reentered_password);
+﻿public record SignUpRequest(string PhoneNumber, string Email, string Password, string ReenteredPassword);

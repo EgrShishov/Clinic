@@ -2,7 +2,7 @@
 
 public class SignInCommandHandler(
     IMediator mediator,
-    IAccountRepository _accountRepository,
+    IUnitOfWork unitOfWork,
     UserManager<Account> manager,
     IEmailSender emailSender,
     ITokenGenerator tokenService
@@ -11,12 +11,12 @@ public class SignInCommandHandler(
 {
     public async Task<ErrorOr<AuthorizationResponse>> Handle(SignInCommand request, CancellationToken cancellationToken)
     {
-        if (!await _accountRepository.EmailExistsAsync(request.Email))
+        if (!await unitOfWork.AccountRepository.EmailExistsAsync(request.Email))
         {
             return Errors.Authentication.InvalidCredentials;
         }
 
-        var account = await _accountRepository.GetByEmailAsync(request.Email);
+        var account = await unitOfWork.AccountRepository.GetByEmailAsync(request.Email);
 
         var isPasswordValid = await manager.CheckPasswordAsync(account, request.Password);
         if (!isPasswordValid)

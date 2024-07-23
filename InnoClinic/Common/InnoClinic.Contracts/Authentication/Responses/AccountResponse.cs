@@ -1,7 +1,5 @@
-﻿public sealed record AccountResponse(
-        string PhoneNumber,
-        int PhotoId,
-        int CreatedBy,
-        DateTime CreatedAt,
-        int UpdatedBy,
-        DateTime UpdatedAt);
+﻿public record AccountResponse(
+    string Email,
+    string PhoneNumber,
+    DateTime CreatedAt,
+    DateTime UpdatedAt);
