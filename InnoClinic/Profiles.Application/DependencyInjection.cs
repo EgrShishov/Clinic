@@ -13,7 +13,7 @@ public static class DependencyInjection
 
     public static IServiceCollection AddValidation(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssembly(typeof(CreateDoctorCommandValidator).Assembly);
+        services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
         return services;
     }

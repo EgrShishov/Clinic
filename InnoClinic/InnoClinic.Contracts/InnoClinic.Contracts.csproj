@@ -10,4 +10,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Appointments\Requests\" />
+    <Folder Include="Appointments\Responses\" />
+  </ItemGroup>
+
 </Project>

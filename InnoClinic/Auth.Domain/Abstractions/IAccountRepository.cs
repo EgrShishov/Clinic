@@ -1,5 +1,4 @@
-﻿using Auth.Domain.Entities;
-public interface IAccountRepository
+﻿public interface IAccountRepository
 {
     Task<Account> AddAsync(Account account, CancellationToken cancellationToken = default);
     Task DeleteAsync(int id, CancellationToken cancellationToken = default);

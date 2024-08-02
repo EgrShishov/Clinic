@@ -1,4 +1,4 @@
-﻿public class UpdateServiceCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<UpdateServiceCommand, ErrorOr<Service>>
+﻿public class UpdateServiceCommandHandler(IUnitOfWork unitOfWork, IEventBus eventBus) : IRequestHandler<UpdateServiceCommand, ErrorOr<Service>>
 {
     public async Task<ErrorOr<Service>> Handle(UpdateServiceCommand request, CancellationToken cancellationToken)
     {
@@ -16,6 +16,12 @@
 
         await unitOfWork.Services.UpdateServiceAsync(service, cancellationToken);
         await unitOfWork.SaveChangesAsync();
+
+        await eventBus.PublishAsync(new ServiceUpdatedEvent
+        {
+            Id = service.Id,
+            ServiceName = service.ServiceName
+        });
         return service;
     }
 }
