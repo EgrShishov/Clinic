@@ -1,8 +1,11 @@
-﻿public sealed record CreatePatientCommand(
+﻿using Microsoft.AspNetCore.Http;
+
+public sealed record CreatePatientCommand(
+    int AccountId,
     string FirstName,
     string LastName,
     string MiddleName,
     string PhoneNumber,
     DateTime DateOfBirth,
-    byte[] Photo) : IRequest<ErrorOr<Patient>>
+    IFormFile Photo) : IRequest<ErrorOr<CreatePatientResponse>>
 { }

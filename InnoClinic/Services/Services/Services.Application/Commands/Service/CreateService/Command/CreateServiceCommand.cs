@@ -1,5 +1,5 @@
 ﻿public sealed record CreateServiceCommand(
-    int ServiceCategoryId,
+    ServiceCategory ServiceCategory,
     string ServiceName,
     Decimal ServicePrice,
     bool IsActive,

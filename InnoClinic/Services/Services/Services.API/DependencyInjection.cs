@@ -6,10 +6,6 @@
         {
             busConfigurator.SetKebabCaseEndpointNameFormatter();
 
-            busConfigurator.AddConsumer<ServiceCreatedConsumer>();
-            busConfigurator.AddConsumer<ServiceStatusChangedConsumer>();
-            busConfigurator.AddConsumer<ServiceUpdatedConsumer>();
-
             busConfigurator.UsingRabbitMq((context, configurator) =>
             {
                 MessageBrokerSettings settings = context.GetRequiredService<MessageBrokerSettings>();

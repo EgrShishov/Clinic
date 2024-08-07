@@ -16,7 +16,7 @@
         var result = await _mediator.Send(new ViewAppointmentScheduleQuery(id, appointmentDate));
 
         return result.Match(
-            schedule => Ok(_mapper.Map<List<AppointmentHistoryResponse>>(schedule)),
+            schedule => Ok(schedule),
             errors => Problem(errors));
     }
 
@@ -33,7 +33,7 @@
         var result = await _mediator.Send(command);
 
         return result.Match(
-            list => Ok(_mapper.Map<List<AppointmentHistoryResponse>>(list)),
+            list => Ok(list),
             errors => Problem(errors));
     }
 
@@ -44,7 +44,7 @@
         var result = await _mediator.Send(new ViewAppointmentsHistoryQuery(id));
 
         return result.Match(
-            history => Ok(_mapper.Map<List<AppointmentHistoryResponse>>(history)),
+            history => Ok(history),
             errors => Problem(errors));
     }
 
@@ -56,7 +56,7 @@
         var result = await _mediator.Send(command);
 
         return result.Match(
-            appointment => Ok(_mapper.Map<AppointmentHistoryResponse>(appointment)),
+            appointment => Ok(appointment),
             errors => Problem(errors));
     }
 
@@ -65,6 +65,7 @@
     public async Task<IActionResult> ApproveAppointment(int id)
     {
         var result = await _mediator.Send(new ApproveAppointmentCommand(id));
+        
         return result.Match(
             value => Ok(value),
             errors => Problem(errors));
@@ -75,16 +76,22 @@
     public async Task<IActionResult> CancelAppointment(int id)
     {
         var result = await _mediator.Send(new CancelAppointmentCommand(id));
+
         return result.Match(
             value => Ok(value),
             errors => Problem(errors));
     }
 
-    [HttpPost("select-slots")]
+    [HttpPost("select-time")]
     [Authorize(Roles = "Receptionist, Patient")]
     public async Task<IActionResult> SelectDateAndTimeSlot(DateTime appointmentDate, TimeSpan appointmentTime)
     {
-        throw new NotImplementedException();
+        var command = _mapper.Map<SelectDateAndTimeSlotCommand>((appointmentDate, appointmentTime));
+        var result = await _mediator.Send(command);
+
+        return result.Match(
+            isIsuccess => Ok(),
+            errors => Problem(errors));
     }
 
     [HttpPut("reschedule/{id:int}")]
@@ -93,8 +100,9 @@
     {
         var command = _mapper.Map<RescheduleAppointmentCommand>((id, doctorId, appointmentDate, appointmentTime));
         var result = await _mediator.Send(command);
+
         return result.Match(
-            rescheduledAppointment => Ok(_mapper.Map<AppointmentHistoryResponse>(rescheduledAppointment)),
+            rescheduledAppointment => Ok(rescheduledAppointment),
             errors => Problem(errors));
     }
 }

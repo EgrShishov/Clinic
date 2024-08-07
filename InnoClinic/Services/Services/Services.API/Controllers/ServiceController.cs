@@ -18,6 +18,7 @@ public class ServiceController : ApiController
     public async Task<IActionResult> GetAllServices()
     {
         var result = await _mediator.Send(new ViewServicesQuery());
+
         return result.Match(
             services => Ok(_mapper.Map<List<ServiceInfoResponse>>(services)),
             errors => Problem(errors));
@@ -28,6 +29,7 @@ public class ServiceController : ApiController
     public async Task<IActionResult> GetServiceInfo(int id)
     {
         var result = await _mediator.Send(new ViewServicesInfoQuery(id));
+
         return result.Match(
             services => Ok(_mapper.Map<ServiceInfoResponse>(services)),
             errors => Problem(errors));
@@ -39,6 +41,7 @@ public class ServiceController : ApiController
     {
         var command = _mapper.Map<CreateServiceCommand>(request);
         var result = await _mediator.Send(command);
+
         return result.Match(
             services => Ok(_mapper.Map<ServiceInfoResponse>(services)),
             errors => Problem(errors));

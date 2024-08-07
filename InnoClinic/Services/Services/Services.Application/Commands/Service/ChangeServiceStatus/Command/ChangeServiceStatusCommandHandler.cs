@@ -14,18 +14,21 @@
         await unitOfWork.Services.UpdateServiceAsync(service);
         await unitOfWork.SaveChangesAsync();
 
-        await eventBus.PublishAsync(new ServiceStatusChangedEvent
-        {
-            Id = service.Id,
-            ServiceName = service.ServiceName,
-            IsActive = service.IsActive
-        });
 
         var category = await unitOfWork.Categories.GetServiceCategoryByIdAsync(service.ServiceCategoryId);
         if (category is null)
         {
             return Errors.Category.NotFound;
         }
+
+        await eventBus.PublishAsync(
+            new ServiceStatusChangedEvent
+            {
+                Id = service.Id,
+                ServiceName = service.ServiceName,
+                IsActive = service.IsActive
+            },
+            cancellationToken);
 
         return new ServiceInfoResponse(
             service.Id,

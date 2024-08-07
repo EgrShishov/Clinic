@@ -77,9 +77,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Domain", "Services
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Infrastructure", "Services\Services\Services.Infrastructure\Services.Infrastructure.csproj", "{38BADDF1-CA06-4C84-AD84-883D3AD3CABC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Appointments.WorkerHost", "Appointments.WorkerHost\Appointments.WorkerHost.csproj", "{DE5FCE3D-3BE5-4082-98DA-D5328C87A6DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Appointments.WorkerHost", "Appointments.WorkerHost\Appointments.WorkerHost.csproj", "{DE5FCE3D-3BE5-4082-98DA-D5328C87A6DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Appointments.RMQHost", "Appointments.RMQHost\Appointments.RMQHost.csproj", "{18901E8B-419F-4BCD-A671-3F597496EFC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Appointments.RMQHost", "Appointments.RMQHost\Appointments.RMQHost.csproj", "{18901E8B-419F-4BCD-A671-3F597496EFC4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Profiles.RMQHost", "Profiles.RMQHost\Profiles.RMQHost.csproj", "{C57F0618-897B-46B4-A3DE-D467E53FFBC8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Appointments.UnitTests", "Appointments.UnitTests\Appointments.UnitTests.csproj", "{094B41A1-7EAC-49A4-AD36-F42D4902E131}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{522ACCFC-C488-477A-8284-0ED911D87B33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -207,6 +213,18 @@ Global
 		{18901E8B-419F-4BCD-A671-3F597496EFC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18901E8B-419F-4BCD-A671-3F597496EFC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18901E8B-419F-4BCD-A671-3F597496EFC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C57F0618-897B-46B4-A3DE-D467E53FFBC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C57F0618-897B-46B4-A3DE-D467E53FFBC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C57F0618-897B-46B4-A3DE-D467E53FFBC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C57F0618-897B-46B4-A3DE-D467E53FFBC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{094B41A1-7EAC-49A4-AD36-F42D4902E131}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{094B41A1-7EAC-49A4-AD36-F42D4902E131}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{094B41A1-7EAC-49A4-AD36-F42D4902E131}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{094B41A1-7EAC-49A4-AD36-F42D4902E131}.Release|Any CPU.Build.0 = Release|Any CPU
+		{522ACCFC-C488-477A-8284-0ED911D87B33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{522ACCFC-C488-477A-8284-0ED911D87B33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{522ACCFC-C488-477A-8284-0ED911D87B33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{522ACCFC-C488-477A-8284-0ED911D87B33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -248,6 +266,8 @@ Global
 		{38BADDF1-CA06-4C84-AD84-883D3AD3CABC} = {7E8DD6B8-94A9-4654-A9C1-294E5E2D57E8}
 		{DE5FCE3D-3BE5-4082-98DA-D5328C87A6DB} = {1FD00E62-0407-42FE-8D9D-587CECFEE70D}
 		{18901E8B-419F-4BCD-A671-3F597496EFC4} = {1FD00E62-0407-42FE-8D9D-587CECFEE70D}
+		{C57F0618-897B-46B4-A3DE-D467E53FFBC8} = {498CD822-9FC5-488A-BD25-2AEE496B7B8F}
+		{094B41A1-7EAC-49A4-AD36-F42D4902E131} = {1FD00E62-0407-42FE-8D9D-587CECFEE70D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {08B5BF60-6C7C-4644-9E1D-CC43C2DACCAD}

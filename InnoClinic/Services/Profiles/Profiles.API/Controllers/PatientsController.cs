@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Route("api/[controller]")]
 public class PatientsController : ApiController
 {
     private readonly IMediator _mediator;
@@ -11,6 +10,17 @@ public class PatientsController : ApiController
     {
         _mediator = mediator;
         _mapper = mapper;
+    }
+
+    [Authorize(Roles = "Patient")]
+    [HttpPost("link-profile")]
+    public async Task<IActionResult> LinkProfile(int accountId, int profileId)
+    {
+        var result = await _mediator.Send(new LinkPatientToExistingAccountCommand(accountId, profileId));
+
+        return result.Match(
+            success => Ok("Profile linked successfully"),
+            errors => Problem(errors));
     }
 
     [Authorize(Roles = "Patient, Receptionist")]

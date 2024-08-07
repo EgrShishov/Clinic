@@ -1,9 +1,8 @@
 ﻿public class RememberAboutUpcomingAppointmentCommandHandler(
     IUnitOfWork unitOfWork, 
     IEmailSender emailSender,
-    IServiceService serviceService,
-    IProfileService profileService,
-    IAccountService accountService)
+    IProfilesHttpClient profilesHttpClient,
+    IAccountsHttpClient accountsHttpClient)
     : IRequestHandler<RememberAboutUpcomingAppointmentCommand, ErrorOr<Unit>>
 {
     public async Task<ErrorOr<Unit>> Handle(RememberAboutUpcomingAppointmentCommand request, CancellationToken cancellationToken)
@@ -17,27 +16,27 @@
             return Errors.Appointments.NotFound;
         }
 
-        foreach(var appointment in appointments )
+        foreach(var appointment in appointments)
         {
-            var doctor = await profileService.GetDoctorAsync(appointment.DoctorId);
+            var doctor = await profilesHttpClient.GetDoctorAsync(appointment.DoctorId);
             if (doctor == null)
             {
                 return Error.NotFound();
             }            
             
-            var patient = await profileService.GetPatientAsync(appointment.PatientId);
+            var patient = await profilesHttpClient.GetPatientAsync(appointment.PatientId);
             if (patient == null)
             {
                 return Error.NotFound();
             }                
             
-            var patientAccount = await accountService.GetAccountInfoAsync(patient.UserId);
+            var patientAccount = await accountsHttpClient.GetAccountInfoAsync(patient.UserId);
             if (patientAccount == null)
             {
                 return Error.NotFound();
             }            
             
-            var service = await serviceService.GetServiceAsync(appointment.ServiceId);
+            var service = await unitOfWork.ServiceRepository.GetServiceByIdAsync(appointment.ServiceId);
             if (service == null)
             {
                 return Error.NotFound();
@@ -46,7 +45,7 @@
             string DoctorsFullName = $"{doctor.LastName} {doctor.FirstName} {doctor.MiddleName}";
             string PatientsFullName = $"{patient.LastName} {patient.FirstName} {patient.MiddleName}";
 
-            var emailNotificationTemplate = new AppointmentNotificationEmailTemplate
+            var emailNotificationTemplate = new EmailTemplates.AppointmentNotificationEmailTemplate
             {
                 AppointmentDate = appointment.Date,
                 AppointmentTime = appointment.Time,

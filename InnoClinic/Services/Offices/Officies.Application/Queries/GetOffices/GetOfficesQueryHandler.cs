@@ -8,7 +8,7 @@
             return Errors.Offices.NotFound;
         }
 
-        var officesList = new List<OfficeListResponse();
+        var officesList = new List<OfficeListResponse>();
 
         foreach(var office in offices)
         {

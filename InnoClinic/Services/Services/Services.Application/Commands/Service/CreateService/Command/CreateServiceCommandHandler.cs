@@ -7,7 +7,7 @@
         {
             ServiceName = request.ServiceName,
             ServicePrice = request.ServicePrice,
-            ServiceCategoryId = request.ServiceCategoryId,
+            ServiceCategory = request.ServiceCategory,
             IsActive = request.IsActive,
             SpecializationId = request.SpecializationId
         };
@@ -18,20 +18,15 @@
         await eventBus.PublishAsync(new ServiceCreatedEvent
             {
                 Id = newService.Id,
-                ServiceCategoryId = newService.ServiceCategoryId,
-                ServiceName = newService.ServiceName
+                ServiceCategory = newService.ServiceCategory,
+                ServiceName = newService.ServiceName,
+                IsActive = newService.IsActive,
             }, 
             cancellationToken);
 
-        var category = await unitOfWork.Categories.GetServiceCategoryByIdAsync(newService.ServiceCategoryId);
-        if (category is null)
-        {
-            return Errors.Category.NotFound;
-        }
-
         return new ServiceInfoResponse(
             newService.Id,
-            category.CategoryName,
+            newService.ServiceCategory.ToString(),
             newService.ServiceName,
             newService.ServicePrice,
             newService.IsActive);

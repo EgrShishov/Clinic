@@ -4,5 +4,5 @@
         DateTime appointmentDate, 
         TimeSpan startWorkingHours, 
         TimeSpan endWorkingHours, 
-        string serviceCategoryId);
+        ServiceCategory serviceCategory);
 }

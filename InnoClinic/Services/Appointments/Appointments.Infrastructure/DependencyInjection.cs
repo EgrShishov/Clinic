@@ -7,24 +7,20 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddPersistence(configuration)
-                .AddScoped<IProfileService, ProfileService>()
-                .AddTransient<IPDFDocumentGenerator, PDFDodumentGenerator>()
-                .AddHttpClient<IProfileService, ProfileService>(client =>
-                    {
-                        client.BaseAddress = new Uri(configuration.GetSection("ProfilesAPI").Value);
-                    });
+                .AddEmail(configuration)
+                .AddHttpClients(configuration)
+                .AddCaching(configuration)
+                .AddTransient<IPDFDocumentGenerator, PDFDodumentGenerator>();
 
-        services.AddScoped<IServiceService, ServicesService>()
-                .AddHttpClient<IServiceService, ServicesService>(client =>
-                {
-                    client.BaseAddress = new Uri(configuration.GetSection("ServicesAPI").Value);
-                });
-        services.AddEmail(configuration);
         return services;
     }    
     public static IServiceCollection AddPersistence(this IServiceCollection services)
     {
-        services.AddTransient<IUnitOfWork, UnitOfWork>();
+        services.AddTransient<IUnitOfWork, UnitOfWork>()
+                .AddScoped<IAppointmentsRepository, AppointmentsRepository>()
+                .AddScoped<IAppointmentsResultRepository, AppointmentsResultRepository>()
+                .AddScoped<IServiceRepository, ServiceRepository>();
+
         return services;
     }    
     public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
@@ -33,6 +29,7 @@ public static class DependencyInjection
             .AddDbContext<AppointmentsDbContext>(opt =>
                 opt.UseNpgsql(
                     configuration.GetConnectionString("AppointmentsDb")));
+
         return services;
     }
 
@@ -41,7 +38,46 @@ public static class DependencyInjection
         var emailSettings = new EmailSettings();
         configuration.Bind(EmailSettings.SectionName, emailSettings);
 
-        services.AddTransient<IEmailSender, EmailSender>();
+        services.AddSingleton(emailSettings)
+                .AddTransient<IEmailSender, EmailSender>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddHttpClients(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddScoped<IFilesHttpClient, FilesHttpClient>()
+            .AddHttpClient<IFilesHttpClient, FilesHttpClient>(client =>
+            {
+                client.BaseAddress = new Uri(configuration["FilesAPI"]);
+            });
+
+        services.AddScoped<IProfilesHttpClient, ProfilesHttpClient>()
+            .AddHttpClient<IProfilesHttpClient, ProfilesHttpClient>(client =>
+            {
+                client.BaseAddress = new Uri(configuration["ProfilesAPI"]);
+            });
+
+        services.AddScoped<IAccountsHttpClient, AccountHttpClient>()
+            .AddHttpClient<IAccountsHttpClient, AccountHttpClient>(client =>
+            {
+                client.BaseAddress = new Uri(configuration["AccountAPI"]);
+            });
+
+        return services;
+    }
+
+    public static IServiceCollection AddCaching(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddStackExchangeRedisCache(redisOpt =>
+        {
+            string connection = configuration.GetConnectionString("Redis");
+
+            redisOpt.Configuration = connection;
+        });
+
+        services.AddSingleton<ICacheService, CacheService>();
+
         return services;
     }
 }

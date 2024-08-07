@@ -1,8 +1,19 @@
-﻿public class ViewAppointmentsListQueryHandler(IUnitOfWork unitOfWork, IProfileService profileService, IServiceService serviceService) 
+﻿public class ViewAppointmentsListQueryHandler(
+    IUnitOfWork unitOfWork, 
+    IProfilesHttpClient profilesHttpClient,
+    ICacheService cacheService) 
     : IRequestHandler<ViewAppointmentsListQuery, ErrorOr<List<AppointmentListResponse>>>
 {
     public async Task<ErrorOr<List<AppointmentListResponse>>> Handle(ViewAppointmentsListQuery request, CancellationToken cancellationToken)
     {
+        List<AppointmentListResponse>? appointmentsList = await cacheService.
+            GetAsync<List<AppointmentListResponse>>("appointments", cancellationToken);
+
+        if (appointmentsList is not null)
+        {
+            return appointmentsList;
+        }
+
         var appointments = await unitOfWork.AppointmentsRepository.GetAllAsync(cancellationToken)
             .ContinueWith(task =>
             {
@@ -29,22 +40,22 @@
                 return query.ToList();
             });
 
-        var appointmentsList = new List<AppointmentListResponse>();
-
+        var appointmentListResponses = new List<AppointmentListResponse>();
         foreach (var appointment in appointments)
         {
-            var doctor = await profileService.GetDoctorAsync(appointment.DoctorId);
-            var patient = await profileService.GetPatientAsync(appointment.PatientId);
-            var service = await serviceService.GetServiceAsync(appointment.ServiceId);
+            var doctor = await profilesHttpClient.GetDoctorAsync(appointment.DoctorId);
+            var patient = await profilesHttpClient.GetPatientAsync(appointment.PatientId);
+            var service = await unitOfWork.ServiceRepository.GetServiceByIdAsync(appointment.ServiceId);
 
             if (doctor == null || patient == null || service == null)
             {
                 return Error.NotFound();
             }
+
             string doctorFullName = $"{doctor.FirstName} {doctor.LastName} {doctor.MiddleName}";
             string patientFullName = $"{patient.FirstName} {patient.LastName} {patient.MiddleName}";
 
-            appointmentsList.Add(new AppointmentListResponse
+            appointmentListResponses.Add(new AppointmentListResponse
             {
                 AppointmentTime = appointment.Time,
                 DoctorFullName = doctorFullName,
@@ -53,6 +64,10 @@
                 ServiceName = service.ServiceName
             });
         }
+
+        appointmentsList = appointmentListResponses;
+
+        await cacheService.SetAsync("appointments", appointmentsList, cancellationToken);
 
         return appointmentsList;
     }

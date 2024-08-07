@@ -1,9 +1,9 @@
 ﻿public class NotifyAppointmentsResultCreatedCommandHandler(
     IUnitOfWork unitOfWork, 
     IEmailSender emailSender, 
-    IFileService fileService,
-    IProfileService profileService,
-    IAccountService accountService)
+    IFilesHttpClient filesHttpClient,
+    IProfilesHttpClient profilesHttpClient,
+    IAccountsHttpClient accountHttpClient)
     : IRequestHandler<NotifyAppointmentsResultCreatedCommand, ErrorOr<Unit>>
 {
     public async Task<ErrorOr<Unit>> Handle(NotifyAppointmentsResultCreatedCommand request, CancellationToken cancellationToken)
@@ -14,25 +14,25 @@
             return Errors.Results.NotFound;
         }
             
-        var document = await fileService.GetDocumentForResultAsync(request.ResultsId);
+        var document = await filesHttpClient.GetDocumentForResultAsync(request.ResultsId);
         if (document == null)
         {
             return Error.NotFound();
         }        
         
-        var doctor = await profileService.GetDoctorAsync(appointmentResults.DoctorId);
+        var doctor = await profilesHttpClient.GetDoctorAsync(appointmentResults.DoctorId);
         if (doctor == null)
         {
             return Error.NotFound();
         }
 
-        var profile = await profileService.GetPatientAsync(appointmentResults.PatientId);
+        var profile = await profilesHttpClient.GetPatientAsync(appointmentResults.PatientId);
         if (profile == null)
         {
             return Error.NotFound();
         }
 
-        var patientAccount = await accountService.GetAccountInfoAsync(profile.UserId);
+        var patientAccount = await accountHttpClient.GetAccountInfoAsync(profile.UserId);
         if (patientAccount == null)
         {
             return Error.NotFound();

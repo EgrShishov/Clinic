@@ -1,10 +1,12 @@
-﻿public sealed record GeneratePDFResultsRequest(
-    DateTime Date,
-    string PatientName,
-    DateTime DateOfBirth,
-    string DoctorName,
-    string Specialization,
-    string ServiceName,
-    string Complaints,
-    string Conclusion,
-    string Recommendations);
+﻿public class GeneratePDFResultsRequest
+{
+    public DateTime Date { get; init; }
+    public string PatientName { get; init; }
+    public DateTime DateOfBirth { get; init; }
+    public string DoctorName { get; init; }
+    public string Specialization { get; init; }
+    public string ServiceName { get; init; }
+    public string Complaints { get; init; }
+    public string Conclusion { get; init; }
+    public string Recommendations { get; init; }
+}

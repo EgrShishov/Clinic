@@ -12,7 +12,9 @@ public static class DependencyInjection
     } 
     public static IServiceCollection AddPersistence(this IServiceCollection services)
     {
-        services.AddTransient<IUnitOfWork, UnitOfWork>();
+        services.AddTransient<IUnitOfWork, UnitOfWork>()
+                .AddScoped<IServicesRepository, ServicesRepository>()
+                .AddScoped<ISpecializationsRepository, SpecializationsRepository>();
         return services;
     } 
     public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)

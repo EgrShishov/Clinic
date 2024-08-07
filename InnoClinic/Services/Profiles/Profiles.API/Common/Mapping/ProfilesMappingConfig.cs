@@ -11,6 +11,7 @@
             .Map(dest => dest.FirstName, src => src.request.FirstName)
             .Map(dest => dest.LastName, src => src.request.LastName)
             .Map(dest => dest.MiddleName, src => src.request.MiddleName)
+            .Map(dest => dest.CreatedBy, src => src.request.CreatedBy)
             //.Map(dest => dest, src => src.request.Email)
             .Map(dest => dest.SpecializationId, src => src.request.SpecializationId)
             .Map(dest => dest.Status, src => src.request.Status);

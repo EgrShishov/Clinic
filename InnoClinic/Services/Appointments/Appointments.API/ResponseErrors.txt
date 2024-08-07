@@ -1,0 +1,258 @@
+Registered model binder providers, in the following order: ["Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BinderTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ServicesModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.HeaderModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FloatingPointTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.EnumTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DateTimeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.SimpleTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.TryParseModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CancellationTokenModelBinderProvider"]
+Hosting starting
+Now listening on: "https://localhost:7136"
+Now listening on: "http://localhost:5062"
+Loaded hosting startup assembly "Appointments.API"
+Loaded hosting startup assembly "Microsoft.WebTools.ApiEndpointDiscovery"
+Loaded hosting startup assembly "Microsoft.AspNetCore.Watch.BrowserRefresh"
+Loaded hosting startup assembly "Microsoft.WebTools.BrowserLink.Net"
+Connection id ""0HN5IAKHN7VRN"" accepted.
+Connection id ""0HN5IAKHN7VRO"" accepted.
+Connection id ""0HN5IAKHN7VRN"" started.
+Connection id ""0HN5IAKHN7VRO"" started.
+Application started. Press Ctrl+C to shut down.
+Hosting environment: "Development"
+Content root path: "C:\InnoClinic\InnoClinic\Services\Appointments\Appointments.API"
+Hosting started
+Connection id ""0HN5IAKHN7VRN"" received FIN.
+Connection id ""0HN5IAKHN7VRO"" received FIN.
+Failed to authenticate HTTPS connection.
+System.IO.IOException: Received an unexpected EOF or 0 bytes from the transport stream.
+   at System.Net.Security.SslStream.ReceiveHandshakeFrameAsync[TIOAdapter](CancellationToken cancellationToken)
+   at System.Net.Security.SslStream.ForceAuthenticationAsync[TIOAdapter](Boolean receiveFirst, Byte[] reAuthenticationData, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Https.Internal.HttpsConnectionMiddleware.OnConnectionAsync(ConnectionContext context)
+Failed to authenticate HTTPS connection.
+System.IO.IOException: Received an unexpected EOF or 0 bytes from the transport stream.
+   at System.Net.Security.SslStream.ReceiveHandshakeFrameAsync[TIOAdapter](CancellationToken cancellationToken)
+   at System.Net.Security.SslStream.ForceAuthenticationAsync[TIOAdapter](Boolean receiveFirst, Byte[] reAuthenticationData, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Https.Internal.HttpsConnectionMiddleware.OnConnectionAsync(ConnectionContext context)
+Connection id ""0HN5IAKHN7VRO"" stopped.
+Connection id ""0HN5IAKHN7VRN"" stopped.
+Connection id ""0HN5IAKHN7VRN"" sending FIN because: ""The Socket transport's send loop completed gracefully.""
+Connection id ""0HN5IAKHN7VRO"" sending FIN because: ""The Socket transport's send loop completed gracefully.""
+Connection id ""0HN5IAKHN7VRP"" accepted.
+Connection id ""0HN5IAKHN7VRP"" started.
+Connection "0HN5IAKHN7VRP" established using the following protocol: Tls13
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger""" - null null
+Wildcard detected, all requests with hosts will be allowed.
+No candidates found for the request path '"/swagger"'
+Request did not match any endpoints
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger""" - 301 0 null 301.4417ms
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/index.html""" - null null
+No candidates found for the request path '"/swagger/index.html"'
+Request did not match any endpoints
+Response markup is scheduled to include Browser Link script injection.
+Response markup is scheduled to include browser refresh script injection.
+Response markup was updated to include Browser Link script injection.
+Response markup was updated to include browser refresh script injection.
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/index.html""" - 200 null "text/html;charset=utf-8" 145.5431ms
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/swagger-ui.css""" - null null
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/index.css""" - null null
+No candidates found for the request path '"/swagger/swagger-ui.css"'
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/swagger-ui-bundle.js""" - null null
+No candidates found for the request path '"/swagger/index.css"'
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/swagger-ui-standalone-preset.js""" - null null
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/index.js""" - null null
+Request did not match any endpoints
+No candidates found for the request path '"/swagger/swagger-ui-bundle.js"'
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/_vs/browserLink""" - null null
+Request did not match any endpoints
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/_framework/aspnetcore-browser-refresh.js""" - null null
+No candidates found for the request path '"/swagger/swagger-ui-standalone-preset.js"'
+No candidates found for the request path '"/swagger/index.js"'
+Request did not match any endpoints
+Request did not match any endpoints
+Sending file. Request path: '"/index.css"'. Physical path: '"N/A"'
+Request did not match any endpoints
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/index.css""" - 200 202 "text/css" 37.8745ms
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/index.js""" - 200 null "application/javascript;charset=utf-8" 32.8555ms
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/_framework/aspnetcore-browser-refresh.js""" - 200 13768 "application/javascript; charset=utf-8" 28.4344ms
+Sending file. Request path: '"/swagger-ui.css"'. Physical path: '"N/A"'
+Sending file. Request path: '"/swagger-ui-standalone-preset.js"'. Physical path: '"N/A"'
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/swagger-ui.css""" - 200 152034 "text/css" 61.2382ms
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/swagger-ui-standalone-preset.js""" - 200 230293 "text/javascript" 54.2107ms
+Sending file. Request path: '"/swagger-ui-bundle.js"'. Physical path: '"N/A"'
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/swagger-ui-bundle.js""" - 200 1452753 "text/javascript" 81.6884ms
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/_vs/browserLink""" - 200 null "text/javascript; charset=UTF-8" 77.3574ms
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/favicon-32x32.png""" - null null
+No candidates found for the request path '"/swagger/favicon-32x32.png"'
+Request did not match any endpoints
+Sending file. Request path: '"/favicon-32x32.png"'. Physical path: '"N/A"'
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/favicon-32x32.png""" - 200 628 "image/png" 15.1629ms
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/v1/swagger.json""" - null null
+No candidates found for the request path '"/swagger/v1/swagger.json"'
+Request did not match any endpoints
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/v1/swagger.json""" - 200 null "application/json;charset=utf-8" 246.1129ms
+Connection id ""0HN5IAKHN7VRP"" received FIN.
+Connection id ""0HN5IAKHN7VRP"" is closing.
+The connection queue processing loop for "0HN5IAKHN7VRP" completed.
+Connection id ""0HN5IAKHN7VRP"" is closed. The last processed stream ID was 35.
+Connection id ""0HN5IAKHN7VRP"" sending FIN because: ""The Socket transport's send loop completed gracefully.""
+Connection id ""0HN5IAKHN7VRP"" stopped.
+Registered model binder providers, in the following order: ["Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BinderTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ServicesModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.HeaderModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FloatingPointTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.EnumTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DateTimeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.SimpleTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.TryParseModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CancellationTokenModelBinderProvider"]
+Hosting starting
+Now listening on: "https://localhost:7136"
+Now listening on: "http://localhost:5062"
+Loaded hosting startup assembly "Appointments.API"
+Loaded hosting startup assembly "Microsoft.WebTools.ApiEndpointDiscovery"
+Loaded hosting startup assembly "Microsoft.AspNetCore.Watch.BrowserRefresh"
+Loaded hosting startup assembly "Microsoft.WebTools.BrowserLink.Net"
+Application started. Press Ctrl+C to shut down.
+Hosting environment: "Development"
+Content root path: "C:\InnoClinic\InnoClinic\Services\Appointments\Appointments.API"
+Hosting started
+Connection id ""0HN5IAOIHL81C"" accepted.
+Connection id ""0HN5IAOIHL81C"" started.
+Connection id ""0HN5IAOIHL81D"" accepted.
+Connection id ""0HN5IAOIHL81D"" started.
+Connection id ""0HN5IAOIHL81D"" received FIN.
+Connection id ""0HN5IAOIHL81C"" received FIN.
+Failed to authenticate HTTPS connection.
+System.IO.IOException: Received an unexpected EOF or 0 bytes from the transport stream.
+   at System.Net.Security.SslStream.ReceiveHandshakeFrameAsync[TIOAdapter](CancellationToken cancellationToken)
+   at System.Net.Security.SslStream.ForceAuthenticationAsync[TIOAdapter](Boolean receiveFirst, Byte[] reAuthenticationData, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Https.Internal.HttpsConnectionMiddleware.OnConnectionAsync(ConnectionContext context)
+Failed to authenticate HTTPS connection.
+System.IO.IOException: Received an unexpected EOF or 0 bytes from the transport stream.
+   at System.Net.Security.SslStream.ReceiveHandshakeFrameAsync[TIOAdapter](CancellationToken cancellationToken)
+   at System.Net.Security.SslStream.ForceAuthenticationAsync[TIOAdapter](Boolean receiveFirst, Byte[] reAuthenticationData, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Https.Internal.HttpsConnectionMiddleware.OnConnectionAsync(ConnectionContext context)
+Connection id ""0HN5IAOIHL81E"" accepted.
+Connection id ""0HN5IAOIHL81D"" stopped.
+Connection id ""0HN5IAOIHL81C"" stopped.
+Connection id ""0HN5IAOIHL81E"" started.
+Connection id ""0HN5IAOIHL81C"" sending FIN because: ""The Socket transport's send loop completed gracefully.""
+Connection id ""0HN5IAOIHL81D"" sending FIN because: ""The Socket transport's send loop completed gracefully.""
+Connection "0HN5IAOIHL81E" established using the following protocol: Tls13
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/index.html""" - null null
+Wildcard detected, all requests with hosts will be allowed.
+No candidates found for the request path '"/swagger/index.html"'
+Request did not match any endpoints
+Response markup is scheduled to include Browser Link script injection.
+Response markup is scheduled to include browser refresh script injection.
+Response markup was updated to include Browser Link script injection.
+Response markup was updated to include browser refresh script injection.
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/index.html""" - 200 null "text/html;charset=utf-8" 320.282ms
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/_framework/aspnetcore-browser-refresh.js""" - null null
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/swagger-ui-standalone-preset.js""" - null null
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/_vs/browserLink""" - null null
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/index.js""" - null null
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/_framework/aspnetcore-browser-refresh.js""" - 200 13768 "application/javascript; charset=utf-8" 17.5583ms
+No candidates found for the request path '"/swagger/swagger-ui-standalone-preset.js"'
+No candidates found for the request path '"/swagger/index.js"'
+Request did not match any endpoints
+Request did not match any endpoints
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/index.js""" - 200 null "application/javascript;charset=utf-8" 40.7721ms
+The file transmission was cancelled
+System.OperationCanceledException: The operation was canceled.
+   at System.Threading.CancellationToken.ThrowOperationCanceledException()
+   at System.Threading.CancellationToken.ThrowIfCancellationRequested()
+   at Microsoft.AspNetCore.Http.SendFileResponseExtensions.SendFileAsyncCore(HttpResponse response, IFileInfo file, Int64 offset, Nullable`1 count, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.SendFileResponseExtensions.SendFileAsyncCore(HttpResponse response, IFileInfo file, Int64 offset, Nullable`1 count, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.StaticFiles.StaticFileContext.SendAsync()
+Sending file. Request path: '"/swagger-ui-standalone-preset.js"'. Physical path: '"N/A"'
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/swagger-ui-standalone-preset.js""" - 499 230293 "text/javascript" 65.1407ms
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/_vs/browserLink""" - 200 null "text/javascript; charset=UTF-8" 66.3981ms
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/favicon-32x32.png""" - null null
+No candidates found for the request path '"/swagger/favicon-32x32.png"'
+Request did not match any endpoints
+The file transmission was cancelled
+System.OperationCanceledException: The operation was canceled.
+   at System.Threading.CancellationToken.ThrowOperationCanceledException()
+   at System.Threading.CancellationToken.ThrowIfCancellationRequested()
+   at Microsoft.AspNetCore.Http.SendFileResponseExtensions.SendFileAsyncCore(HttpResponse response, IFileInfo file, Int64 offset, Nullable`1 count, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.SendFileResponseExtensions.SendFileAsyncCore(HttpResponse response, IFileInfo file, Int64 offset, Nullable`1 count, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.StaticFiles.StaticFileContext.SendAsync()
+Sending file. Request path: '"/favicon-32x32.png"'. Physical path: '"N/A"'
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/favicon-32x32.png""" - 499 628 "image/png" 20.8258ms
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/v1/swagger.json""" - null null
+No candidates found for the request path '"/swagger/v1/swagger.json"'
+Request did not match any endpoints
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/v1/swagger.json""" - 200 null "application/json;charset=utf-8" 163.4313ms
+Connection id ""0HN5IAOIHL81E"" received FIN.
+Connection id ""0HN5IAOIHL81E"" is closing.
+The connection queue processing loop for "0HN5IAOIHL81E" completed.
+Connection id ""0HN5IAOIHL81E"" is closed. The last processed stream ID was 27.
+Connection id ""0HN5IAOIHL81E"" sending FIN because: ""The Socket transport's send loop completed gracefully.""
+Connection id ""0HN5IAOIHL81E"" stopped.
+Registered model binder providers, in the following order: ["Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BinderTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ServicesModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.HeaderModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FloatingPointTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.EnumTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DateTimeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.SimpleTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.TryParseModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CancellationTokenModelBinderProvider"]
+Hosting starting
+Now listening on: "https://localhost:7136"
+Now listening on: "http://localhost:5062"
+Loaded hosting startup assembly "Appointments.API"
+Loaded hosting startup assembly "Microsoft.WebTools.ApiEndpointDiscovery"
+Loaded hosting startup assembly "Microsoft.AspNetCore.Watch.BrowserRefresh"
+Loaded hosting startup assembly "Microsoft.WebTools.BrowserLink.Net"
+Application started. Press Ctrl+C to shut down.
+Hosting environment: "Development"
+Content root path: "C:\InnoClinic\InnoClinic\Services\Appointments\Appointments.API"
+Hosting started
+Connection id ""0HN5LCVLCJ8RD"" accepted.
+Connection id ""0HN5LCVLCJ8RD"" started.
+Connection id ""0HN5LCVLCJ8RD"" received FIN.
+Failed to authenticate HTTPS connection.
+System.IO.IOException: Received an unexpected EOF or 0 bytes from the transport stream.
+   at System.Net.Security.SslStream.ReceiveHandshakeFrameAsync[TIOAdapter](CancellationToken cancellationToken)
+   at System.Net.Security.SslStream.ForceAuthenticationAsync[TIOAdapter](Boolean receiveFirst, Byte[] reAuthenticationData, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Https.Internal.HttpsConnectionMiddleware.OnConnectionAsync(ConnectionContext context)
+Connection id ""0HN5LCVLCJ8RD"" stopped.
+Connection id ""0HN5LCVLCJ8RD"" sending FIN because: ""The Socket transport's send loop completed gracefully.""
+Connection id ""0HN5LCVLCJ8RE"" accepted.
+Connection id ""0HN5LCVLCJ8RE"" started.
+Connection "0HN5LCVLCJ8RE" established using the following protocol: Tls13
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger""" - null null
+Wildcard detected, all requests with hosts will be allowed.
+No candidates found for the request path '"/swagger"'
+Request did not match any endpoints
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger""" - 301 0 null 830.5996ms
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/index.html""" - null null
+No candidates found for the request path '"/swagger/index.html"'
+Request did not match any endpoints
+Response markup is scheduled to include Browser Link script injection.
+Response markup is scheduled to include browser refresh script injection.
+Response markup was updated to include Browser Link script injection.
+Response markup was updated to include browser refresh script injection.
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/index.html""" - 200 null "text/html;charset=utf-8" 199.7072ms
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/swagger-ui.css""" - null null
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/swagger-ui-bundle.js""" - null null
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/index.css""" - null null
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/swagger-ui-standalone-preset.js""" - null null
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/index.js""" - null null
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/_vs/browserLink""" - null null
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/_framework/aspnetcore-browser-refresh.js""" - null null
+No candidates found for the request path '"/swagger/swagger-ui.css"'
+No candidates found for the request path '"/swagger/index.css"'
+No candidates found for the request path '"/swagger/index.js"'
+Request did not match any endpoints
+Request did not match any endpoints
+Request did not match any endpoints
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/_framework/aspnetcore-browser-refresh.js""" - 200 13768 "application/javascript; charset=utf-8" 51.0358ms
+No candidates found for the request path '"/swagger/swagger-ui-standalone-preset.js"'
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/index.js""" - 200 null "application/javascript;charset=utf-8" 1218.5378ms
+Sending file. Request path: '"/index.css"'. Physical path: '"N/A"'
+No candidates found for the request path '"/swagger/swagger-ui-bundle.js"'
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/index.css""" - 200 202 "text/css" 1266.4015ms
+Request did not match any endpoints
+Request did not match any endpoints
+Sending file. Request path: '"/swagger-ui.css"'. Physical path: '"N/A"'
+Sending file. Request path: '"/swagger-ui-standalone-preset.js"'. Physical path: '"N/A"'
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/swagger-ui.css""" - 200 152034 "text/css" 1315.8842ms
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/swagger-ui-standalone-preset.js""" - 200 230293 "text/javascript" 1318.7448ms
+Sending file. Request path: '"/swagger-ui-bundle.js"'. Physical path: '"N/A"'
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/swagger-ui-bundle.js""" - 200 1452753 "text/javascript" 1363.4328ms
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/_vs/browserLink""" - 200 null "text/javascript; charset=UTF-8" 1403.4094ms
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/favicon-32x32.png""" - null null
+No candidates found for the request path '"/swagger/favicon-32x32.png"'
+Request did not match any endpoints
+Sending file. Request path: '"/favicon-32x32.png"'. Physical path: '"N/A"'
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/favicon-32x32.png""" - 200 628 "image/png" 27.6764ms
+Request starting "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/v1/swagger.json""" - null null
+No candidates found for the request path '"/swagger/v1/swagger.json"'
+Request did not match any endpoints
+Request finished "HTTP/2" "GET" "https"://"localhost:7136""""/swagger/v1/swagger.json""" - 200 null "application/json;charset=utf-8" 384.0607ms
+Connection id ""0HN5LCVLCJ8RE"" received FIN.
+Connection id ""0HN5LCVLCJ8RE"" is closing.
+The connection queue processing loop for "0HN5LCVLCJ8RE" completed.
+Connection id ""0HN5LCVLCJ8RE"" is closed. The last processed stream ID was 35.
+Connection id ""0HN5LCVLCJ8RE"" sending FIN because: ""The Socket transport's send loop completed gracefully.""
+Connection id ""0HN5LCVLCJ8RE"" stopped.

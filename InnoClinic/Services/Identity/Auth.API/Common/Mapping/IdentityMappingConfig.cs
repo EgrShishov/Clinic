@@ -3,18 +3,20 @@
     public void Register(TypeAdapterConfig config)
     {
         config.NewConfig<RefreshTokenRequest, RefreshTokenCommand>()
-            .Map(dest => dest.RefreshToken, src => src.refreshToken)
-            .Map(dest => dest.AccessToken, src => src.accessToken);
+            .Map(dest => dest.RefreshToken, src => src.RefreshToken)
+            .Map(dest => dest.AccessToken, src => src.AccessToken);
 
         config.NewConfig<SignInRequest, SignInCommand>()
-            .Map(dest => dest.Role, src => src.role)
-            .Map(dest => dest.Email, src => src.email)
-            .Map(dest => dest.Password, src => src.password);
+            .Map(dest => dest.Role, src => src.Role)
+            .Map(dest => dest.Email, src => src.Email)
+            .Map(dest => dest.Password, src => src.Password);
 
         config.NewConfig<SignUpRequest, SignUpCommand>()
-            .Map(dest => dest.Role, src => src.role)
-            .Map(dest => dest.Email, src => src.email)
-            .Map(dest => dest.Password, src => src.password)
-            .Map(dest => dest.ReenteredPassword, src => src.reentered_password);
+            .Map(dest => dest.Role, src => src.Role)
+            .Map(dest => dest.Email, src => src.Email)
+            .Map(dest => dest.Password, src => src.Password)
+            .Map(dest => dest.PhoneNumber, src => src.PhoneNumber)
+            .Map(dest => dest.CreatedBy, src => src.CreatedBy)
+            .Map(dest => dest.ReenteredPassword, src => src.ReenteredPassword);
     }
 }

@@ -10,10 +10,10 @@ public class EmailSender(EmailSettings emailSettings) : IEmailSender
         smtp.Authenticate(emailSettings.EmailAddress, emailSettings.Password);
 
         var email = new MimeMessage();
-        email.From.Add(MailboxAddress.Parse(emailSettings.Host));
+        email.From.Add(MailboxAddress.Parse(emailSettings.EmailAddress));
         email.To.Add(new MailboxAddress("", to));
         email.Subject = subject;
-        BodyBuilder messageBody = new BodyBuilder();
+        BodyBuilder messageBody = new BodyBuilder();    
         messageBody.HtmlBody = body;
 
         email.Body = messageBody.ToMessageBody();

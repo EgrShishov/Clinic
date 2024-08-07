@@ -1,6 +1,6 @@
 ﻿public sealed record UpdateServiceCommand(
     int Id, 
-    int ServiceCategoryId,
+    ServiceCategory ServiceCategory,
     string ServiceName,
     Decimal ServicePrice,
     bool IsActive) : IRequest<ErrorOr<ServiceInfoResponse>>

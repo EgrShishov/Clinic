@@ -1,10 +1,25 @@
-﻿public class SelectDateAndTimeSlotCommandHandler(IUnitOfWork unitOfWork, ITimeSlotsGenerator timeSlotGenerator) 
-    : IRequestHandler<SelectDateAndTimeSlotCommand, ErrorOr<List<TimeSlot>>>
+﻿public class SelectDateAndTimeSlotCommandHandler(
+    IUnitOfWork unitOfWork, 
+    ITimeSlotsGenerator timeSlotGenerator) 
+    : IRequestHandler<SelectDateAndTimeSlotCommand, ErrorOr<List<TimeSlotResponse>>>
 {
-    public async Task<ErrorOr<List<TimeSlot>>> Handle(SelectDateAndTimeSlotCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<List<TimeSlotResponse>>> Handle(SelectDateAndTimeSlotCommand request, CancellationToken cancellationToken)
     {
-        var appointments = await unitOfWork.AppointmentsRepository.ListAsync(a => a.Date ==  request.AppointmentDate.Date);
+        var service = await unitOfWork.ServiceRepository.GetServiceByIdAsync(request.ServiceId);
 
-        return Error.NotFound();
+        if (service is null)
+        {
+            return Error.NotFound();
+        }
+
+        var avaibaleSlots = await timeSlotGenerator
+            .GenerateSlots(request.AppointmentDate, TimeSpan.FromHours(8), TimeSpan.FromHours(17), service.ServiceCategory);
+
+        if (!avaibaleSlots.Any())
+        {
+            return Error.NotFound();
+        }
+
+        return avaibaleSlots;
     }
 }

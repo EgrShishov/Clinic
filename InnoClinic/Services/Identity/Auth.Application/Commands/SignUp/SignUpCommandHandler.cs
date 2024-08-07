@@ -2,7 +2,7 @@
 
 public class SignUpCommandHandler(
         IMediator mediator,
-        IAccountRepository _accountRepository,
+        IUnitOfWork unitOfWork,
         IEmailSender emailSender,
         UserManager<Account> manager,
         ITokenGenerator tokenGenerator
@@ -11,7 +11,7 @@ public class SignUpCommandHandler(
 {
     public async Task<ErrorOr<AuthorizationResponse>> Handle(SignUpCommand request, CancellationToken cancellationToken)
     {
-        if (await _accountRepository.EmailExistsAsync(request.Email))
+        if (await unitOfWork.AccountRepository.EmailExistsAsync(request.Email))
         {
             return Errors.Authentication.DuplicateEmail;
         }
@@ -25,13 +25,27 @@ public class SignUpCommandHandler(
         {
             Email = request.Email,
             CreatedAt = DateTime.UtcNow,
+            CreatedBy = request.CreatedBy,
+            UserName = request.Email,
+            PhoneNumber = request.PhoneNumber,
+            PhotoUrl = ""
         };
 
-        var addedAccount = await _accountRepository.AddAsync(account);
+        var identityResult = await manager.CreateAsync(account, request.Password);
+        if (!identityResult.Succeeded)
+        {
+            return Errors.Authentication.GenerationFailed;
+        }
+
         await manager.AddToRoleAsync(account, request.Role);
 
-        var confirmationLink = await mediator.Send(new GenerateEmailConfirmationLinkQuery(account));
-        await emailSender.SendEmailAsync(request.Email, "Confirm your email", confirmationLink.Value);
+        var confirmationLink = await mediator.Send(new GenerateEmailConfirmationLinkQuery(account.Id));
+        var emailTemplate = new EmailTemplates.EmailConfirmationLinkTemplate
+        {
+            ConfirmationLink = confirmationLink.Value
+        };
+
+        await emailSender.SendEmailAsync(request.Email, "Confirm your email", emailTemplate.GetContent());
 
         var accessToken = tokenGenerator.GenerateAccessToken(account);
         var refreshToken = tokenGenerator.GenerateRefreshToken(account);

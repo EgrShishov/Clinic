@@ -16,6 +16,10 @@
 
         public static Error InvalidPhoneNumber => Error.Validation(
             code: "Patient.InvalidPhoneNumber",
-            description: "The phone number provided is invalid.");
+            description: "The phone number provided is invalid.");        
+        
+        public static Error AlreadyLinked => Error.Conflict(
+            code: "Patient.ProfileAlreadyLinked",
+            description: "Profile is already linked to an account.");
     }
 }
