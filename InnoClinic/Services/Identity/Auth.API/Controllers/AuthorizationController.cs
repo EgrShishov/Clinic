@@ -5,13 +5,19 @@ public class AuthorizationController : ApiController
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
+    private readonly IConfiguration _config;
     private readonly UserManager<Account> _userManager;
 
-    public AuthorizationController(IMediator mediator, IMapper mapper, UserManager<Account> userManager)
+    public AuthorizationController(
+        IMediator mediator, 
+        IMapper mapper, 
+        UserManager<Account> userManager, 
+        IConfiguration config)
     {
         _mediator = mediator;
         _mapper = mapper;
         _userManager = userManager;
+        _config = config;
     }
 
     [HttpPost("sign-in")]
@@ -23,9 +29,9 @@ public class AuthorizationController : ApiController
         return signInResult.Match(
             response => 
             {
-                Response.Cookies.Append("access", response.accessToken);
-                Response.Cookies.Append("refresh", response.refreshToken);
-                return Ok(_mapper.Map<AuthorizationResponse>(response));
+                Response.Cookies.Append("access", response.AccessToken);
+                Response.Cookies.Append("refresh", response.RefreshToken);
+                return Ok(response);
             },
             errors => Problem(errors));
     }
@@ -39,8 +45,8 @@ public class AuthorizationController : ApiController
         return signUpResult.Match(
             response => 
             {
-                Response.Cookies.Append("access", response.accessToken);
-                Response.Cookies.Append("refresh", response.refreshToken);
+                Response.Cookies.Append("access", response.AccessToken);
+                Response.Cookies.Append("refresh", response.RefreshToken);
                 return Ok(_mapper.Map<AuthorizationResponse>(response));
             },
             errors => Problem(errors));
@@ -64,13 +70,13 @@ public class AuthorizationController : ApiController
             return NotFound();
         }
 
-        var refreshTokenResult = await _mediator.Send(new RefreshTokenCommand(request.accessToken, request.refreshToken));
+        var refreshTokenResult = await _mediator.Send(new RefreshTokenCommand(request.AccessToken, request.RefreshToken));
         if (refreshTokenResult.IsError)
         {
             return BadRequest(refreshTokenResult.FirstError);
         }
 
-        account.RefreshTokens.Add(request.refreshToken);
+        account.RefreshToken = request.RefreshToken;
         await _userManager.UpdateAsync(account);
 
         return refreshTokenResult.Match(
@@ -78,7 +84,7 @@ public class AuthorizationController : ApiController
             {
                 Response.Cookies.Delete("access");
                 Response.Cookies.Append("access", response.accessToken);
-                return Ok(_mapper.Map<AuthorizationResponse>(response));
+                return Ok(response);
             },
             errors => Problem(errors));
     }
@@ -86,15 +92,20 @@ public class AuthorizationController : ApiController
     [HttpGet("verify")]
     public async Task<IActionResult> VerifyEmail(string link)
     {
-        var verificationResult = await _mediator.Send(new VerifyEmailCommand(link));
+        var id = User.GetUserId();
+        var verificationResult = await _mediator.Send(new VerifyEmailCommand(id.ToString(), link));
 
         return verificationResult.Match(
-            response => Ok(response),
+            response =>
+            {
+                var role = User.GetRole();
+                return Redirect($"{_config["ProfilesAPI"]}/{role}/create-profile"); //redirect to create profile page
+            },
             errors => Problem(errors));
     }
 
     [HttpGet("account/{id:int}")]
-    public async Task<IActionResult> GetAccountInformation(int id)
+    public async Task<IActionResult> GetAccount(int id)
     {
         var result = await _mediator.Send(new GetAccountByIdQuery(id));
 

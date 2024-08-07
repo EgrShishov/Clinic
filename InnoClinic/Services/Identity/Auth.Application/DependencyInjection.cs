@@ -19,7 +19,9 @@ public static class DependencyInjection
         JwtSettings jwtSettings = new JwtSettings();
         configuration.Bind(JwtSettings.SectionName, jwtSettings);
 
-        services.AddSingleton<ITokenGenerator, TokenGenerator>()
+
+        services.AddSingleton(jwtSettings)
+            .AddSingleton<ITokenGenerator, TokenGenerator>()
             .AddAuthentication(defaultScheme: JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(opt =>
                 opt.TokenValidationParameters = new TokenValidationParameters()

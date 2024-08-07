@@ -1,4 +1,8 @@
-﻿public class CreateReceptionistCommandHandler(IUnitOfWork unitOfWork, IEmailSender emailService, IIdentityService identityService) 
+﻿public class CreateReceptionistCommandHandler(
+    IUnitOfWork unitOfWork, 
+    IPasswordGenerator passwordGenerator,
+    IEmailSender emailService, 
+    IAccountHttpClient accountHttpClient) 
     : IRequestHandler<CreateReceptionistCommand, ErrorOr<CreateReceptionistProfileResponse>>
 {
     public async Task<ErrorOr<CreateReceptionistProfileResponse>> Handle(CreateReceptionistCommand request, CancellationToken cancellationToken)
@@ -15,18 +19,29 @@
                 OfficeId = request.OfficeId
             };
 
-            /* receptionist.Password = GeneratePassword(); throw identity framework? and also email verify
-                receptionist.IsEmailVerified = true;*/
-                
-            // await emailService.SendEmailWithCredentialsAsync(receptionist.Email, receptionist.Password);
+            var password = passwordGenerator.GeneratePassword(15, 5);
+            var addedAccount = await accountHttpClient.CreateAccount(
+                new CreateAccountRequest
+                {
+                    Password = password,
+                    Email = request.Email,
+                    Photo = request.Photo,
+                    Role = nameof(Patient)
+                });
+
+            await emailService.SendEmailWithCredentialsAsync(request.Email, password);
 
             var newReceptionist = await unitOfWork.ReceptionistsRepository.AddReceptionistAsync(receptionist);
+
             await unitOfWork.CompleteAsync(cancellationToken);
             await unitOfWork.CommitTransactionAsync(cancellationToken);
-            return new CreateReceptionistProfileResponse(
-                newReceptionist.Id,
-                newReceptionist.AccountId,
-                request.Email);
+
+            return new CreateReceptionistProfileResponse
+            {
+                AccountId = newReceptionist.AccountId,
+                Email = request.Email,
+                ReceptionistId = newReceptionist.Id
+            };
         }
         catch (Exception)
         {

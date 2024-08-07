@@ -19,17 +19,11 @@
                 continue;
             }
 
-            var category = await unitOfWork.Categories.GetServiceCategoryByIdAsync(service.ServiceCategoryId);
-            if (category is null)
-            {
-                return Errors.Category.NotFound;
-            }
-
             relatedServices.Add(new ServiceInfoResponse
             {
                 Id = service.Id,
                 IsActive = service.IsActive,
-                ServiceCategory = category.CategoryName,
+                ServiceCategoryName = service.ServiceCategory.ToString(),
                 ServiceName = service.ServiceName,
                 ServicePrice = service.ServicePrice
             });

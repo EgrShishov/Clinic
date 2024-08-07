@@ -3,21 +3,20 @@
 public class UnitOfWork : IUnitOfWork
 {
     private readonly IServiceProvider _serviceProvider;
-    public UnitOfWork(IServiceProvider serviceProvider, IConfiguration configuration)
+    public UnitOfWork(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }
 
     public ISpecializationsRepository Specializations => _serviceProvider.GetService<ISpecializationsRepository>();
     public IServicesRepository Services => _serviceProvider.GetService<IServiceProvider>();
-    public IServiceCategoryRepository Categories => _serviceProvider.GetService<IServiceCategoryRepository>();
 
-    public Task BeginTransactionAsync()
+    public Task BeginTransactionAsync(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    public Task CommitTransactionAsync()
+    public Task CommitTransactionAsync(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
@@ -27,12 +26,12 @@ public class UnitOfWork : IUnitOfWork
         throw new NotImplementedException();
     }
 
-    public Task RollbackTransactionAsync()
+    public Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    public Task<int> SaveChangesAsync()
+    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

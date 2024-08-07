@@ -9,17 +9,13 @@
             return Error.NotFound();
         }
 
-        var category = await unitOfWork.Categories.GetServiceCategoryByIdAsync(service.ServiceCategoryId);
-        if (category is null)
+        return new ServiceInfoResponse
         {
-            return Errors.Category.NotFound;
-        }
-
-        return new ServiceInfoResponse(
-            service.Id,
-            category.CategoryName,
-            service.ServiceName,
-            service.ServicePrice,
-            service.IsActive);
+            Id = service.Id,
+            ServiceCategoryName = service.ServiceCategory.ToString(),
+            ServiceName = service.ServiceName,
+            ServicePrice = service.ServicePrice,
+            IsActive = service.IsActive,
+        };
     }
 }

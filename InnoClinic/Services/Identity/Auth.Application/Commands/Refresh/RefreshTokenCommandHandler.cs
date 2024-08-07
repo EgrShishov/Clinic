@@ -6,11 +6,13 @@ public class RefreshTokenCommandHandler(UserManager<Account> userManager, IToken
 {
     public async Task<ErrorOr<RefreshTokenResponse>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
-        var principal = tokenGenerator.GetPrincipalFromExpiredToken(request.AccessToken);
-        if (principal == null)
+        var principalResult = tokenGenerator.GetPrincipalFromExpiredToken(request.AccessToken);
+        if (principalResult.IsError)
         {
             return Errors.Authentication.InvalidToken;
         }
+
+        var principal = principalResult.Value;
 
         var email = principal.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Email)?.Value;
         if (email == null)

@@ -1,6 +1,7 @@
-﻿public record UpdateDoctorRequest(
-    int DoctorProfileId,
-    byte[] Photo,
+﻿using Microsoft.AspNetCore.Http;
+
+public record UpdateDoctorRequest(
+    IFormFile Photo,
     string FirstName,
     string LastName,
     string MiddleName,

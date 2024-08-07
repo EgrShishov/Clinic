@@ -1,18 +1,26 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Route("api/[controller]")]
 public class PatientsController : ApiController
 {
     private readonly IMediator _mediator;
-    private readonly ILogger _logger;
     private readonly IMapper _mapper;
 
-    public PatientsController(IMediator mediator, ILogger logger, IMapper mapper)
+    public PatientsController(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator;
-        _logger = logger;
         _mapper = mapper;
+    }
+
+    [Authorize(Roles = "Patient")]
+    [HttpPost("link-profile")]
+    public async Task<IActionResult> LinkProfile(int accountId, int profileId)
+    {
+        var result = await _mediator.Send(new LinkPatientToExistingAccountCommand(accountId, profileId));
+
+        return result.Match(
+            success => Ok("Profile linked successfully"),
+            errors => Problem(errors));
     }
 
     [Authorize(Roles = "Patient, Receptionist")]
@@ -25,9 +33,7 @@ public class PatientsController : ApiController
         {
             return BadRequest(result.FirstError.Description);
         }
-
-        var response = result.Value.Adapt<PatientProfileResponse>();
-        return Ok(response);
+        return Ok(result.Value);
     }
 
     [Authorize(Roles = "Patient, Receptionist")]
@@ -42,8 +48,7 @@ public class PatientsController : ApiController
             return BadRequest(result.FirstError.Description);
         }
 
-        var response = result.Value.Adapt<PatientProfileResponse>();
-        return Ok(response);
+        return Ok(result.Value);
     }
 
     [Authorize(Roles = "Receptionist")]
@@ -71,7 +76,7 @@ public class PatientsController : ApiController
             return BadRequest(result.FirstError.Description);
         }
 
-        return Ok(_mapper.Map<PatientProfileResponse>(result.Value));
+        return Ok(result.Value);
     }
 
     [Authorize(Roles = "Receptionist")]
@@ -85,7 +90,7 @@ public class PatientsController : ApiController
             return BadRequest(result.FirstError.Description);
         }
 
-        return Ok(_mapper.Map<PatientProfileResponse>(result.Value));
+        return Ok(result.Value);
     }
 
     [Authorize(Roles = "Receptionist")]
@@ -99,8 +104,6 @@ public class PatientsController : ApiController
             return BadRequest(result.FirstError.Description);
         }
 
-        return Ok(_mapper.Map<List<PatientProfileResponse>>(result.Value));
+        return Ok(result.Value);
     }
-
-
 }

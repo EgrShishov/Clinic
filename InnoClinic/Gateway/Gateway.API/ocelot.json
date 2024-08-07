@@ -2,112 +2,312 @@
   "GlobalConfiguration": {
     "BaseUrl": "https://localhost:5051"
   },
+  "AuthenticationOptions": {
+    "Bearer": {
+      "Authority": "https://localhost:5212",
+      "ApiName": "your-api-name",
+      "RequireHttpsMetadata": true
+    }
+  },
   "Routes": [
     // Authentication Web API
+
     {
       "UpstreamPathTemplate": "/gateway/auth/sign-in",
       "UpstreamHttpMethod": [ "Post" ],
-      "DownstreamPathTemplate": "/api/auth",
+      "DownstreamPathTemplate": "/api/Auth",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5051
+          "Port": 5212
         }
       ]
     },
     {
       "UpstreamPathTemplate": "/gateway/auth/sign-up",
       "UpstreamHttpMethod": [ "Post" ],
-      "DownstreamPathTemplate": "/api/auth",
+      "DownstreamPathTemplate": "/api/Auth",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5051
+          "Port": 5212
         }
       ]
     },
     {
       "UpstreamPathTemplate": "/gateway/auth/sign-out",
       "UpstreamHttpMethod": [ "Post" ],
-      "DownstreamPathTemplate": "/api/auth",
+      "DownstreamPathTemplate": "/api/Auth",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5051
+          "Port": 5212
         }
       ]
     },
     {
       "UpstreamPathTemplate": "/gateway/auth/refresh",
       "UpstreamHttpMethod": [ "Post" ],
-      "DownstreamPathTemplate": "/api/auth",
+      "DownstreamPathTemplate": "/api/Auth",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5051
+          "Port": 5212
         }
       ]
     },
     {
       "UpstreamPathTemplate": "/gateway/auth/verify",
       "UpstreamHttpMethod": [ "Get" ],
-      "DownstreamPathTemplate": "/api/auth",
+      "DownstreamPathTemplate": "/api/Auth",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5051
+          "Port": 5212
         }
       ]
     },
     {
       "UpstreamPathTemplate": "/gateway/auth/account/{id}",
       "UpstreamHttpMethod": [ "Get" ],
-      "DownstreamPathTemplate": "/api/auth",
+      "DownstreamPathTemplate": "/api/Auth",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5051
+          "Port": 5212
         }
       ]
     },
 
     // Appointments Web Api
     {
-      "UpstreamPathTemplate": "/gateway/appointments/",
-      "UpstreamHttpMethod": [ "Get" ],
-      "DownstreamPathTemplate": "/api/appointments",
+      "UpstreamPathTemplate": "/gateway/appointments/create",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/Appointments/create-appointment",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5051
+          "Port": 5062
         }
       ],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": [ "Receptionist", "Patient" ]
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/schedule/{id}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/Appointments/schedule/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5062
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Doctor"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/appointments/list",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/Appointments/all",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5062
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Receptionist"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/appointments/history",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/Appointments/history",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5062
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": [ "Doctor", "Receptionist" ]
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/appointments/approve/{id}",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/Appointments/approve/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5062
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Receptionist"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/appointments/cancel/{id}",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/Appointments/cancel/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5062
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Receptionist"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/appointments/select-time",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/Appointments/select-time",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5062
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": [ "Patient", "Receptionist" ]
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/reschedule/{id}",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/Appointments/reschedule/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5062
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": [ "Patient", "Receptionist" ]
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/appointments/results/{id}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/Results/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5062
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": [ "Patient", "Doctor" ]
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/appointments/results/download/{id}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/Results/download/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5062
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
       },
       "RouteClaimsRequirement": {
         "Role": "Patient"
       }
     },
     {
-      "UpstreamPathTemplate": "/gateway/articles/{id}",
-      "UpstreamHttpMethod": [ "Get", "Delete" ],
-      "DownstreamPathTemplate": "/api/articles/{id}",
+      "UpstreamPathTemplate": "/gateway/appointments/results/create",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/Results/create-result",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5001
+          "Port": 5062
         }
-      ]
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Doctor"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/appointments/results/update",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "DownstreamPathTemplate": "/api/Results/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5062
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Doctor"
+      }
     }
+
+    // Offices API
+
+    // Profiles API
+
+    // Service API
+
   ]
 }

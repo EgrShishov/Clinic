@@ -5,6 +5,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly AppointmentsDbContext _context;
     private readonly Lazy<IAppointmentsRepository> _appointmentsRepository;
     private readonly Lazy<IAppointmentsResultRepository> _appointmentsResultRepository;
+    private readonly Lazy<IServiceRepository> _serviceRepository;
     private IDbContextTransaction _transaction;
 
     public UnitOfWork(AppointmentsDbContext context)
@@ -13,9 +14,11 @@ public class UnitOfWork : IUnitOfWork
 
         _appointmentsRepository = new(() => new AppointmentsRepository(_context));
         _appointmentsResultRepository = new(() => new AppointmentsResultRepository(_context));
+        _serviceRepository = new(() => new ServiceRepository(_context));
     }
     public IAppointmentsRepository AppointmentsRepository => _appointmentsRepository.Value;
     public IAppointmentsResultRepository ResultsRepository => _appointmentsResultRepository.Value;
+    public IServiceRepository ServiceRepository => _serviceRepository.Value;
 
     public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
     {

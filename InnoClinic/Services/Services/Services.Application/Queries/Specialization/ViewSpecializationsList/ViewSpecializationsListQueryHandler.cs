@@ -9,7 +9,7 @@
             return Error.NotFound();
         }
 
-        var specializationsList = new List<SpecializationInfoResponse>();
+        var specializationsList = new List<SpecializationResponse>();
         foreach (var specialization in specializations)
         {
             specializationsList.Add(new SpecializationResponse

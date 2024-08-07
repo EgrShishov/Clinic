@@ -2,6 +2,12 @@
 {
     public async Task<ErrorOr<Results>> Handle(CreateAppointmentsResultCommand request, CancellationToken cancellationToken)
     {
+        var service = await unitOfWork.ServiceRepository.GetServiceByIdAsync(request.ServiceId);
+        if (service is null)
+        {
+            return Error.NotFound();
+        }
+
         var appointmetsResult = new Results
         {
             Complaints = request.Complaints,

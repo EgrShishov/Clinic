@@ -3,7 +3,6 @@
 public class DocumentRepository : IDocumentRepository
 {
     private readonly DocumentsDbContext _context;
-
     public DocumentRepository(DocumentsDbContext context)
     {
         _context = context;
@@ -12,17 +11,19 @@ public class DocumentRepository : IDocumentRepository
     public async Task SaveDocumentAsync(Document document)
     {
         _context.Documents.Add(document);
+
         await _context.SaveChangesAsync();
     }
 
-    public async Task<Document> GetDocumentByUrlAsync(string url)
+    public async Task<Document> GetDocumentAsync(string fileName)
     {
-        return await _context.Documents.FirstOrDefaultAsync(p => p.Url == url);
+        return await _context.Documents.FirstOrDefaultAsync(p => p.Url.EndsWith(fileName));
     }
 
-    public async Task DeleteDocumentByUrlAsync(string url)
+    public async Task DeleteDocumentAsync(string fileName)
     {
-        var document = await _context.Documents.FirstOrDefaultAsync(p => p.Url == url);
+        var document = await _context.Documents.FirstOrDefaultAsync(p => p.Url.EndsWith(fileName));
+
         if (document != null)
         {
             _context.Entry(document).State = EntityState.Deleted;

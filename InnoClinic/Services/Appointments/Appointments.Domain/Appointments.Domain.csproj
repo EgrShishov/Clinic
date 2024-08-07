@@ -10,4 +10,8 @@
     <Folder Include="Common\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\InnoClinic.Contracts\InnoClinic.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>

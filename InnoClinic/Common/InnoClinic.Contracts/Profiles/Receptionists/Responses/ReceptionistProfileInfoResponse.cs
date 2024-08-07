@@ -1,6 +1,6 @@
 ﻿public record ReceptionistProfileInfoResponse(
-        int id,
-        byte[] Photo,
+        int Id,
+        string PhotoUrl,
         string FirstName,
         string LastName,
         string MiddleName,

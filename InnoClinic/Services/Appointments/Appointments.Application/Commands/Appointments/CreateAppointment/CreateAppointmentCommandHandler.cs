@@ -1,20 +1,21 @@
-﻿
-public class CreateAppointmentCommandHandler(IUnitOfWork unitOfWork, IServiceService services, IProfileService profiles) 
-    : IRequestHandler<CreateAppointmentCommand, ErrorOr<Appointment>>
+﻿public class CreateAppointmentCommandHandler(
+    IUnitOfWork unitOfWork,
+    IProfilesHttpClient profilesHttpClient) : IRequestHandler<CreateAppointmentCommand, ErrorOr<Appointment>>
 {
     public async Task<ErrorOr<Appointment>> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
     {
-        if (!await profiles.DoctorExistsAsync(request.DoctorId))
+        if (!await profilesHttpClient.DoctorExistsAsync(request.DoctorId))
         {
             return Error.NotFound();
         }        
         
-        if (!await profiles.PatientExistsAsync(request.PatientId))
+        if (!await profilesHttpClient.PatientExistsAsync(request.PatientId))
         {
             return Error.NotFound();
-        }        
-        
-        if (!await services.ServiceExistsAsync(request.ServiceId))
+        }
+
+        var service = await unitOfWork.ServiceRepository.GetServiceByIdAsync(request.ServiceId);
+        if (service is null)
         {
             return Error.NotFound();
         }
@@ -30,7 +31,9 @@ public class CreateAppointmentCommandHandler(IUnitOfWork unitOfWork, IServiceSer
         };
 
         var newAppointment = await unitOfWork.AppointmentsRepository.AddAppointmentAsync(appointment, cancellationToken);
+
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
         return newAppointment;
     }
 }

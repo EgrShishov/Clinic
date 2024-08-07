@@ -1,10 +1,22 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-public class VerifyEmailCommandHandler(IAccountRepository repository, UserManager<Account> manager) 
+public class VerifyEmailCommandHandler(UserManager<Account> manager) 
     : IRequestHandler<VerifyEmailCommand, ErrorOr<Unit>>
 {
-    public Task<ErrorOr<Unit>> Handle(VerifyEmailCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Unit>> Handle(VerifyEmailCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var account = await manager.FindByIdAsync(request.AccountId);
+        if (account is null)
+        {
+            return Errors.Authentication.NotFound;
+        }
+
+        var identityResult = await manager.ConfirmEmailAsync(account, request.Link);
+        if (!identityResult.Succeeded)
+        {
+            return Errors.Authentication.InvalidToken;
+        }
+
+        return Unit.Value;
     }
 }

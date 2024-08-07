@@ -1,19 +1,27 @@
-﻿public class DeleteOfficeCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<DeleteOfficeCommand, ErrorOr<Unit>>
+﻿public class DeleteOfficeCommandHandler(IUnitOfWork unitOfWork, IFilesHttpClient filesHttpClient, IEventBus eventBus) 
+    : IRequestHandler<DeleteOfficeCommand, ErrorOr<Unit>>
 {
     public async Task<ErrorOr<Unit>> Handle(DeleteOfficeCommand request, CancellationToken cancellationToken)
     {
-        await unitOfWork.BeginTransactionAsync();
+        var office = await unitOfWork.OfficeRepository.GetOfficeByIdAsync(request.Id, cancellationToken);
+        if (office is null)
+        {
+            return Errors.Offices.NotFound;
+        }
 
-        try
+        var photoDeletionResult = await filesHttpClient.DeletedPhoto($"{office.City}-{office.OfficeNumber}");
+        if (photoDeletionResult.IsError)
         {
-            await unitOfWork.OfficeRepository.DeleteOfficeAsync(request.Id, unitOfWork.Session);
-            await unitOfWork.CommitTransactionAsync(cancellationToken);
+            return Error.Failure();
         }
-        catch (Exception)
+
+        await unitOfWork.OfficeRepository.DeleteOfficeAsync(request.Id, cancellationToken);
+        await unitOfWork.CommitTransactionAsync(cancellationToken);
+
+        await eventBus.PublishAsync(new OfficeDeletedEvent
         {
-            await unitOfWork.RollbackTransactionAsync();
-            throw;
-        }
+            Id = request.Id
+        });
         return Unit.Value;
     }
 }

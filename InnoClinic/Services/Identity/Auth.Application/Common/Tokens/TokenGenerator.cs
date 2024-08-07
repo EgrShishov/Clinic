@@ -1,7 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 
 public class TokenGenerator(JwtSettings jwtSettings) : ITokenGenerator
@@ -33,14 +32,26 @@ public class TokenGenerator(JwtSettings jwtSettings) : ITokenGenerator
 
     public string GenerateRefreshToken(Account account)
     {
-        var randomNumber = new byte[32];
-        using (var rng = RandomNumberGenerator.Create())
+        var signingCredentials = new SigningCredentials(
+            new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtSettings.Secret)),
+            SecurityAlgorithms.HmacSha256);
+
+        var claims = new[]
         {
-            rng.GetBytes(randomNumber);
-            return Convert.ToBase64String(randomNumber);
-        }
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+        var token = new JwtSecurityToken(
+            issuer: jwtSettings.Issuer,
+            audience: jwtSettings.Audience,
+            expires: DateTime.Now.AddMinutes(5),
+            claims: claims,
+            signingCredentials: signingCredentials);
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
-    public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+    public ErrorOr<ClaimsPrincipal> GetPrincipalFromExpiredToken(string token)
     {
         var tokenValidationParameters = new TokenValidationParameters
         {
@@ -58,16 +69,17 @@ public class TokenGenerator(JwtSettings jwtSettings) : ITokenGenerator
         {
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
             var jwtSecurityToken = securityToken as JwtSecurityToken;
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            if (jwtSecurityToken == null 
+                || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
             {
-                throw new SecurityTokenException("Invalid token");
+                return Errors.Authentication.InvalidToken;
             }
 
             return principal;
         }
         catch
         {
-            return null;
+            return Error.Failure();
         }
     }
 }

@@ -1,10 +1,10 @@
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddInfrastructure(builder.Configuration)
-    .AddApplication(builder.Configuration);
+builder.Services.AddApplication(builder.Configuration)
+                .AddInfrastructure(builder.Configuration)
+                .AddPresentation();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -19,16 +19,8 @@ if (app.Environment.IsDevelopment())
 }
 
 using var scope = app.Services.CreateScope();
-var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-var roles = new[] { "Doctor", "Patient", "Receptionist" };
-
-foreach (var role in roles)
-{
-    if (!await roleManager.RoleExistsAsync(role))
-    {
-        await roleManager.CreateAsync(new IdentityRole(role));
-    }
-}
+var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
+await RoleSeeder.SeedRolesAsync(roleManager);
 
 app.UseHttpsRedirection();
 

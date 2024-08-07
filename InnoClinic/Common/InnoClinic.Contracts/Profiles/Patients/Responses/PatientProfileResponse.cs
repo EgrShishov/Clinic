@@ -5,4 +5,4 @@
     string MiddleName,
     string PhoneNumber,
     DateTime DateOfBirth,
-    byte[] Photo);
+    string PhotoUrl);

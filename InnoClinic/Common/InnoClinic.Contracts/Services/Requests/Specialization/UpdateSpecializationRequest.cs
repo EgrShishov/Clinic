@@ -1,1 +1,3 @@
-﻿public sealed record UpdateSpecializationRequest();
+﻿public sealed record UpdateSpecializationRequest(
+    string SpecializationName,
+    bool IsActive);

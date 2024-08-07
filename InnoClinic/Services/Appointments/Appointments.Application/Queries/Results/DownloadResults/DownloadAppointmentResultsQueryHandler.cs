@@ -4,6 +4,7 @@
     public async Task<ErrorOr<byte[]>> Handle(DownloadAppointmentResultsQuery request, CancellationToken cancellationToken)
     {
         var results = await unitOfWork.ResultsRepository.GetResultsByIdAsync(request.ResultsId);
+
         if (results is null)
         {
             return Errors.Results.NotFound;
@@ -14,7 +15,6 @@
         string patientsName = string.Empty;
         string servicesName = string.Empty;
         string specialization = string.Empty;
-
 
         var pdfRequest = new GeneratePDFResultsRequest
         {
@@ -30,10 +30,12 @@
         };
 
         var appointmentResultsInPDF = documentGenerator.GenerateAppointmentResults(pdfRequest);
-        if (appointmentResultsInPDF is null)
+
+        if (appointmentResultsInPDF is null || !appointmentResultsInPDF.Any())
         {
-            return Error.Failure("Cannot generate PDF aapointments results");
+            return Errors.Results.CannotGeneratePDF;
         }
+
         return appointmentResultsInPDF;
     }
 }

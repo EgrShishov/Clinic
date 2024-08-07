@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Route("api/[controller]")]
 public class DoctorsController : ApiController
 {
     private readonly IMediator _mediator;
@@ -17,15 +16,15 @@ public class DoctorsController : ApiController
 
     [HttpPost("create-profile")]
     [Authorize(Roles = "Receptionist")]
-    public async Task<IActionResult> CreateDoctorProfile(CreateDoctorRequest request)
+    public async Task<IActionResult> CreateDoctorProfile(CreateDoctorRequest request, int AccountId)
     {
-        var command = _mapper.Map<CreateDoctorCommand>(request);
+        var command = _mapper.Map<CreateDoctorCommand>((AccountId, request));
         var result = await _mediator.Send(command);
         if (result.IsError)
         {
             return BadRequest(result.FirstError);
         }
-        return Ok(_mapper.Map<DoctorProfileResponse>(result.Value));
+        return Ok(result.Value);
     }
 
     [HttpDelete("{id}")]
@@ -51,7 +50,7 @@ public class DoctorsController : ApiController
         {
             return BadRequest(result.FirstError);
         }
-        return Ok(_mapper.Map<DoctorProfileResponse>(result.Value));
+        return Ok(result.Value);
     }
 
     [HttpGet("by-office")]
@@ -64,7 +63,7 @@ public class DoctorsController : ApiController
         {
             return BadRequest(result.FirstError);
         }
-        return Ok(_mapper.Map<List<DoctorProfileResponse>>(result.Value));
+        return Ok(result.Value);
     }
 
     [HttpGet("by-specialization")]
@@ -77,7 +76,7 @@ public class DoctorsController : ApiController
         {
             return BadRequest(result.FirstError);
         }
-        return Ok(_mapper.Map<List<DoctorProfileResponse>>(result.Value));
+        return Ok(result.Value);
     }
 
     [HttpGet("search-by-name")]
@@ -90,7 +89,7 @@ public class DoctorsController : ApiController
         {
             return BadRequest(result.FirstError);
         }
-        return Ok(_mapper.Map<List<DoctorProfileResponse>>(result.Value));
+        return Ok(result.Value);
     }
 
     [HttpGet("{id}")]
@@ -103,7 +102,7 @@ public class DoctorsController : ApiController
         {
             return BadRequest(result.FirstError);
         }
-        return Ok(_mapper.Map<DoctorProfileResponse>(result.Value));
+        return Ok(result.Value);
     }
 
     [HttpGet]
@@ -116,6 +115,6 @@ public class DoctorsController : ApiController
         {
             return BadRequest(result.FirstError);
         }
-        return Ok(_mapper.Map<List<DoctorProfileResponse>>(result.Value));
+        return Ok(result.Value);
     }
     }

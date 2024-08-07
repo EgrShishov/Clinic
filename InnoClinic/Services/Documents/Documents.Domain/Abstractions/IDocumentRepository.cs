@@ -1,6 +1,6 @@
 ﻿public interface IDocumentRepository
 {
-    public Task<Document> GetDocumentByUrlAsync(string url);
+    public Task<Document> GetDocumentAsync(string fileName);
     public Task SaveDocumentAsync(Document document);
-    public Task DeleteDocumentByUrlAsync(string url);
+    public Task DeleteDocumentAsync(string fileName);
 }
