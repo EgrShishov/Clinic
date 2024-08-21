@@ -1,4 +1,4 @@
-﻿public class DeletePatientCommandHandler(IUnitOfWork unitOfWork, IFilesHttpClient filesHttpClient) 
+﻿public class DeletePatientCommandHandler(IUnitOfWork unitOfWork) 
     : IRequestHandler<DeletePatientCommand, ErrorOr<Unit>>
 {
     public async Task<ErrorOr<Unit>> Handle(DeletePatientCommand request, CancellationToken cancellationToken)
@@ -8,27 +8,23 @@
         try
         {
             var patient = await unitOfWork.PatientsRepository.GetPatientByIdAsync(request.PatientId);
+            
             if (patient is null)
             {
-                return Errors.Patients.NotFound;
-            }
-
-            var patientProfilePhotoResponse = await filesHttpClient.DeletePhoto($"patient-{request.PatientId}");
-            if (patientProfilePhotoResponse.IsError)
-            {
-                return Error.Failure();
+                return Errors.Patients.NotFound(request.PatientId);
             }
 
             await unitOfWork.PatientsRepository.DeletePatientAsync(request.PatientId);
 
             await unitOfWork.CompleteAsync(cancellationToken);
             await unitOfWork.CommitTransactionAsync(cancellationToken);
-            return Unit.Value;
         }
         catch (Exception)
         {
             await unitOfWork.RollbackTransactionAsync(cancellationToken);
             throw;
         }
+
+        return Unit.Value;
     }
 }

@@ -9,6 +9,7 @@ public static class DependencyInjection
     {
         services.AddPersistense(configuration)
                 .AddEmailService(configuration)
+                .AddHttpClients(configuration)
                 .AddIdentity();
 
         return services;
@@ -21,20 +22,13 @@ public static class DependencyInjection
 
         services.AddSingleton(emailSettings);
         services.AddScoped<IEmailSender, EmailSender>();
-        return services;
-    }
 
-    public static IServiceCollection AddPersistence(this IServiceCollection services)
-    {
-        services.AddScoped<IUnitOfWork, UnitOfWork>()
-                .AddScoped<IAccountRepository, AccountRepository>();
         return services;
     }
 
     public static IServiceCollection AddPersistense(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddPersistence()
-                .AddDbContext<AuthDbContext>(
+        services.AddDbContext<AuthDbContext>(
                         options =>
                             options.UseNpgsql(
                                 configuration.GetConnectionString("AuthorizationDb")));
@@ -48,11 +42,16 @@ public static class DependencyInjection
             .AddUserManager<UserManager<Account>>()
             .AddDefaultTokenProviders();
 
-        services.AddAuthorization(options =>
+        return services;
+    }
+
+    public static IServiceCollection AddHttpClients(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddScoped<IFilesHttpClient, FilesHttpClient>();
+
+        services.AddHttpClient("files", (serviceProvider, client) =>
         {
-            options.AddPolicy("Doctor", policy => policy.RequireRole("Doctor"));
-            options.AddPolicy("Patient", policy => policy.RequireRole("Patient"));
-            options.AddPolicy("Receptionist", policy => policy.RequireRole("Receptionist"));
+            client.BaseAddress = new Uri(configuration["FilesService"]);
         });
 
         return services;

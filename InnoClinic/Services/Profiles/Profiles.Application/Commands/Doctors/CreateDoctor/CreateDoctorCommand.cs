@@ -8,9 +8,8 @@ public sealed record CreateDoctorCommand(
     DateTime DateOfBirth,
     IFormFile Photo,
     int SpecializationId,
-    int OfficeId,
+    string OfficeId,
     int CareerStartYear,
     int CreatedBy,
-    int AccountId,
     ProfileStatus Status) : IRequest<ErrorOr<Doctor>>
 { }

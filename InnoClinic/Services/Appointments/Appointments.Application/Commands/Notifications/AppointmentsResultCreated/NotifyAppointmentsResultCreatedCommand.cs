@@ -1,3 +1,8 @@
-﻿public sealed record NotifyAppointmentsResultCreatedCommand(int ResultsId) : IRequest<ErrorOr<Unit>>
+﻿using Microsoft.AspNetCore.Http;
+
+public sealed record NotifyAppointmentsResultCreatedCommand(
+    IFormFile AppointmentResult, 
+    DateTime AppointmentDate,
+    int AccountId) : IRequest<ErrorOr<Unit>>
 {
 }

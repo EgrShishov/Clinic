@@ -2,9 +2,17 @@
 {
     public static class Patients
     {
-        public static Error NotFound => Error.NotFound(
-        code: "Patient.NotFound",
-        description: "Patient not found.");
+        public static Error NotFound(int id) => Error.NotFound(
+            code: "Patient.DoesNotExist",
+            description: $"Patient with id: {id} not found.");        
+        
+        public static Error EmptyList => Error.NotFound(
+            code: "Patient.EmptyList",
+            description: $"There are no patients profiles.");
+
+        public static Error NotFoundByFullName => Error.NotFound(
+            code: "Patient.DoesNotExist",
+            description: "There are no patients with such fullname");
 
         public static Error InvalidEmail => Error.Validation(
             code: "Patient.InvalidEmail",

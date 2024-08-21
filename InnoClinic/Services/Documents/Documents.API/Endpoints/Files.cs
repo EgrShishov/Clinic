@@ -4,73 +4,85 @@ public class Files : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/document", async (IFileFacade fileFacade, [AsParameters] UploadDocumentRequest request) =>
+        app.MapGet("/api/documents/by-result/{resultId}", async (IFileFacade fileFacade, int resultId) =>
+        {
+            var response = await fileFacade.DownloadDocumentAsync(resultId);
+
+            return response.Match(
+                response =>
+                {
+                    using var memoryStream = new MemoryStream();
+                    response.Content.CopyTo(memoryStream);
+                    memoryStream.Position = 0;
+                    return Results.File(memoryStream, response.ContentType, response.Filename);
+                },
+                errors => Results.Extensions.Problem(errors));
+        })
+        .WithName("DocumentsAccordingResults")
+        .DisableAntiforgery();
+        //.RequireAuthorization("Patient, Doctor, Receptionist");
+
+        app.MapPost("/api/document", async (IFileFacade fileFacade, [FromForm] IFormFile File, [FromForm] int ResultId) =>
         {
             var response = await fileFacade
-                .UploadDocumentAsync(request.File, request.ResultId);
+                .UploadDocumentAsync(File, ResultId);
 
             return response.Match(
                 url => Results.Ok(url),
                 errors => Results.Extensions.Problem(errors));
         })
         .WithName("UploadDocument")
-        .RequireAuthorization("Patient, Doctor, Receptionist");
+        .DisableAntiforgery();
+        //.RequireAuthorization("Patient, Doctor, Receptionist");
 
-        app.MapGet("/api/document/{fileName}", async (IFileFacade fileFacade, string fileName) =>
+        app.MapGet("/api/document/{resultId}", async (IFileFacade fileFacade, int resultId) =>
         {
-            var response = await fileFacade.DownloadDocumentAsync(fileName);
+            var response = await fileFacade.DownloadDocumentAsync(resultId);
 
             return response.Match(
-                document => Results.Ok(document),
+                response => Results.File(response.Content, response.ContentType, response.Filename),
                 errors => Results.Extensions.Problem(errors));
         })
         .WithName("DownloadDocument")
-        .RequireAuthorization("Patient, Doctor, Receptionist");
+        .DisableAntiforgery();
+        //.RequireAuthorization("Patient, Doctor, Receptionist");
 
-        app.MapDelete("/api/document/{fileName}", async (IFileFacade fileFacade, string fileName) =>
+        app.MapDelete("/api/document/{resultId}", async (IFileFacade fileFacade, int resultId) =>
         {
-            var response = await fileFacade.DeleteDocumentAsync(fileName);
+            var response = await fileFacade.DeleteResultDocumentAsync(resultId);
 
             return response.Match(
                 _ => Results.NoContent(),
                 errors => Results.Extensions.Problem(errors));
         })
         .WithName("DeleteDocument")
-        .RequireAuthorization("Patient, Doctor, Receptionist");
+        .DisableAntiforgery();
+        //.RequireAuthorization("Patient, Doctor, Receptionist");
 
-        app.MapPost("api/photos", async (IFileFacade fileFacade, [AsParameters] UploadPhotoRequest request) =>
+        app.MapPost("api/photos", async (IFileFacade fileFacade, IFormFile photo) =>
         {
             var response = await fileFacade
-                .UploadPhotoAsync(request.File);
+                .UploadPhotoAsync(photo);
 
             return response.Match(
                 url => Results.Ok(url),
                 errors => Results.Extensions.Problem(errors));
         })
         .WithName("UploadPhoto")
-        .RequireAuthorization("Patient, Doctor, Receptionist");
+        .DisableAntiforgery();
+        //.RequireAuthorization("Patient, Doctor, Receptionist");
 
-        app.MapGet("/api/photo/{fileName}", async (IFileFacade fileFacade, string fileName) =>
+        app.MapDelete("/api/photo/{fileName}", async (IFileFacade fileFacade, string filename) =>
         {
-            var response = await fileFacade.DownloadPhotoAsync(fileName);
-
-            return response.Match(
-                document => Results.Ok(document),
-                errors => Results.Extensions.Problem(errors));
-        })
-        .WithName("DownloadPhoto")
-        .RequireAuthorization("Patient, Doctor, Receptionist");
-
-        app.MapDelete("/api/photo/{fileName}", async (IFileFacade fileFacade, string fileName) =>
-        {
-            var response = await fileFacade.DeletePhotoAsync(fileName);
+            var response = await fileFacade.DeletePhotoAsync(filename);
 
             return response.Match(
                 _ => Results.NoContent(),
                 errors => Results.Extensions.Problem(errors));
         })
         .WithName("DeletePhoto")
-        .RequireAuthorization("Patient, Doctor, Receptionist");
+        .DisableAntiforgery();
+        //.RequireAuthorization("Patient, Doctor, Receptionist");
     }
 }
     

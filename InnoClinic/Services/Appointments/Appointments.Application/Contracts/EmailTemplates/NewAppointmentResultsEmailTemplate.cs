@@ -1,5 +1,6 @@
 ﻿public class NewAppointmentResultsEmailTemplate
 {
+    public static string TemplateName = "Appointment's results";
     public string PatientsFullName { get; set; }
     public string DoctorsFullName { get; set; }
     public DateTime AppointmentDate { get; set; }

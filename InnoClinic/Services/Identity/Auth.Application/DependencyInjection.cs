@@ -7,10 +7,11 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services, ConfigurationManager configuration)
     {
-        services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
-        services.AddMediatR(conf => conf.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
+        services.AddSingleton<IPasswordGenerator, PasswordGenerator>()
+                .AddTokens(configuration)
+                .AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly)
+                .AddMediatR(conf => conf.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
 
-        services.AddTokens(configuration);
         return services;
     }
 
@@ -21,7 +22,7 @@ public static class DependencyInjection
 
 
         services.AddSingleton(jwtSettings)
-            .AddSingleton<ITokenGenerator, TokenGenerator>()
+            .AddScoped<ITokenGenerator, TokenGenerator>()
             .AddAuthentication(defaultScheme: JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(opt =>
                 opt.TokenValidationParameters = new TokenValidationParameters()

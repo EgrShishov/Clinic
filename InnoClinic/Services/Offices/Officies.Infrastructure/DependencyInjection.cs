@@ -17,6 +17,7 @@ public static class DependencyInjection
     {
         services.AddTransient<IUnitOfWork, UnitOfWork>()
                 .AddScoped<IOfficeRepository, OfficeRepository>();
+
         return services;
     }
 
@@ -31,16 +32,20 @@ public static class DependencyInjection
         services.AddPersistence()
                 .AddDbContext<OfficesDbContext>(opt =>
                     opt.UseMongoDB(mongoDbSettings.ConnectionString, mongoDbSettings.DatabaseName));
+
         return services;
     }
 
     public static IServiceCollection AddHttpClients(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<IFilesHttpClient, FilesHttpClient>()
-                .AddHttpClient<IFilesHttpClient, FilesHttpClient>(client =>
-                {
-                    client.BaseAddress = new Uri(configuration["DocumentsAPI"]);
-                });
+        services.AddScoped<IFilesHttpClient, FilesHttpClient>();
+
+        services.AddHttpClient("files", client =>
+        {
+            string address = configuration["DocumentsAPI"];
+            client.BaseAddress = new Uri(address);
+        });
+
         return services;
     }
 
@@ -63,9 +68,9 @@ public static class DependencyInjection
                 config.ConfigureEndpoints(context);
             });
         });
-        services.AddMassTransitHostedService();
 
         services.AddTransient<IEventBus, EventBus>();
+
         return services;
     }
 }

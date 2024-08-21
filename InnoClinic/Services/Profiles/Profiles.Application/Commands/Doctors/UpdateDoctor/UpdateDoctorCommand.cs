@@ -7,8 +7,9 @@ public record UpdateDoctorCommand(
     string MiddleName,
     DateTime DateOfBirth,
     int SpecializationId,
-    int OfficeId,
+    string OfficeId,
     int CareerStartYear,
     IFormFile Photo,
-    ProfileStatus Status
+    ProfileStatus Status,
+    int UpdatedBy
 ) : IRequest<ErrorOr<Doctor>>;

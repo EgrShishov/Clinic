@@ -5,16 +5,18 @@ public class VerifyEmailCommandHandler(UserManager<Account> manager)
 {
     public async Task<ErrorOr<Unit>> Handle(VerifyEmailCommand request, CancellationToken cancellationToken)
     {
-        var account = await manager.FindByIdAsync(request.AccountId);
+        var account = await manager.FindByIdAsync(request.AccountId.ToString());
+       
         if (account is null)
         {
-            return Errors.Authentication.NotFound;
+            return Errors.Account.NotFound(request.AccountId);
         }
 
         var identityResult = await manager.ConfirmEmailAsync(account, request.Link);
+       
         if (!identityResult.Succeeded)
         {
-            return Errors.Authentication.InvalidToken;
+            return Errors.Authentication.InvalidEmailVerificationLink;
         }
 
         return Unit.Value;

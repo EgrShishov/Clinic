@@ -8,9 +8,12 @@ builder.Services.AddInfrastructure(builder.Configuration)
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAuthorization();
+builder.Services.AddCors();
 builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
+
+app.UseCors(builder => builder.AllowAnyOrigin());
 
 app.MapEndpoints();
 
@@ -22,8 +25,6 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
     });
 }
-
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

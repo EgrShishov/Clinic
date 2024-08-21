@@ -1,12 +1,14 @@
-﻿public record DoctorProfileResponse(
-    string FirstName,
-    string LastName,
-    string MiddleName,
-    string PhotoUrl,
-    DateTime DateOfBirth,
-    int CareerStartYear,
-    string SpecializationName,
-    string City,
-    string Street,
-    string HouseNumber,
-    string OfficeNumber);
+﻿public class DoctorProfileResponse
+{
+    public string FirstName { get; init; }
+    public string LastName {  get; init; }
+    public string MiddleName {  get; init; }
+    public string PhotoUrl {  get; init; }
+    public DateTime DateOfBirth {  get; init; }
+    public int CareerStartYear {  get; init; }
+    public string SpecializationName { get; init; }
+    public string City {  get; init; }
+    public string Street {  get; init; }
+    public string HouseNumber {  get; init; }
+    public string OfficeNumber { get; init; }
+}

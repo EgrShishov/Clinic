@@ -3,24 +3,14 @@
 {
     public async Task<ErrorOr<CreatePatientResponse>> Handle(CreatePatientCommand request, CancellationToken cancellationToken)
     {
-        await unitOfWork.BeginTransactionAsync(cancellationToken);
-
-        var accountInfoResponse = await accountHttpClient.GetAccountInfo(request.AccountId);
-        if (accountInfoResponse.IsError)
-        {
-            return Error.NotFound("Accounts.AccountNotFound", "User account does not exist.");
-        }
-
-        var account = accountInfoResponse.Value;
-
         var existingProfiles = await unitOfWork
             .PatientsRepository
-            .SearchPatientByNameAsync(request.FirstName, request.LastName, request.MiddleName);
+            .GetListPatientsAsync(cancellationToken);
 
-        if (existingProfiles.Any())
+        if (existingProfiles is not null && existingProfiles.Any())
         {
             var matchedProfile = existingProfiles
-                .Where(p => !p.IsLinkedToAccount)
+                .Where(p => !p.IsLinkedToAccount) //problem here is that we create profile with account
                 .Select(p => new
                 {
                     Profile = p,
@@ -48,29 +38,39 @@
             }
         }
 
-/*        var createPatientAccountResponse = await accountHttpClient.CreateAccount(
+        var createPatientAccountResponse = await accountHttpClient.CreateAccount(
            new CreateAccountRequest
            {
                Email = request.Email,
-               Password = ,
+               PhoneNumber = request.PhoneNumber,
                Role = nameof(Patient),
-               Photo = request.Photo
-           });*/
+               Photo = request.Photo,
+           });
+
+        if (createPatientAccountResponse.IsError)
+        {
+            return createPatientAccountResponse.FirstError;
+        }
+
+        var response = createPatientAccountResponse.Value;
 
         Patient patient = new Patient
         {
-            AccountId = account.AccountId,
+            AccountId = response.AccountId,
             FirstName = request.FirstName,
             LastName = request.LastName,
             MiddleName = request.MiddleName,
             DateOfBirth = request.DateOfBirth,
             IsLinkedToAccount = true
         };
+
         var newPatient = await unitOfWork.PatientsRepository.AddPatientAsync(patient);
+        
         await unitOfWork.CompleteAsync(cancellationToken);
 
         return new CreatePatientResponse
         {
+            Id = newPatient.Id,
             Success = true,
             IsMatchFound = false
         };
@@ -79,10 +79,12 @@
     private int CalculateMatchScore(Patient existingProfile, CreatePatientCommand request)
     {
         int score = 0;
+
         if (existingProfile.FirstName == request.FirstName) score += 5;
         if (existingProfile.LastName == request.LastName) score += 5;
         if (existingProfile.MiddleName == request.MiddleName) score += 5;
         if (existingProfile.DateOfBirth == request.DateOfBirth) score += 3;
+        
         return score;
     }
 }

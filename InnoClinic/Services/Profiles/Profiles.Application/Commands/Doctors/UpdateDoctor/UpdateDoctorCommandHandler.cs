@@ -3,9 +3,10 @@
     public async Task<ErrorOr<Doctor>> Handle(UpdateDoctorCommand request, CancellationToken cancellationToken)
     {
         var doctor = await unitOfWork.DoctorsRepository.GetDoctorByIdAsync(request.DoctorId);
-        if (doctor == null)
+        
+        if (doctor is null)
         {
-            return Errors.Doctors.NotFound;
+            return Errors.Doctors.NotFound(request.DoctorId);
         }
 
         doctor.FirstName = request.FirstName;
@@ -18,6 +19,7 @@
         doctor.Status = request.Status;
 
         await unitOfWork.DoctorsRepository.UpdateDoctorAsync(doctor);
+
         await unitOfWork.CompleteAsync(cancellationToken);
 
         return doctor;

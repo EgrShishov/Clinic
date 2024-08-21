@@ -1,4 +1,4 @@
 ﻿public interface IAccountsHttpClient
 {
-    public Task<AccountResponse> GetAccountInfoAsync(int AccountId);
+    public Task<ErrorOr<AccountResponse>> GetAccountInfoAsync(int AccountId);
 }

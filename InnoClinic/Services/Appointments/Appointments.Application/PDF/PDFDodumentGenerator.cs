@@ -1,12 +1,18 @@
-﻿using QuestPDF.Fluent;
+﻿using Microsoft.AspNetCore.Http;
+using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
 public class PDFDodumentGenerator : IPDFDocumentGenerator
 {
-    public byte[] GenerateAppointmentResults(GeneratePDFResultsRequest results)
+    public PDFDodumentGenerator()
     {
-        return Document.Create(container =>
+        Settings.License = LicenseType.Community;
+    }
+
+    public IFormFile GenerateAppointmentResults(GeneratePDFResultsRequest results)
+    {
+        var pdfBytes = Document.Create(container =>
         {
             container.Page(page =>
             {
@@ -73,5 +79,10 @@ public class PDFDodumentGenerator : IPDFDocumentGenerator
                     });
             });
         }).GeneratePdf();
+
+        var stream = new MemoryStream(pdfBytes);
+        string fileName = $"{results.PatientName.Replace("/", "-")}_Results_{results.Date.ToString("yyyy-MM-dd")}.pdf";
+        var file = new FormFile(stream, 0, stream.Length, "File", fileName);
+        return file;
     }
 }

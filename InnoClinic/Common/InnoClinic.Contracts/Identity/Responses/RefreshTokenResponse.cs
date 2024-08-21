@@ -1,1 +1,5 @@
-﻿public record RefreshTokenResponse(string accessToken, string refreshToken);
+﻿public class RefreshTokenResponse
+{
+    public string AccessToken { get; init; }
+    public string RefreshToken { get; init; }
+}

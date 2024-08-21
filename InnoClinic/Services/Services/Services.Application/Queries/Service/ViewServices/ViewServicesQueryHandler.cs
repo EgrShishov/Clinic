@@ -5,31 +5,29 @@
     {
         var services = await unitOfWork.Services.GetAllAsync(cancellationToken);
 
-        if (services is null)
+        if (services is null || !services.Any())
         {
-            return Error.NotFound();
+            return Errors.Service.EmptyServicesList;
         }
 
-        var servicesInfo = new List<ServiceResponse>();
-
-        foreach(var service in services)
-        {
-            var specialization = await unitOfWork.Specializations.GetSpecializationByIdAsync(service.SpecializationId);
-
-            if (specialization is null)
+        var activeServices = await Task.WhenAll(services
+            .Where(s => s.IsActive)
+            .Select(async service => new
             {
-                return Errors.Specialization.NotFound;
-            }
+                Service = service,
+                Specialization = await unitOfWork.Specializations.GetSpecializationByIdAsync(service.SpecializationId)
+            }));
 
-            servicesInfo.Add(new ServiceResponse
+        var validServices = activeServices
+            .Where(s => s.Specialization!= null && s.Specialization.IsActive)
+            .Select(s => new ServiceResponse
             {
-                ServiceCategoryName = service.ServiceCategory.ToString(),
-                ServiceName = service.ServiceName,
-                ServicePrice = service.ServicePrice,
-                Specialization = specialization.SpecializationName
+                ServiceCategoryName = s.Service.ServiceCategory.ToString(),
+                ServiceName = s.Service.ServiceName,
+                ServicePrice = s.Service.ServicePrice,
+                Specialization = s.Specialization.SpecializationName
             });
-        }
 
-        return servicesInfo;
+        return validServices.Any() ? validServices.ToList() : Errors.Service.NoActiveServices;
     }
 }

@@ -1,4 +1,6 @@
-﻿public sealed class OfficeCreatedConsumer : IConsumer<OfficeChangedEvent>
+﻿using InnoClinic.Contracts.OfficeCreatedEvent;
+
+public sealed class OfficeCreatedConsumer : IConsumer<OfficeCreatedEvent>
 {
     private readonly IUnitOfWork _unitOfWork;
     public OfficeCreatedConsumer(IUnitOfWork unitOfWork)
@@ -6,7 +8,7 @@
         _unitOfWork = unitOfWork;
     }
 
-    public async Task Consume(ConsumeContext<OfficeChangedEvent> context)
+    public async Task Consume(ConsumeContext<OfficeCreatedEvent> context)
     {
         var message = context.Message;
 

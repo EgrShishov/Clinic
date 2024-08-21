@@ -1,4 +1,4 @@
-using Appointments.API.Middleware;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,8 +16,27 @@ builder.Host.UseSerilog((context, configuration) =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer(options =>
+{
+    options.Authority = "http://identity.api";
+    options.RequireHttpsMetadata = false;
+    options.Audience = "gateway-api";
+});
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+using var scope = app.Services.CreateScope();
+
+var context = scope.ServiceProvider.GetRequiredService<AppointmentsDbContext>();
+
+var migrations = context.Database.GetPendingMigrations();
+
+if (migrations.Any())
+{
+    context.Database.Migrate();
+}
 
 if (app.Environment.IsDevelopment())
 {
@@ -25,16 +44,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseLoggingMiddleware();
-
 app.UseSerilogRequestLogging();
 
-app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseLoggingMiddleware();
+//app.UseLoggingMiddleware();
 
 app.Run();

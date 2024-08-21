@@ -3,16 +3,21 @@
 {
     public async Task<ErrorOr<List<PatientListResponse>>> Handle(ViewAllPatientsQuery request, CancellationToken cancellationToken)
     {
-        var patients = await unitOfWork.PatientsRepository.GetListPatientsAsync(request.PageNumber, request.PageSize);
-        if (patients is null)
+        var patients = await unitOfWork
+            .PatientsRepository
+            .GetListPatientsAsync(request.PageNumber, request.PageSize, cancellationToken);
+
+        if (patients is null || !patients.Any())
         {
-            return Errors.Patients.NotFound;
+            return Errors.Patients.EmptyList;
         }
 
         var patientList = new List<PatientListResponse>();
+        
         foreach (var patient in patients)
         {
             var accountResponse = await accountHttpClient.GetAccountInfo(patient.AccountId);
+            
             if (accountResponse.IsError)
             {
                 return accountResponse.FirstError;

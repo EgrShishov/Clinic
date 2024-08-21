@@ -1,3 +1,5 @@
-﻿public sealed record UpdateSpecializationRequest(
-    string SpecializationName,
-    bool IsActive);
+﻿public class UpdateSpecializationRequest
+{
+    public string SpecializationName { get; init; }
+    public bool IsActive { get; init; }
+}

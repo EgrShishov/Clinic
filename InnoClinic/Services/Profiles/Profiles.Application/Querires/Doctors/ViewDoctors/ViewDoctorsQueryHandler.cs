@@ -4,28 +4,30 @@
     public async Task<ErrorOr<List<DoctorListResponse>>> Handle(ViewDoctorsQuery request, CancellationToken cancellationToken)
     {
         var doctors = await unitOfWork.DoctorsRepository.GetListDoctorsAsync(request.PageNumber, request.PageSize);
-        if (doctors is null)
+        
+        if (doctors is null || !doctors.Any())
         {
-            return Errors.Doctors.NotFound;
+            return Errors.Doctors.EmptyList;
         }
 
         var allDoctors = new List<DoctorListResponse>();
 
         foreach (var doctor in doctors)
         {
-            string photoUrl = string.Empty;
-
             var accountInfoResponse = await accountHttpClient.GetAccountInfo(doctor.AccountId);
+            
             if (accountInfoResponse.IsError)
             {
                 return accountInfoResponse.FirstError;
             }
+            
             var account = accountInfoResponse.Value;
 
-            var office = await unitOfWork.OfficeRepository.GetOfficeByIdAsync(doctor.OfficeId);
+            var office = await unitOfWork.OfficeRepository.GetOfficeByIdAsync(doctor.OfficeId.ToString());
+            
             if (office is null)
             {
-                return Error.NotFound();
+                return Errors.Office.NotFound;
             }
 
             string specialization = string.Empty;

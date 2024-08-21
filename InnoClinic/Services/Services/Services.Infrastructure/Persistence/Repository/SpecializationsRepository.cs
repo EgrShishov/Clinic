@@ -1,4 +1,6 @@
-﻿public class SpecializationsRepository : ISpecializationsRepository
+﻿using DapperExtensions;
+
+public class SpecializationsRepository : ISpecializationsRepository
 {
     private readonly ISqlConnectionFactory _connectionFactory;
 
@@ -11,10 +13,12 @@
     {
         const string query = @"
             INSERT INTO Specializations (SpecializationName, IsActive)
-            VALUES (@{nameof(Specialization.SpecializationName)}, @{nameof(Specialization.IsActive)});
+            VALUES ( 
+            @SpecializationName, 
+            @IsActive)
             RETURNING Id;";
 
-        await using SqlConnection sqlConnection = _connectionFactory.CreateConnection();
+        await using var sqlConnection = _connectionFactory.CreateConnection();
 
         var id = await sqlConnection.QuerySingleAsync<int>(query,
             new
@@ -24,14 +28,24 @@
             });
 
         specialization.Id = id;
+
         return specialization;
+    }
+
+    public async Task DeleteSpecializationAsync(int id, CancellationToken cancellationToken = default)
+    {
+        const string query = @"DELETE FROM Specializations WHERE Id = @Id";
+
+        await using var sqlConnection = _connectionFactory.CreateConnection();
+
+        await sqlConnection.ExecuteAsync(query, new {Id = id});
     }
 
     public async Task<IEnumerable<Specialization>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         const string query = @"SELECT * FROM Specializations;";
 
-        await using SqlConnection sqlConnection = _connectionFactory.CreateConnection();
+        await using var sqlConnection = _connectionFactory.CreateConnection();
 
         return await sqlConnection.QueryAsync<Specialization>(query);
     }
@@ -40,7 +54,7 @@
     {
         const string query = @"SELECT * FROM Specializations WHERE Id = @Id;";
 
-        await using SqlConnection sqlConnection = _connectionFactory.CreateConnection();
+        await using var sqlConnection = _connectionFactory.CreateConnection();
 
         return await sqlConnection.QuerySingleOrDefaultAsync<Specialization>(query, new
         {
@@ -52,16 +66,21 @@
     {
         const string query = @"
             UPDATE Specializations
-            SET SpecializationName = @{nameof(Specialization.SpecializationName)}, IsActive = @{nameof(Specialization.IsActive)}
+            SET SpecializationName = @SpecializationName, IsActive = @IsActive
             WHERE Id = @Id;";
 
-        await using SqlConnection sqlConnection = _connectionFactory.CreateConnection();
+        await using var sqlConnection = _connectionFactory.CreateConnection();
 
-        await sqlConnection.ExecuteAsync(query, new
+        var affectedRows = await sqlConnection.ExecuteAsync(query, new
         {
             specialization.SpecializationName,
             specialization.Id,
             specialization.IsActive
         });
+
+        if (affectedRows == 0)
+        {
+            throw new Exception("No specialization found with the given Id.");
+        }
     }
 }

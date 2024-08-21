@@ -1,37 +1,46 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using System.Net.Http.Json;
 
 public class FilesHttpClient : IFilesHttpClient
 {
-    private readonly HttpClient _httpClient;
-    private readonly IConfiguration _configuration;
-    public FilesHttpClient(HttpClient httpClient, IConfiguration configuration)
+    private readonly IHttpClientFactory _factory;
+    public FilesHttpClient(IHttpClientFactory factory)
     {
-        _httpClient = httpClient;
-        _configuration = configuration;
+        _factory = factory;
     }
 
     public async Task<ErrorOr<Unit>> DeletedPhoto(string fileName)
     {
-        var response = await _httpClient.DeleteAsync(fileName);
+        var _httpClient = _factory.CreateClient("files");
+
+        var response = await _httpClient.DeleteAsync($"{_httpClient.BaseAddress}/photo/{fileName}");
+        
         if (!response.IsSuccessStatusCode)
         {
             return Error.Failure();
         }
+        
         return Unit.Value;
     }
 
-    public async Task<ErrorOr<string>> UploadPhoto(IFormFile photo, string fileName)
+    public async Task<ErrorOr<string>> UploadPhoto(IFormFile photo)
     {
-        var response = await _httpClient.PostAsJsonAsync($"{_configuration["DocumentsAPI"]}/file/photo", 
-            new UploadPhotoRequest
-            {
-                file = photo,
-            });
+        var _httpClient = _factory.CreateClient("files");
+
+        using var content = new MultipartFormDataContent();
+
+        var fileContent = new StreamContent(photo.OpenReadStream());
+
+        var contentType = string.IsNullOrWhiteSpace(photo.ContentType) ? "application/octet-stream" : photo.ContentType;
+        
+        fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
+            
+        content.Add(fileContent, photo.Name, photo.FileName);
+
+        var response = await _httpClient.PostAsync($"{_httpClient.BaseAddress}/photos", content);
+
         if (!response.IsSuccessStatusCode)
         {
-            return Error.Failure();
+            return Error.Failure("Failed to upload photo");
         }
 
         return await response.Content.ReadAsStringAsync();

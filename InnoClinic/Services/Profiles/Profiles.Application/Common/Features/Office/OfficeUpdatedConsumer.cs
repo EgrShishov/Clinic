@@ -1,4 +1,6 @@
-﻿public sealed class OfficeUpdatedConsumer : IConsumer<OfficeChangedEvent>
+﻿using InnoClinic.Contracts.OfficeChangedEvent;
+
+public sealed class OfficeUpdatedConsumer : IConsumer<OfficeChangedEvent>
 {
     private readonly IUnitOfWork _unitOfWork;
     public OfficeUpdatedConsumer(IUnitOfWork unitOfWork)
@@ -11,6 +13,7 @@
         var message = context.Message;
         
         var office = await _unitOfWork.OfficeRepository.GetOfficeByIdAsync(message.Id);
+        
         if (office is null)
         {
             return;

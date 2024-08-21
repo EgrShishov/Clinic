@@ -1,4 +1,5 @@
-﻿
+﻿using InnoClinic.Contracts.OfficeDeletedEvent;
+
 public class OfficeDeletedConsumer : IConsumer<OfficeDeletedEvent>
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -10,7 +11,9 @@ public class OfficeDeletedConsumer : IConsumer<OfficeDeletedEvent>
     public async Task Consume(ConsumeContext<OfficeDeletedEvent> context)
     {
         var message = context.Message;
+        
         await _unitOfWork.OfficeRepository.DeleteOfficeAsync(message.Id);
+        
         await _unitOfWork.CompleteAsync();
     }
 }

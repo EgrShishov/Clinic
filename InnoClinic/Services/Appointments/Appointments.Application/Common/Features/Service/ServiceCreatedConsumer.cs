@@ -1,4 +1,6 @@
-﻿public sealed class ServiceCreatedConsumer : IConsumer<ServiceCreatedEvent>
+﻿using InnoClinic.Contracts.ServiceCreatedEvent;
+
+public sealed class ServiceCreatedConsumer : IConsumer<ServiceCreatedEvent>
 {
     private readonly IUnitOfWork _unitOfWork;
 

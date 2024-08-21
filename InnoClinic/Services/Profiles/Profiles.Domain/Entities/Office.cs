@@ -7,4 +7,5 @@
     public string OfficeNumber { get; set; }
     public string PhotoId { get; set; }
     public string RegistryPhoneNumber { get; set; }
+    public bool IsActive { get; set; }
 }

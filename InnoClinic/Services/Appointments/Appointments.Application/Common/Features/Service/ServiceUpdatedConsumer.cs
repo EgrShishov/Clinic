@@ -1,4 +1,6 @@
-﻿public sealed class ServiceUpdatedConsumer : IConsumer<ServiceUpdatedEvent>
+﻿using InnoClinic.Contracts.ServiceUpdatedEvent;
+
+public sealed class ServiceUpdatedConsumer : IConsumer<ServiceUpdatedEvent>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -12,6 +14,7 @@
         var message = context.Message;
 
         var service = await _unitOfWork.ServiceRepository.GetServiceByIdAsync(message.Id);
+        
         if (service is null)
         {
             return;

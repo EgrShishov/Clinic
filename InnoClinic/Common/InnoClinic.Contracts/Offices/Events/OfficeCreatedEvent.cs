@@ -1,4 +1,5 @@
-﻿public record OfficeCreatedEvent
+﻿namespace InnoClinic.Contracts.OfficeCreatedEvent;
+public class OfficeCreatedEvent
 {
     public string Id { get; set; }
     public string City { get; set; }

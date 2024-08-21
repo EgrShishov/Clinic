@@ -5,19 +5,13 @@ public class AuthorizationController : ApiController
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
-    private readonly IConfiguration _config;
     private readonly UserManager<Account> _userManager;
 
-    public AuthorizationController(
-        IMediator mediator, 
-        IMapper mapper, 
-        UserManager<Account> userManager, 
-        IConfiguration config)
+    public AuthorizationController(IMediator mediator, IMapper mapper, UserManager<Account> userManager)
     {
         _mediator = mediator;
         _mapper = mapper;
         _userManager = userManager;
-        _config = config;
     }
 
     [HttpPost("sign-in")]
@@ -43,12 +37,47 @@ public class AuthorizationController : ApiController
         var signUpResult = await _mediator.Send(command);
 
         return signUpResult.Match(
-            response => 
+            response =>
             {
                 Response.Cookies.Append("access", response.AccessToken);
                 Response.Cookies.Append("refresh", response.RefreshToken);
-                return Ok(_mapper.Map<AuthorizationResponse>(response));
+                return Ok(response);
             },
+            errors => Problem(errors));
+    }
+
+    [HttpPost("create")]
+    public async Task<IActionResult> CreateAccount([FromForm] CreateAccountRequest request)
+    {
+        var command = new CreateAccountCommand(
+            request.Email, 
+            request.PhoneNumber, 
+            request.Photo, 
+            request.CreatedBy,
+            request.Role);
+
+        var signUpResult = await _mediator.Send(command);
+
+        return signUpResult.Match(
+            response =>
+            {
+                Response.Cookies.Append("access", response.AccessToken);
+                Response.Cookies.Append("refresh", response.RefreshToken);
+
+                return Ok(response);
+            },
+            errors => Problem(errors));
+    }
+
+    [HttpPut("account/{id}")]
+    public async Task<IActionResult> EditAccount(int AccountId, EditAccountRequest request)
+    {
+        var command = new EditAccountCommand(AccountId, request.UpdatedBy, request.PhoneNumber, request.Photo);
+
+        var editAccountResult = await _mediator.Send(command);
+
+        return editAccountResult.Match(
+            _ => Ok(),
             errors => Problem(errors));
     }
 
@@ -59,48 +88,36 @@ public class AuthorizationController : ApiController
         return NoContent();
     }
 
-    [HttpPost("refresh")]
+    [HttpPost("refresh-token")]
     public async Task<IActionResult> Refresh(RefreshTokenRequest request)
     {
-        int accountId = User.GetUserId();
-        var account = await _userManager.FindByIdAsync(accountId.ToString());
-
-        if(account is null)
-        {
-            return NotFound();
-        }
-
         var refreshTokenResult = await _mediator.Send(new RefreshTokenCommand(request.AccessToken, request.RefreshToken));
+        
         if (refreshTokenResult.IsError)
         {
             return BadRequest(refreshTokenResult.FirstError);
         }
 
-        account.RefreshToken = request.RefreshToken;
-        await _userManager.UpdateAsync(account);
-
         return refreshTokenResult.Match(
             response =>
             {
                 Response.Cookies.Delete("access");
-                Response.Cookies.Append("access", response.accessToken);
+                Response.Cookies.Append("access", response.AccessToken);
+
                 return Ok(response);
             },
             errors => Problem(errors));
     }
 
-    [HttpGet("verify")]
+    [HttpPost("email-verify")]
     public async Task<IActionResult> VerifyEmail(string link)
     {
         var id = User.GetUserId();
-        var verificationResult = await _mediator.Send(new VerifyEmailCommand(id.ToString(), link));
+
+        var verificationResult = await _mediator.Send(new VerifyEmailCommand(id, link));
 
         return verificationResult.Match(
-            response =>
-            {
-                var role = User.GetRole();
-                return Redirect($"{_config["ProfilesAPI"]}/{role}/create-profile"); //redirect to create profile page
-            },
+            response => Ok(),
             errors => Problem(errors));
     }
 
@@ -110,7 +127,17 @@ public class AuthorizationController : ApiController
         var result = await _mediator.Send(new GetAccountByIdQuery(id));
 
         return result.Match(
-            response => Ok(_mapper.Map<AccountResponse>(response)),
+            response => Ok(response),
+            errors => Problem(errors));
+    }
+
+    [HttpDelete("account/{id:int}")]
+    public async Task<IActionResult> DeleteAccount(int id)
+    {
+        var result = await _mediator.Send(new DeleteAccountCommand(id));
+
+        return result.Match(
+            _ => NoContent(),
             errors => Problem(errors));
     }
 }

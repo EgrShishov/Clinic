@@ -14,41 +14,55 @@
             return schedule;
         }
 
-        var appointments = await unitOfWork.AppointmentsRepository.
-            ListAsync(a => a.DoctorId == request.DoctorId && a.Date == request.AppointmentDate.Date);
+        var doctorProfileResponse = await profilesHttlClient.GetDoctorAsync(request.DoctorId);
 
-        if (appointments == null || !appointments.Any())
+        if (doctorProfileResponse.IsError)
         {
-            return Errors.Appointments.NotFound;
+            return doctorProfileResponse.FirstError;
+        }
+
+        var appointments = await unitOfWork.AppointmentsRepository.
+            ListAsync(a => a.DoctorId == request.DoctorId && a.Date.Date == request.AppointmentDate.Date);
+
+        if (appointments is null || !appointments.Any())
+        {
+            return Errors.Appointments.EmptyList;
         }
 
         List<AppointmentsScheduleResponse?> appointmentsSchedule = new();
 
         foreach (var appointment in appointments)
         {
-            var patient = await profilesHttlClient.GetPatientAsync(appointment.PatientId);
+            var patientProfileResponse = await profilesHttlClient.GetPatientAsync(appointment.PatientId);
 
-            if (patient == null)
+            if (patientProfileResponse.IsError)
             {
-                return Error.NotFound();
+                return patientProfileResponse.FirstError;
             }
+
+            var patientProfile = patientProfileResponse.Value;
 
             var service = await unitOfWork.ServiceRepository.GetServiceByIdAsync(appointment.ServiceId);
 
-            if (service == null)
+            if (service is null)
             {
-                return Error.NotFound();
+                return Errors.Service.NotFound(appointment.ServiceId);
             }
 
             appointmentsSchedule.Add(new AppointmentsScheduleResponse
             {
-                Time = appointment.Date + appointment.Time - appointment.Time.Add(TimeSpan.FromMinutes(10)),
-                PatientFullName = $"{patient.LastName} {patient.FirstName} {patient.MiddleName}",
+                Time = appointment.Time,
+                PatientFullName = $"{patientProfile.LastName} {patientProfile.FirstName} {patientProfile.MiddleName}",
                 PatientProfileLink = $"profileservice.api/patients/{appointment.PatientId}",
                 ServiceName = service.ServiceName,
                 ApprovalStatus = appointment.IsApproved ? "Approved" : "Not approved",
                 MedicalResultsLink = appointment.IsApproved ? $"appointments/{appointment.Id}/results" : null
             });
+        }
+
+        if (!appointmentsSchedule.Any() || appointmentsSchedule is null)
+        {
+            return Errors.Appointments.EmptySchedule;
         }
 
         schedule = appointmentsSchedule.OrderBy(a => a.Time).ToList();

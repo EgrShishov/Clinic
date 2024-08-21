@@ -1,6 +1,6 @@
 ﻿public class AppointmentsScheduleResponse
 {
-    public DateTime Time { get; init; }
+    public TimeSpan Time { get; init; }
     public string PatientFullName { get; init; }
     public string PatientProfileLink { get; init; }
     public string ServiceName { get; init; }

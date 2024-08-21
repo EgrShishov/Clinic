@@ -1,12 +1,18 @@
-﻿public class CreateOfficeCommandHandler(IUnitOfWork unitOfWork, IFilesHttpClient filesHttpClient, IEventBus eventBus) 
-    : IRequestHandler<CreateOfficeCommand, ErrorOr<Office>>
+﻿using InnoClinic.Contracts.OfficeCreatedEvent;
+
+public class CreateOfficeCommandHandler(
+    IUnitOfWork unitOfWork, 
+    IFilesHttpClient filesHttpClient, 
+    IEventBus eventBus) 
+    : IRequestHandler<CreateOfficeCommand, ErrorOr<OfficeResponse>>
 {
-    public async Task<ErrorOr<Office>> Handle(CreateOfficeCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<OfficeResponse>> Handle(CreateOfficeCommand request, CancellationToken cancellationToken)
     {
-        var photoUrl = await filesHttpClient.UploadPhoto(request.Photo, $"{request.City}-{request.OfficeNumber}");
+        var photoUrl = await filesHttpClient.UploadPhoto(request.Photo);
+        
         if (photoUrl.IsError)
         {
-            return Error.Failure();
+            return Errors.FilesApi.UploadingError;
         }
 
         var office = new Office
@@ -22,9 +28,11 @@
 
         await unitOfWork.OfficeRepository.AddOfficeAsync(office, cancellationToken);
 
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
         await eventBus.PublishAsync(new OfficeCreatedEvent
         {
-            Id = office.Id,
+            Id = office.Id.ToString(),
             City = office.City,
             HouseNumber = office.HouseNumber,
             OfficeNumber = office.OfficeNumber,
@@ -33,6 +41,13 @@
             Street = office.Street
         });
 
-        return office;
+        return new OfficeResponse 
+        {
+            Id = office.Id.ToString(),
+            Address = office.Address,
+            PhotoUrl = office.PhotoId,
+            IsActive = office.IsActive,
+            RegistryPhoneNumber = office.RegistryPhoneNumber
+        };
     }
 }

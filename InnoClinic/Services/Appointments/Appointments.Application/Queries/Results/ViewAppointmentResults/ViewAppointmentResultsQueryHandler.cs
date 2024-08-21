@@ -28,36 +28,42 @@
             return Errors.Appointments.NotFound;
         }
 
-        var patientInfo = await profilesHttpClient.GetPatientAsync(appointment.PatientId);
+        var patientProfileResponse = await profilesHttpClient.GetPatientAsync(appointment.PatientId);
 
-        if (patientInfo is null)
+        if (patientProfileResponse.IsError)
         {
-            return Error.NotFound();
+            return patientProfileResponse.FirstError;
         }
-        string patientFullName = $"{patientInfo.LastName} {patientInfo.FirstName} {patientInfo.MiddleName}";
 
-        var doctorInfo = await profilesHttpClient.GetDoctorAsync(appointment.DoctorId);
+        var patientProfile = patientProfileResponse.Value;
 
-        if (doctorInfo is null)
+        string patientFullName = $"{patientProfile.LastName} {patientProfile.FirstName} {patientProfile.MiddleName}";
+
+        var doctorProfileResponse = await profilesHttpClient.GetDoctorAsync(appointment.DoctorId);
+
+        if (doctorProfileResponse.IsError)
         {
-            return Error.NotFound();
+            return doctorProfileResponse.FirstError;
         }
-        string doctorFullName = $"{doctorInfo.LastName} {doctorInfo.FirstName} {doctorInfo.MiddleName}";
+
+        var doctorProfile = doctorProfileResponse.Value;
+
+        string doctorFullName = $"{doctorProfile.LastName} {doctorProfile.FirstName} {doctorProfile.MiddleName}";
 
         var serviceInfo = await unitOfWork.ServiceRepository.GetServiceByIdAsync(appointment.ServiceId);
 
         if (serviceInfo is null)
         {
-            return Error.NotFound();
+            return Errors.Service.NotFound(appointment.ServiceId);
         }
 
         var resultResponse = new ResultResponse
         {
             AppointmentDate = results.Date,
             PatientsFullName = patientFullName,
-            PatientDateOfBirth = patientInfo.DateOfBirth,
+            PatientDateOfBirth = patientProfile.DateOfBirth,
             DoctorsFullName = doctorFullName,
-            DoctorsSpecialization = doctorInfo.Specialization,
+            DoctorsSpecialization = doctorProfile.SpecializationName,
             ServiceName = serviceInfo.ServiceName,
             Complaints = results.Complaints,
             Conclusion = results.Conclusion,

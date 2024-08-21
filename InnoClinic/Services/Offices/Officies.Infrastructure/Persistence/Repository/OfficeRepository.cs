@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
 using MongoDB.Driver.Linq;
 using System.Linq.Expressions;
 public class OfficeRepository : IOfficeRepository
@@ -17,28 +18,44 @@ public class OfficeRepository : IOfficeRepository
 
     public async Task<Office> GetOfficeByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Offices.FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
+        if (!ObjectId.TryParse(id, out ObjectId Id)) 
+        {
+            return null;
+        }
+
+        return await _dbContext.Offices.FirstOrDefaultAsync(o => o.Id == Id, cancellationToken);
     }
 
     public async Task<string> AddOfficeAsync(Office office, CancellationToken cancellationToken = default)
     {
+        office.Id = ObjectId.GenerateNewId();
+
         var addedOffice = await _dbContext.Offices.AddAsync(office, cancellationToken);
-        return addedOffice.Entity.Id;
+
+        return addedOffice.Entity.Id.ToString();
     }
 
     public Task UpdateOfficeAsync(Office office, CancellationToken cancellationToken = default)
     {
         _dbContext.Entry(office).State = EntityState.Modified;
+        
         return Task.FromResult(office);
     }
 
     public async Task DeleteOfficeAsync(string id, CancellationToken cancellationToken = default)
     {
-        var office = await _dbContext.Offices.FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
+        if (!ObjectId.TryParse(id, out ObjectId Id))
+        {
+            return;
+        }
+
+        var office = await _dbContext.Offices.FirstOrDefaultAsync(o => o.Id == Id, cancellationToken);
+
         if (office is null)
         {
             return;
         }
+
         _dbContext.Offices.Remove(office);
     }
 

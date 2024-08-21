@@ -1,17 +1,18 @@
 ﻿public class ViewByIdQueryHandler(
     IUnitOfWork unitOfWork, 
-    IAccountHttpClient accountHttpClient) 
-    : IRequestHandler<ViewByIdQuery, ErrorOr<DoctorProfileResponse>>
+    IAccountHttpClient accountHttpClient) : IRequestHandler<ViewByIdQuery, ErrorOr<DoctorProfileResponse>>
 {
     public async Task<ErrorOr<DoctorProfileResponse>> Handle(ViewByIdQuery request, CancellationToken cancellationToken)
     {
         var doctor = await unitOfWork.DoctorsRepository.GetDoctorByIdAsync(request.DoctorId);
+        
         if (doctor is null)
         {
-            return Errors.Doctors.NotFound;
+            return Errors.Doctors.NotFound(request.DoctorId);
         }
 
         var accountInfoResponse = await accountHttpClient.GetAccountInfo(doctor.AccountId);
+        
         if (accountInfoResponse.IsError)
         {
             return accountInfoResponse.FirstError;
@@ -19,10 +20,11 @@
 
         var account = accountInfoResponse.Value;
 
-        var office = await unitOfWork.OfficeRepository.GetOfficeByIdAsync(doctor.OfficeId);
+        var office = await unitOfWork.OfficeRepository.GetOfficeByIdAsync(doctor.OfficeId.ToString());
+        
         if (office is null)
         {
-            return Error.NotFound();
+            return Errors.Office.NotFound;
         }
 
         string specilization = string.Empty;

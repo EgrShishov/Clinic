@@ -9,11 +9,11 @@
         _mapper = mapper;
     }
 
-    [HttpGet("schedule/{id:int}")]
+    [HttpGet("schedule/{doctorId:int}")]
     [Authorize(Roles = "Doctor")]
-    public async Task<IActionResult> GetAppointmentSchedule(int id, DateTime appointmentDate)
+    public async Task<IActionResult> GetAppointmentSchedule(int doctorId, DateTime appointmentDate)
     {
-        var result = await _mediator.Send(new ViewAppointmentScheduleQuery(id, appointmentDate));
+        var result = await _mediator.Send(new ViewAppointmentScheduleQuery(doctorId, appointmentDate));
 
         return result.Match(
             schedule => Ok(schedule),
@@ -26,10 +26,10 @@
         DateTime? appointmentDate, 
         int? doctorId, 
         int? serviceId, 
-        bool appointmentStatus,
-        int? officeId)
+        bool isActive)
     {
-        var command = _mapper.Map<ViewAppointmentsListQuery>((appointmentDate, doctorId, serviceId, appointmentStatus, officeId));
+        var command = new ViewAppointmentsListQuery(appointmentDate, doctorId, serviceId, isActive);
+        
         var result = await _mediator.Send(command);
 
         return result.Match(
@@ -48,11 +48,19 @@
             errors => Problem(errors));
     }
 
-    [HttpPost("create-appointment")]
+    [HttpPost("create")]
     [Authorize(Roles = "Patient, Receptionist")]
     public async Task<IActionResult> CreateAppointment(CreateAppointmentRequest request)
     {
-        var command = _mapper.Map<CreateAppointmentCommand>(request);
+        var command = new CreateAppointmentCommand(
+            request.PatientId,
+            request.SpecializationId,
+            request.DoctorId,
+            request.ServiceId,
+            request.OfficeId,
+            request.AppointmentDate,
+            request.TimeSlot);
+
         var result = await _mediator.Send(command);
 
         return result.Match(
@@ -82,23 +90,32 @@
             errors => Problem(errors));
     }
 
-    [HttpPost("select-time")]
+    [HttpGet("time-slots")]
     [Authorize(Roles = "Receptionist, Patient")]
-    public async Task<IActionResult> SelectDateAndTimeSlot(DateTime appointmentDate, TimeSpan appointmentTime)
+    public async Task<IActionResult> ViewTimeSlots(int ServiceId, int DoctorId, DateTime AppointmentDate)
     {
-        var command = _mapper.Map<SelectDateAndTimeSlotCommand>((appointmentDate, appointmentTime));
+        var command = new ViewTimeSlotsQuery(
+            ServiceId,
+            DoctorId, 
+            AppointmentDate);
+
         var result = await _mediator.Send(command);
 
         return result.Match(
-            isIsuccess => Ok(),
+            slots => Ok(slots),
             errors => Problem(errors));
     }
 
     [HttpPut("reschedule/{id:int}")]
     [Authorize(Roles = "Receptionist, Patient")]
-    public async Task<IActionResult> RescheduleAppointment(int id, int doctorId, DateTime appointmentDate, TimeSpan appointmentTime)
+    public async Task<IActionResult> RescheduleAppointment(int appointmentId, RescheduleAppointmentRequest request)
     {
-        var command = _mapper.Map<RescheduleAppointmentCommand>((id, doctorId, appointmentDate, appointmentTime));
+        var command = new RescheduleAppointmentCommand(
+            appointmentId, 
+            request.DoctorId, 
+            request.NewAppointmentDate, 
+            request.NewAppointmentTime);
+
         var result = await _mediator.Send(command);
 
         return result.Match(

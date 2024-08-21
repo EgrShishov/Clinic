@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +10,7 @@ public static class DependencyInjection
         services.AddPersistence(configuration)
                 .AddEmail(configuration)
                 .AddHttpClients(configuration)
+                .AddMessageBroker(configuration)
                 .AddCaching(configuration)
                 .AddTransient<IPDFDocumentGenerator, PDFDodumentGenerator>();
 
@@ -46,23 +48,33 @@ public static class DependencyInjection
 
     public static IServiceCollection AddHttpClients(this IServiceCollection services, IConfiguration configuration)
     {
+        services.Configure<CircuitBreakerSettings>(configuration.GetSection("CircuitBreakerSettings"))
+                .Configure<RetrySettings>(configuration.GetSection("RetrySettings"));
+
+        services.AddSingleton<ICircuitBreakerSettings, CircuitBreakerSettings>(
+            sp => sp.GetRequiredService<IOptions<CircuitBreakerSettings>>().Value);
+
+        services.AddSingleton<IRetrySettings, RetrySettings>(
+            sp => sp.GetRequiredService<IOptions<RetrySettings>>().Value);
+
         services.AddScoped<IFilesHttpClient, FilesHttpClient>()
-            .AddHttpClient<IFilesHttpClient, FilesHttpClient>(client =>
-            {
-                client.BaseAddress = new Uri(configuration["FilesAPI"]);
-            });
+                .AddScoped<IAccountsHttpClient, AccountHttpClient>()
+                .AddScoped<IProfilesHttpClient, ProfilesHttpClient>();
 
-        services.AddScoped<IProfilesHttpClient, ProfilesHttpClient>()
-            .AddHttpClient<IProfilesHttpClient, ProfilesHttpClient>(client =>
-            {
-                client.BaseAddress = new Uri(configuration["ProfilesAPI"]);
-            });
+        services.AddHttpClient("files", (serviceProvider, client) =>
+        {
+            client.BaseAddress = new Uri(configuration["FilesService"]);
+        });
 
-        services.AddScoped<IAccountsHttpClient, AccountHttpClient>()
-            .AddHttpClient<IAccountsHttpClient, AccountHttpClient>(client =>
-            {
-                client.BaseAddress = new Uri(configuration["AccountAPI"]);
-            });
+        services.AddHttpClient("profiles", (serviceProvider, client) =>
+        {
+            client.BaseAddress = new Uri(configuration["ProfilesService"]);
+        });
+
+        services.AddHttpClient("identity",(serviceProvider, client) =>
+        {
+            client.BaseAddress = new Uri(configuration["IdentityService"]);
+        });
 
         return services;
     }
@@ -77,6 +89,37 @@ public static class DependencyInjection
         });
 
         services.AddSingleton<ICacheService, CacheService>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddMessageBroker(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<MessageBrokerSettings>(configuration.GetRequiredSection(MessageBrokerSettings.SectionName))
+            .AddSingleton(conf => conf.GetRequiredService<IOptions<MessageBrokerSettings>>().Value);
+
+        services.AddMassTransit(busConfigurator =>
+        {
+            busConfigurator.SetKebabCaseEndpointNameFormatter();
+
+            busConfigurator.AddConsumer<ServiceCreatedConsumer>();
+            busConfigurator.AddConsumer<ServiceStatusChangedConsumer>();
+            busConfigurator.AddConsumer<ServiceUpdatedConsumer>();
+            busConfigurator.AddConsumer<ServiceDeletedConsumer>();
+
+            busConfigurator.UsingRabbitMq((context, configurator) =>
+            {
+                MessageBrokerSettings settings = context.GetRequiredService<MessageBrokerSettings>();
+
+                configurator.Host(new Uri(settings.Host), h =>
+                {
+                    h.Username(settings.Username);
+                    h.Password(settings.Password);
+                });
+
+                configurator.ConfigureEndpoints(context);
+            });
+        });
 
         return services;
     }

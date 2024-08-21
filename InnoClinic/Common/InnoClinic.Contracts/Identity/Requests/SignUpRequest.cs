@@ -1,7 +1,6 @@
-﻿public record SignUpRequest(
-    string Email,
-    string Password, 
-    string ReenteredPassword, 
-    string PhoneNumber, 
-    string Role, 
-    int CreatedBy);
+﻿public class SignUpRequest
+{
+    public string Email { get; init; }
+    public string Password { get; init; }
+    public string PhoneNumber { get; init; }
+}

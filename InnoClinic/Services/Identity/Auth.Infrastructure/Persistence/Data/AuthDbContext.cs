@@ -7,6 +7,4 @@ public class AuthDbContext : IdentityDbContext<Account, AppRole, int>
     {
         Database.EnsureCreated();
     }
-
-    public DbSet<Account> Accounts { get; set; }
 }

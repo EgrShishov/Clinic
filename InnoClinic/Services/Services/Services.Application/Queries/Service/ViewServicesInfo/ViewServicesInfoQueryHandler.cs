@@ -4,9 +4,10 @@
     public async Task<ErrorOr<ServiceInfoResponse>> Handle(ViewServicesInfoQuery request, CancellationToken cancellationToken)
     {
         var service = await unitOfWork.Services.GetServiceByIdAsync(request.Id);
+
         if (service is null)
         {
-            return Error.NotFound();
+            return Errors.Service.NotFound;
         }
 
         return new ServiceInfoResponse

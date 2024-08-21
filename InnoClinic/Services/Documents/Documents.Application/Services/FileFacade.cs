@@ -12,26 +12,24 @@ public class FileFacade : IFileFacade
         _blobStorageService = blobStorageService;
     }
 
-    public async Task<ErrorOr<Unit>> DeleteDocumentAsync(string fileName)
+    public async Task<ErrorOr<Unit>> DeleteResultDocumentAsync(int resultId)
     {
         try
         {
-            var result = await _blobStorageService.DeleteAsync(fileName, DocumentsContainerName);
-
-            if (!result)
-            {
-                return Errors.Documents.NotFound;
-            }
-
-            var document = await _unitOfWork.Documents.GetDocumentAsync(fileName);
+            var document = await _unitOfWork.Documents.GetDocumentByResultAsync(resultId);
             
             if (document is null)
             {
                 return Errors.Documents.NotFound;
             }
 
-            await _unitOfWork.Documents.DeleteDocumentAsync(fileName);
+            if (!await _blobStorageService.ExistsAsync(document.Url))
+            {
+                return Errors.Documents.BlobNotFound;
+            }
 
+            await _blobStorageService.DeleteAsync(document.Url);
+            await _unitOfWork.Documents.DeleteDocumentAsync(document.Id);
             await _unitOfWork.CompleteAsync();
         }
         catch (Exception ex)
@@ -42,26 +40,24 @@ public class FileFacade : IFileFacade
         return Unit.Value;
     }
 
-    public async Task<ErrorOr<Unit>> DeletePhotoAsync(string fileName)
+    public async Task<ErrorOr<Unit>> DeletePhotoAsync(string url)
     {
         try
         {
-            var result = await _blobStorageService.DeleteAsync(fileName, PhotosContainerName);
-
-            if (!result)
-            {
-                return Errors.Photos.NotFound;
-            }
-
-            var photo = await _unitOfWork.Photos.GetPhotoAsync(fileName);
+            var photo = await _unitOfWork.Photos.GetPhotoAsync(url);
 
             if (photo is null)
             {
                 return Errors.Photos.NotFound;
             }
+            
+            if (!await _blobStorageService.ExistsAsync(photo.Url))
+            {
+                return Errors.Photos.BlobNotFound;
+            }
 
-            await _unitOfWork.Photos.DeletePhotoAsync(fileName);
-
+            await _blobStorageService.DeleteAsync(photo.Url);
+            await _unitOfWork.Photos.DeletePhotoAsync(photo.Url);
             await _unitOfWork.CompleteAsync();
         }
         catch (Exception ex)
@@ -72,21 +68,49 @@ public class FileFacade : IFileFacade
         return Unit.Value;
     }
 
-    public async Task<ErrorOr<FileResponse>> DownloadDocumentAsync(string fileName)
+    public async Task<ErrorOr<FileResponse>> DownloadDocumentAsync(int resultId)
     {
-        return await _blobStorageService.DownloadAsync(fileName, DocumentsContainerName);
+        var document = await _unitOfWork.Documents.GetDocumentByResultAsync(resultId);
+
+        if (document is null)
+        {
+            return Errors.Documents.NotFoundWithResultsId(resultId);
+        }
+
+        var blobFileResponse = await _blobStorageService.DownloadAsync(document.Url);
+
+        if (blobFileResponse is null)
+        {
+            return Errors.Documents.BlobNotFound;
+        }
+
+        return blobFileResponse;
     }
 
-    public async Task<ErrorOr<FileResponse>> DownloadPhotoAsync(string fileName)
+    public async Task<ErrorOr<FileResponse>> DownloadPhotoAsync(string url)
     {
-        return await _blobStorageService.DownloadAsync(fileName, PhotosContainerName);
+        var photo = await _unitOfWork.Photos.GetPhotoAsync(url);
+
+        if (photo is null)
+        {
+            return Errors.Photos.NotFound;
+        }
+
+        var blobFileResponse = await _blobStorageService.DownloadAsync(url);
+
+        if (blobFileResponse is null)
+        {
+            return Errors.Photos.BlobNotFound;
+        }
+
+        return blobFileResponse;
     }
 
     public async Task<ErrorOr<string>> UploadDocumentAsync(IFormFile file, int resultId)
     {
         if (file == null || file.Length == 0)
         {
-            return Errors.Documents.NotFound;
+            return Errors.Documents.InvalidFile;
         }
 
         var url = await _blobStorageService

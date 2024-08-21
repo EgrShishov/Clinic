@@ -11,7 +11,7 @@
             .Map(dest => dest.RegistryPhoneNumber, src => src.RegistryPhoneNumber)
             .Map(dest => dest.Street, src => src.Street);        
         
-        config.NewConfig<(UpdateOfficeRequest request, int OfficeId), UpdateOfficeCommand>()
+        config.NewConfig<(UpdateOfficeRequest request, string OfficeId), UpdateOfficeCommand>()
             .Map(dest => dest.OfficeId, src => src.OfficeId)
             .Map(dest => dest.City, src => src.request.City)
             .Map(dest => dest.HouseNumber, src => src.request.HouseNumber)

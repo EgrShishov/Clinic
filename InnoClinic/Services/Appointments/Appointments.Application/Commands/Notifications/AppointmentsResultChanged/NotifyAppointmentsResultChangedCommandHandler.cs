@@ -9,35 +9,49 @@
     public async Task<ErrorOr<Unit>> Handle(NotifyAppointmentsResultChangedCommand request, CancellationToken cancellationToken)
     {
         var appointmentResults = await unitOfWork.AppointmentsRepository.GetAppointmentByIdAsync(request.ResultsId);
-        if (appointmentResults == null)
+        
+        if (appointmentResults is null)
         {
             return Errors.Results.NotFound;
         }
 
-        var document = await filesHttpClient.GetDocumentForResultAsync(request.ResultsId);
-        if (document == null)
+        var documentResponse = await filesHttpClient.GetDocumentForResultAsync(request.ResultsId);
+        
+        if (documentResponse.IsError)
         {
-            return Error.NotFound();
+            return documentResponse.FirstError;
         }
 
-        var profile = await profilesHttpClient.GetPatientAsync(appointmentResults.PatientId);
-        if (profile == null)
+        var document = documentResponse.Value;
+
+        var profileResponse = await profilesHttpClient.GetPatientAsync(appointmentResults.PatientId);
+        
+        if (profileResponse.IsError)
         {
-            return Error.NotFound();
+            return profileResponse.FirstError;
         }
 
-        var patientAccount = await accountHttpClient.GetAccountInfoAsync(profile.UserId);
-        if (patientAccount == null)
+        var profile = profileResponse.Value;
+
+        var patientAccountResponse = await accountHttpClient.GetAccountInfoAsync(profile.UserId);
+        
+        if (patientAccountResponse.IsError)
         {
-            return Error.NotFound();
+            return patientAccountResponse.FirstError;
         }
+
+        var patientAccount = patientAccountResponse.Value;
 
         var mailTemplate = new NewAppointmentResultsEmailTemplate
         {
             AppointmentDate = appointmentResults.Date
         };
 
-        await emailSender.SendEmailAsync(patientAccount.Email, "Appointments result changed", mailTemplate.GetContent(), new MemoryStream(document));
+        await emailSender.SendEmailWithAttachmentAsync(
+            patientAccount.Email, 
+            "Appointments result changed", 
+            mailTemplate.GetContent(), 
+            document);
 
         return Unit.Value;
     }

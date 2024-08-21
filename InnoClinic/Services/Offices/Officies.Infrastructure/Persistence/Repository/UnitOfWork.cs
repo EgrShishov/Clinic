@@ -14,6 +14,10 @@ public class UnitOfWork : IUnitOfWork
 
     public IOfficeRepository OfficeRepository => _officeRepository.Value;
 
+    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
     public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
     {
         _transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
@@ -62,6 +66,6 @@ public class UnitOfWork : IUnitOfWork
     public void Dispose()
     {
         _transaction?.Dispose();
-        GC.WaitForPendingFinalizers();
+        GC.SuppressFinalize(this);
     }
 }

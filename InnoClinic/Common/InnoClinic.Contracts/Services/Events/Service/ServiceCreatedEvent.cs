@@ -1,4 +1,6 @@
-﻿public record ServiceCreatedEvent
+﻿namespace InnoClinic.Contracts.ServiceCreatedEvent;
+
+public class ServiceCreatedEvent
 {
     public int Id { get; set; }
     public string ServiceName { get; set; }

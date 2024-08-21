@@ -1,7 +1,6 @@
 ﻿public class CreateAppointmentResultRequest
 {
-    public DateTime AppointmentDate { get; init; }
-    public DateTime DateOfBirth { get; init; }
+    public int AppointmentId { get; init; }
     public int PatientId { get; init; }
     public int DoctorId { get; init; }
     public int ServiceId { get; init; }

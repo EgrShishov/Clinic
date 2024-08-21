@@ -53,6 +53,7 @@ public class UnitOfWork : IUnitOfWork
     {
         _transaction?.Dispose();
         _dbContext.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)

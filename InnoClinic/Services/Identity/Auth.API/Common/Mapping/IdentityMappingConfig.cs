@@ -12,11 +12,14 @@
             .Map(dest => dest.Password, src => src.Password);
 
         config.NewConfig<SignUpRequest, SignUpCommand>()
+            .Map(dest => dest.PhoneNumber, src => src.PhoneNumber)
+            .Map(dest => dest.Email, src => src.Email)
+            .Map(dest => dest.Password, src => src.Password);
+
+        config.NewConfig<CreateAccountRequest, CreateAccountCommand>()
             .Map(dest => dest.Role, src => src.Role)
             .Map(dest => dest.Email, src => src.Email)
-            .Map(dest => dest.Password, src => src.Password)
             .Map(dest => dest.PhoneNumber, src => src.PhoneNumber)
-            .Map(dest => dest.CreatedBy, src => src.CreatedBy)
-            .Map(dest => dest.ReenteredPassword, src => src.ReenteredPassword);
+            .Map(dest => dest.CreatedBy, src => src.CreatedBy);
     }
 }

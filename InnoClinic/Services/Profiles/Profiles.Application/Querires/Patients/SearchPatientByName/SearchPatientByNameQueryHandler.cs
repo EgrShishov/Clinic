@@ -3,20 +3,27 @@
 {
     public async Task<ErrorOr<List<PatientListResponse>>> Handle(SearchPatientByNameQuery request, CancellationToken cancellationToken)
     {
-        var patients = await unitOfWork.PatientsRepository
-                    .SearchPatientByNameAsync(request.FirstName, request.LastName, request.MiddleName);
-        if (patients is null)
+        var patients = await unitOfWork
+            .PatientsRepository
+                .ListPatientsAsync(p => p.FirstName == request.FirstName
+                                    && p.LastName == request.LastName
+                                    && p.MiddleName == request.MiddleName,
+                                    cancellationToken);
+
+        if (patients is null || !patients.Any())
         {
-            return Errors.Patients.NotFound;
+            return Errors.Patients.NotFoundByFullName;
         }
 
-        var patientList = new List<PatientListResponse>(0);
+        var patientList = new List<PatientListResponse>();
+        
         foreach (var patient in patients)
         {
             var accountResponse = await accountHttpClient.GetAccountInfo(patient.AccountId);
+
             if (accountResponse.IsError)
             {
-                return Error.Failure();
+                return accountResponse.FirstError;
             }
 
             var account = accountResponse.Value;

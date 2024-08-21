@@ -1,45 +1,39 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-public class SignUpCommandHandler(
-        IMediator mediator,
-        IUnitOfWork unitOfWork,
-        IEmailSender emailSender,
-        UserManager<Account> manager,
-        ITokenGenerator tokenGenerator
-        )
-        : IRequestHandler<SignUpCommand, ErrorOr<AuthorizationResponse>>
+public sealed class SignUpCommandHandler(
+    UserManager<Account> manager,
+    IMediator mediator,
+    IEmailSender emailSender,
+    ITokenGenerator tokenGenerator) : IRequestHandler<SignUpCommand, ErrorOr<AuthorizationResponse>>
 {
     public async Task<ErrorOr<AuthorizationResponse>> Handle(SignUpCommand request, CancellationToken cancellationToken)
     {
-        if (await unitOfWork.AccountRepository.EmailExistsAsync(request.Email))
+        var account = await manager.FindByEmailAsync(request.Email);
+
+        if (account is not null)
         {
-            return Errors.Authentication.DuplicateEmail;
+            return Errors.Account.DuplicateEmail;
         }
 
-        if (request.Password != request.ReenteredPassword)
-        {
-            return Errors.Authentication.PasswordNotCoincide;
-        }
-
-        var account = new Account
+        var newAccount = new Account
         {
             Email = request.Email,
             CreatedAt = DateTime.UtcNow,
-            CreatedBy = request.CreatedBy,
             UserName = request.Email,
             PhoneNumber = request.PhoneNumber,
-            PhotoUrl = ""
         };
 
-        var identityResult = await manager.CreateAsync(account, request.Password);
+        var identityResult = await manager.CreateAsync(newAccount, request.Password);
+
         if (!identityResult.Succeeded)
         {
             return Errors.Authentication.GenerationFailed;
         }
 
-        await manager.AddToRoleAsync(account, request.Role);
+        await manager.AddToRoleAsync(newAccount, "Patient");
 
-        var confirmationLink = await mediator.Send(new GenerateEmailConfirmationLinkQuery(account.Id));
+        var confirmationLink = await mediator.Send(new GenerateEmailConfirmationLinkQuery(newAccount.Id));
+
         var emailTemplate = new EmailTemplates.EmailConfirmationLinkTemplate
         {
             ConfirmationLink = confirmationLink.Value
@@ -47,16 +41,17 @@ public class SignUpCommandHandler(
 
         await emailSender.SendEmailAsync(request.Email, "Confirm your email", emailTemplate.GetContent());
 
-        var accessToken = tokenGenerator.GenerateAccessToken(account);
-        var refreshToken = tokenGenerator.GenerateRefreshToken(account);
+        var accessToken = tokenGenerator.GenerateAccessToken(newAccount);
+        var refreshToken = tokenGenerator.GenerateRefreshToken();
 
-        account.RefreshToken = refreshToken;
-        await manager.UpdateAsync(account);
+        newAccount.RefreshToken = refreshToken;
+        await manager.UpdateAsync(newAccount);
 
-        var roles = await manager.GetRolesAsync(account);
-        var role = roles.Contains("Doctor") ? "Doctor" :
-                roles.Contains("Receptionist") ? "Receptionist" : "Patient";
-
-        return new AuthorizationResponse(accessToken, refreshToken, role);
+        return new AuthorizationResponse
+        {
+            AccountId = newAccount.Id,
+            AccessToken = accessToken,
+            RefreshToken = refreshToken
+        };
     }
 }

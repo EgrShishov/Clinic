@@ -9,7 +9,8 @@
         "auth.api": "StartDebugging",
         "officies.api": "StartDebugging",
         "profiles.api": "StartDebugging",
-        "services.api": "StartDebugging"
+        "services.api": "StartDebugging",
+        "gateway.api": "StartDebugging"
       }
     }
   }

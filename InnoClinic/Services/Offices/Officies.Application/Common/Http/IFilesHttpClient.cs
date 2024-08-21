@@ -2,6 +2,6 @@
 
 public interface IFilesHttpClient
 {
-    public Task<ErrorOr<string>> UploadPhoto(IFormFile photo, string fileName);
+    public Task<ErrorOr<string>> UploadPhoto(IFormFile photo);
     public Task<ErrorOr<Unit>> DeletedPhoto(string fileName);
 }

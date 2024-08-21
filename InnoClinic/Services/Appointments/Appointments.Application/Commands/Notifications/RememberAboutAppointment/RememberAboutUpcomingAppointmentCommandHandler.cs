@@ -11,39 +11,49 @@
 
         var appointments = await unitOfWork.AppointmentsRepository
             .ListAsync(a => a.Date == currentDate.Date.AddDays(TimeSpan.FromDays(1).TotalMilliseconds));
-        if (appointments == null)
+        
+        if (appointments is null || !appointments.Any())
         {
-            return Errors.Appointments.NotFound;
+            return Errors.Appointments.EmptyList;
         }
 
-        foreach(var appointment in appointments)
+        foreach (var appointment in appointments)
         {
-            var doctor = await profilesHttpClient.GetDoctorAsync(appointment.DoctorId);
-            if (doctor == null)
+            var doctorProfileResponse = await profilesHttpClient.GetDoctorAsync(appointment.DoctorId);
+            if (doctorProfileResponse.IsError)
             {
-                return Error.NotFound();
-            }            
-            
-            var patient = await profilesHttpClient.GetPatientAsync(appointment.PatientId);
-            if (patient == null)
-            {
-                return Error.NotFound();
-            }                
-            
-            var patientAccount = await accountsHttpClient.GetAccountInfoAsync(patient.UserId);
-            if (patientAccount == null)
-            {
-                return Error.NotFound();
-            }            
-            
-            var service = await unitOfWork.ServiceRepository.GetServiceByIdAsync(appointment.ServiceId);
-            if (service == null)
-            {
-                return Error.NotFound();
+                return doctorProfileResponse.FirstError;
             }
 
-            string DoctorsFullName = $"{doctor.LastName} {doctor.FirstName} {doctor.MiddleName}";
-            string PatientsFullName = $"{patient.LastName} {patient.FirstName} {patient.MiddleName}";
+            var doctorProfile = doctorProfileResponse.Value;
+
+            var patientProfileResponse = await profilesHttpClient.GetPatientAsync(appointment.PatientId);
+           
+            if (patientProfileResponse.IsError)
+            {
+                return patientProfileResponse.FirstError;
+            }
+
+            var patientProfile = patientProfileResponse.Value;
+            
+            var patientAccountResponse = await accountsHttpClient.GetAccountInfoAsync(patientProfile.UserId);
+           
+            if (patientAccountResponse.IsError)
+            {
+                return patientAccountResponse.FirstError;
+            }
+
+            var patientAccount = patientAccountResponse.Value;
+
+            var service = await unitOfWork.ServiceRepository.GetServiceByIdAsync(appointment.ServiceId);
+         
+            if (service == null)
+            {
+                return Errors.Service.NotFound(appointment.ServiceId);
+            }
+
+            string DoctorsFullName = $"{doctorProfile.LastName} {doctorProfile.FirstName} {doctorProfile.MiddleName}";
+            string PatientsFullName = $"{patientProfile.LastName} {patientProfile.FirstName} {patientProfile.MiddleName}";
 
             var emailNotificationTemplate = new EmailTemplates.AppointmentNotificationEmailTemplate
             {

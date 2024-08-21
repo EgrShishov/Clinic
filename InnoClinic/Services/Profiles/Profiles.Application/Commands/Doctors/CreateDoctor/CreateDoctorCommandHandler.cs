@@ -1,50 +1,59 @@
 ﻿public class CreateDoctorCommandHandler(
     IUnitOfWork unitOfWork, 
-    IAccountHttpClient accountHttpClient,
-    IFilesHttpClient filesHttpClient,
-    IPasswordGenerator passwordGenerator,
-    IEmailSender emailService) 
+    IAccountHttpClient accountHttpClient) 
     : IRequestHandler<CreateDoctorCommand, ErrorOr<Doctor>>
 {
     public async Task<ErrorOr<Doctor>> Handle(CreateDoctorCommand request, CancellationToken cancellationToken)
     {
-        var generatedPassword = passwordGenerator.GeneratePassword(15, 5);
+        int accountId = 0;
 
-        var createDoctorsAccountResponse = await accountHttpClient.CreateAccount(
-            new CreateAccountRequest
+        try
+        {
+            var createDoctorsAccountResponse = await accountHttpClient.CreateAccount(
+                new CreateAccountRequest
+                {
+                    Email = request.Email,
+                    Role = nameof(Doctor),
+                    PhoneNumber = string.Empty,
+                    Photo = request.Photo,
+                    CreatedBy = request.CreatedBy
+                });
+
+            if (createDoctorsAccountResponse.IsError)
             {
-                Email = request.Email,
-                Password = generatedPassword,
-                Role = nameof(Doctor),
-                PhoneNumber = string.Empty,
-                Photo = request.Photo,
-                CreatedBy = request.CreatedBy
-            });
+                return createDoctorsAccountResponse.FirstError;
+            }
 
-        if (createDoctorsAccountResponse.IsError) 
-        {
-            return createDoctorsAccountResponse.FirstError;
+            var authorizationResponse = createDoctorsAccountResponse.Value;
+
+            accountId = authorizationResponse.AccountId;
+
+            Doctor doctor = new Doctor
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                MiddleName = request.MiddleName,
+                SpecializationId = request.SpecializationId,
+                DateOfBirth = request.DateOfBirth,
+                CareerStartYear = request.CareerStartYear,
+                OfficeId = request.OfficeId,
+                Status = request.Status,
+                AccountId = accountId
+            };
+
+            var addedDoctor = await unitOfWork.DoctorsRepository.AddDoctorAsync(doctor);
+
+            await unitOfWork.CompleteAsync(cancellationToken);
+
+            return addedDoctor;
         }
-
-        var account = createDoctorsAccountResponse.Value;
-
-        await emailService.SendEmailWithCredentialsAsync(request.Email, generatedPassword);
-
-        Doctor doctor = new Doctor
+        catch (Exception)
         {
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            MiddleName = request.MiddleName,
-            SpecializationId = request.SpecializationId,
-            DateOfBirth = request.DateOfBirth,
-            CareerStartYear = request.CareerStartYear,
-            OfficeId = request.OfficeId,
-            Status = request.Status,
-            AccountId = account.AccountId
-        };
-
-        var addedDoctor = await unitOfWork.DoctorsRepository.AddDoctorAsync(doctor);
-        await unitOfWork.CompleteAsync(cancellationToken);
-        return addedDoctor;
+            if (accountId != 0)
+            {
+                await accountHttpClient.DeleteAccount(accountId);
+            }
+            throw;
+        }
     }
 }

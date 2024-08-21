@@ -10,7 +10,7 @@
             var patientProfile = await unitOfWork.PatientsRepository.GetPatientByIdAsync(request.PatientId);
             if (patientProfile is null)
             {
-                return Errors.Patients.NotFound;
+                return Errors.Patients.NotFound(request.PatientId);
             }
 
             var accountInfoResponse = await accountHttpClient.GetAccountInfo(patientProfile.AccountId);
@@ -22,7 +22,6 @@
             patientProfile.FirstName = request.FirstName;
             patientProfile.LastName = request.LastName;
             patientProfile.MiddleName = request.MiddleName;
-            //patientProfile.PhoneNumber = request.PhoneNumber
             patientProfile.DateOfBirth = request.DateOfBirth;
 
             await unitOfWork.PatientsRepository.UpdatePatientAsync(patientProfile);

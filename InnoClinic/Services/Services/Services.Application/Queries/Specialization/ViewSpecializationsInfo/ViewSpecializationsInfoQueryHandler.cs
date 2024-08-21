@@ -6,13 +6,13 @@
         var specialization = await unitOfWork.Specializations.GetSpecializationByIdAsync(request.Id, cancellationToken);
         if (specialization is null)
         {
-            return Error.NotFound();
+            return Errors.Specialization.NotFound;
         }
 
         var allServices = await unitOfWork.Services.GetAllAsync(cancellationToken);
         var relatedServices = new List<ServiceInfoResponse>();
 
-        foreach(var service in allServices)
+        foreach (var service in allServices)
         {
             if (service.SpecializationId != specialization.Id)
             {
@@ -30,9 +30,11 @@
 
         }
 
-        return new SpecializationInfoResponse(
-            specialization.SpecializationName,
-            specialization.IsActive ? "Active" : "Inactive",
-            relatedServices);
+        return new SpecializationInfoResponse
+        {
+            SpecializationName = specialization.SpecializationName,
+            SpecializationStatus = specialization.IsActive ? "Active" : "Inactive",
+            RelatedServices = relatedServices
+        };
     }
 }

@@ -7,6 +7,6 @@ public sealed record CreateOfficeCommand(
     string OfficeNumber,
     IFormFile Photo,
     string RegistryPhoneNumber,
-    bool IsActive) : IRequest<ErrorOr<Office>>
+    bool IsActive) : IRequest<ErrorOr<OfficeResponse>>
 {
 }

@@ -3,17 +3,24 @@ using Ocelot.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options => options.AddDefaultPolicy(builder =>
+{
+    builder.AllowAnyHeader()
+           .AllowAnyMethod()
+           .AllowAnyOrigin();
+}));
 builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
 builder.Services.AddOcelot(builder.Configuration);
 
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
-        options.Authority = "https://localhost:5212";
-        options.RequireHttpsMetadata = true;
+        options.Authority = "http://identity.api";
+        options.RequireHttpsMetadata = false;
         options.Audience = "gateway-api";
     });
 
+builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -27,6 +34,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();

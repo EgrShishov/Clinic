@@ -16,7 +16,7 @@
 
         var appointments = await unitOfWork.AppointmentsRepository.ListAsync(a => a.PatientId == request.PatientId);
 
-        if (appointments is null)
+        if (appointments is null || !appointments.Any())
         {
             return Errors.Appointments.NotFound;
         }
@@ -25,20 +25,22 @@
 
         foreach (Appointment appointment in appointments)
         {
-            var doctorInfo = await profilesHttpClient.GetDoctorAsync(appointment.DoctorId);
+            var doctorProfileResponse = await profilesHttpClient.GetDoctorAsync(appointment.DoctorId);
 
-            if (doctorInfo is null)
+            if (doctorProfileResponse.IsError)
             {
-                return Error.NotFound();
+                return doctorProfileResponse.FirstError;
             }
 
-            string doctorFullName = $"{doctorInfo.LastName} {doctorInfo.FirstName} {doctorInfo.MiddleName}";
+            var doctorProfile = doctorProfileResponse.Value;
+
+            string doctorFullName = $"{doctorProfile.LastName} {doctorProfile.FirstName} {doctorProfile.MiddleName}";
 
             var serviceInfo = await unitOfWork.ServiceRepository.GetServiceByIdAsync(appointment.ServiceId);
 
             if (serviceInfo is null)
             {
-                return Error.NotFound();
+                return Errors.Service.NotFound(appointment.ServiceId);
             }
 
             historyResponses.Add(new AppointmentHistoryResponse
@@ -49,6 +51,11 @@
                 ServiceName = serviceInfo.ServiceName,
                 LinkToMedicalResults = appointment.IsApproved ? $"appointments/{appointment.Id}/results" : null
             });
+        }
+
+        if (!historyResponses.Any())
+        {
+            return Errors.Appointments.EmptyHistory;
         }
 
         appointmentsHistory = historyResponses;

@@ -6,7 +6,7 @@ public sealed record UpdateOfficeCommand(
     string Street,
     string HouseNumber,
     string OfficeNumber,
-    IFormFile Photo,
+    IFormFile? Photo,
     string RegistryPhoneNumber,
     bool IsActive) : IRequest<ErrorOr<Unit>>
 {

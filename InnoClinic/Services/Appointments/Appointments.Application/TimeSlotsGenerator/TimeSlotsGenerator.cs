@@ -45,21 +45,24 @@
     public async Task<List<TimeSlotResponse>> GetBookedSlotsForDate(DateTime AppointmentDate)
     {
         var avaibaleSlots = new List<TimeSlotResponse>();
-        var appointmentsByDate = await _unitOfWork.AppointmentsRepository.ListAsync(a => a.Date == AppointmentDate.Date);
+
+        var appointmentsByDate = await _unitOfWork.AppointmentsRepository.ListAsync(a => a.Date.Date == AppointmentDate.Date.Date);
 
         foreach (var appointment in appointmentsByDate)
         {
             var service = await _unitOfWork.ServiceRepository.GetServiceByIdAsync(appointment.ServiceId);
+            
             if (service is null)
             {
                 return null;
             }
 
             int requiredMinutes = GetRequiredMinutes(service.ServiceCategory);
+            
             avaibaleSlots.Add(new TimeSlotResponse
             {
                 IsAvaibale = false,
-                AppointmentDate = AppointmentDate,
+                AppointmentDate = AppointmentDate.Date,
                 StartTime = appointment.Time,
                 EndTime = appointment.Time.Add(TimeSpan.FromMinutes(requiredMinutes))
             });

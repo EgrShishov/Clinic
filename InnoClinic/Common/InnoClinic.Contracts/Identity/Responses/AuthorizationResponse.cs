@@ -1,1 +1,6 @@
-﻿public record AuthorizationResponse(string AccessToken, string RefreshToken, string Role);
+﻿public class AuthorizationResponse
+{
+    public int AccountId { get; init; }
+    public string AccessToken { get; init; }
+    public string RefreshToken { get; init; }
+}
