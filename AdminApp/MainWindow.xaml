@@ -1,0 +1,173 @@
+﻿<Window x:Class="AdminApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:AdminApp.ViewModel"
+        xmlns:local="clr-namespace:AdminApp"
+        mc:Ignorable="d"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        Background="Transparent"
+        Title="MainWindow" Height="450" Width="800">
+
+    <Grid>
+        <Border Background="#fafafa"
+                CornerRadius="20" />
+
+        <Grid>
+
+            <!--// Base Grid //-->
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="228" />
+                <ColumnDefinition Width="622" />
+            </Grid.ColumnDefinitions>
+
+            <!--// Navigation Panel //-->
+
+            <Grid HorizontalAlignment="Left"
+                  Width="228">
+
+                <Border Background="#f0f0f0"
+                        CornerRadius="20,0,0,20" />
+
+                <StackPanel Height="400"
+                            Width="228">
+
+                    <!--// Home //-->
+
+                    <Button Style="{StaticResource NaviBtnStyle}"
+                              Command="{Binding ToHomePageCommand}"
+                              IsEnabled="True">
+
+                        <Grid>
+
+                            <Image Source="Images/home.png"
+                                   Style="{StaticResource NaviImageStyle}" />
+
+                            <TextBlock Text="Home"
+                                       Style="{StaticResource NaviTextStyle}"/>
+
+                        </Grid>
+
+                    </Button>
+
+                    <!--// Offices //-->
+
+                    <Button Style="{StaticResource NaviBtnStyle}"
+                              Command="{Binding ToOfficesPageCommand}" Click="Button_Click">
+
+                        <Grid>
+
+                            <Image Source="Images/office-building.png"
+                                   Style="{StaticResource NaviImageStyle}" />
+
+                            <TextBlock Text="Offices"
+                                       Style="{StaticResource NaviTextStyle}" />
+
+                        </Grid>
+
+                    </Button>
+
+                    <!--// Services //-->
+
+                    <Button Style="{StaticResource NaviBtnStyle}"
+                              Command="{Binding ToServicesPageCommand}">
+
+                        <Grid>
+
+                            <Image Source="Images/health-screening.png"
+                                   Style="{StaticResource NaviImageStyle}" />
+
+                            <TextBlock Text="Services"
+                                       Style="{StaticResource NaviTextStyle}" />
+
+                        </Grid>
+
+                    </Button>
+
+                    <!--// Appointments //-->
+
+                    <Button Style="{StaticResource NaviBtnStyle}"
+                              Command="{Binding ToAppointmentsPageCommand}">
+
+                        <Grid>
+
+                            <Image Source="Images/medical.png"
+                                   Style="{StaticResource NaviImageStyle}" />
+
+                            <TextBlock Text="Appointments"
+                                       Style="{StaticResource NaviTextStyle}" />
+
+                        </Grid>
+
+                    </Button>
+
+                    <!--// Doctors //-->
+
+                    <Button Style="{StaticResource NaviBtnStyle}"
+                              Command="{Binding ToDoctorsProfilePageCommand}">
+
+                        <Grid>
+
+                            <Image Source="Images/doctor.png"
+                                   Style="{StaticResource NaviImageStyle}" />
+
+                            <TextBlock Text="Doctors"
+                                       Style="{StaticResource NaviTextStyle}" />
+
+                        </Grid>
+
+                    </Button>
+
+                    <!--// Patients //-->
+
+                    <Button Style="{StaticResource NaviBtnStyle}"
+                              Command="{Binding ToPatientsProfilePageCommand}">
+
+                        <Grid>
+
+                            <Image Source="Images/patient.png"
+                                   Style="{StaticResource NaviImageStyle}" />
+
+                            <TextBlock Text="Patients"
+                                       Style="{StaticResource NaviTextStyle}" />
+
+                        </Grid>
+
+                    </Button>
+
+                    <!--// Recpetionists //-->
+
+                    <Button Style="{StaticResource NaviBtnStyle}"
+                              Command="{Binding ToReceptionistProfilesPageCommand}">
+
+                        <Grid>
+
+                            <Image Source="Images/receptionist.png"
+                                   Style="{StaticResource NaviImageStyle}" />
+
+                            <TextBlock Text="Receptionists"
+                                       Style="{StaticResource NaviTextStyle}" />
+
+                        </Grid>
+
+                    </Button>
+
+                </StackPanel>
+
+            </Grid>
+
+            <Grid Grid.Column="1">
+
+                <ContentControl x:Name="Pages"
+                                Content="{Binding CurrentView}" />
+
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+</Window>

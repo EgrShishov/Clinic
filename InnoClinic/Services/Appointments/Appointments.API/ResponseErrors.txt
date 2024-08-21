@@ -42143,3 +42143,113 @@ RabbitMQ.Client.Exceptions.BrokerUnreachableException: None of the specified end
    at RabbitMQ.Client.ConnectionFactory.CreateConnection(IList`1 hostnames, String clientProvidedName)
    at MassTransit.RabbitMqTransport.ConnectionContextFactory.CreateConnection(ISupervisor supervisor) in /_/src/Transports/MassTransit.RabbitMqTransport/RabbitMqTransport/ConnectionContextFactory.cs:line 85
 Connect: "guest@rabbitmq.message-broker:5672/"
+An 'IServiceProvider' was created for internal use by Entity Framework.
+Entity Framework Core "8.0.8" initialized '"AppointmentsDbContext"' using provider '"Npgsql.EntityFrameworkCore.PostgreSQL":"8.0.4+51faf6e9c9c7ef99c3e98d98a96adb8fa8ae4553"' with options: "None"
+Creating DbConnection.
+Created DbConnection. (130ms).
+Opening connection to database '"AppointmentsDb"' on server '"tcp://postgresdb.appointments:5432"'.
+Opened connection to database '"AppointmentsDb"' on server '"tcp://postgresdb.appointments:5432"'.
+Closing connection to database '"AppointmentsDb"' on server '"tcp://postgresdb.appointments:5432"'.
+Closed connection to database '"AppointmentsDb"' on server '"tcp://postgresdb.appointments:5432"' (21ms).
+Creating DbCommand for '"ExecuteScalar"'.
+Created DbCommand for '"ExecuteScalar"' (19ms).
+Initialized DbCommand for '"ExecuteScalar"' (33ms).
+Opening connection to database '"AppointmentsDb"' on server '"tcp://postgresdb.appointments:5432"'.
+Opened connection to database '"AppointmentsDb"' on server '"tcp://postgresdb.appointments:5432"'.
+Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT EXISTS (
+    SELECT 1 FROM pg_catalog.pg_class c
+    JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+    WHERE n.nspname='public' AND
+          c.relname='__EFMigrationsHistory'
+)"
+Executed DbCommand ("225"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT EXISTS (
+    SELECT 1 FROM pg_catalog.pg_class c
+    JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+    WHERE n.nspname='public' AND
+          c.relname='__EFMigrationsHistory'
+)"
+Closing connection to database '"AppointmentsDb"' on server '"tcp://postgresdb.appointments:5432"'.
+Closed connection to database '"AppointmentsDb"' on server '"tcp://postgresdb.appointments:5432"' (7ms).
+Opening connection to database '"AppointmentsDb"' on server '"tcp://postgresdb.appointments:5432"'.
+Opened connection to database '"AppointmentsDb"' on server '"tcp://postgresdb.appointments:5432"'.
+Creating DbCommand for '"ExecuteReader"'.
+Created DbCommand for '"ExecuteReader"' (3ms).
+Initialized DbCommand for '"ExecuteReader"' (13ms).
+Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"MigrationId\", \"ProductVersion\"
+FROM \"__EFMigrationsHistory\"
+ORDER BY \"MigrationId\";"
+Executed DbCommand ("32"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"MigrationId\", \"ProductVersion\"
+FROM \"__EFMigrationsHistory\"
+ORDER BY \"MigrationId\";"
+Closing data reader to '"AppointmentsDb"' on server '"tcp://postgresdb.appointments:5432"'.
+A data reader for '"AppointmentsDb"' on server '"tcp://postgresdb.appointments:5432"' is being disposed after spending 26ms reading results.
+Closing connection to database '"AppointmentsDb"' on server '"tcp://postgresdb.appointments:5432"'.
+Closed connection to database '"AppointmentsDb"' on server '"tcp://postgresdb.appointments:5432"' (1ms).
+Registered model binder providers, in the following order: ["Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BinderTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ServicesModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.HeaderModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FloatingPointTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.EnumTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DateTimeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.SimpleTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.TryParseModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CancellationTokenModelBinderProvider"]
+Hosting starting
+Configured endpoint "service-created", Consumer: "ServiceCreatedConsumer"
+Configured endpoint "service-status-changed", Consumer: "ServiceStatusChangedConsumer"
+Configured endpoint "service-updated", Consumer: "ServiceUpdatedConsumer"
+Configured endpoint "service-deleted", Consumer: "ServiceDeletedConsumer"
+Using an in-memory repository. Keys will not be persisted to storage.
+Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+Starting bus instances: "IBus"
+Starting bus: rabbitmq://rabbitmq.message-broker/
+Repository contains no viable default key. Caller should generate a key with immediate activation.
+Policy resolution states that a new key should be added to the key ring.
+Creating key {eca3bb7f-c81d-4e6a-b0af-c60dd9a5891a} with creation date 2024-08-21 09:47:33Z, activation date 2024-08-21 09:47:33Z, and expiration date 2024-11-19 09:47:33Z.
+Connect: "guest@rabbitmq.message-broker:5672/"
+Descriptor deserializer type for key {eca3bb7f-c81d-4e6a-b0af-c60dd9a5891a} is '"Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptorDeserializer, Microsoft.AspNetCore.DataProtection, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60"'.
+No key escrow sink found. Not writing key {eca3bb7f-c81d-4e6a-b0af-c60dd9a5891a} to escrow.
+No XML encryptor configured. Key {eca3bb7f-c81d-4e6a-b0af-c60dd9a5891a} may be persisted to storage in unencrypted form.
+Key cache expiration token triggered by '"CreateNewKey"' operation.
+Found key {eca3bb7f-c81d-4e6a-b0af-c60dd9a5891a}.
+Considering key {eca3bb7f-c81d-4e6a-b0af-c60dd9a5891a} with expiration date 2024-11-19 09:47:33Z as default key.
+Forwarded activator type request from "Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptorDeserializer, Microsoft.AspNetCore.DataProtection, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60" to "Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptorDeserializer, Microsoft.AspNetCore.DataProtection, Culture=neutral, PublicKeyToken=adb9793829ddae60"
+Using managed symmetric algorithm '"System.Security.Cryptography.Aes"'.
+Using managed keyed hash algorithm '"System.Security.Cryptography.HMACSHA256"'.
+Using key {eca3bb7f-c81d-4e6a-b0af-c60dd9a5891a} as the default key.
+Key ring with default key {eca3bb7f-c81d-4e6a-b0af-c60dd9a5891a} was loaded during application startup.
+Connected: "guest@rabbitmq.message-broker:5672/" (address: "amqp://rabbitmq.message-broker:5672", local: 47684)
+Endpoint Ready: rabbitmq://rabbitmq.message-broker/57d972e4678b_AppointmentsAPI_bus_fcyyyyfcnebrfru1bdqcdt18r7?temporary=true
+Declare queue: "name: service-deleted, durable", consumer-count: 0 message-count: 0
+Declare queue: "name: service-created, durable", consumer-count: 0 message-count: 0
+Declare queue: "name: service-status-changed, durable", consumer-count: 0 message-count: 0
+Declare queue: "name: service-updated, durable", consumer-count: 0 message-count: 0
+Declare exchange: "name: service-created, type: fanout, durable"
+Declare exchange: "name: service-deleted, type: fanout, durable"
+Declare exchange: "name: service-status-changed, type: fanout, durable"
+Declare exchange: "name: service-updated, type: fanout, durable"
+Declare exchange: "name: InnoClinic.Contracts.ServiceStatusChangedEvent:ServiceStatusChangedEvent, type: fanout, durable"
+Declare exchange: "name: InnoClinic.Contracts.ServiceCreatedEvent:ServiceCreatedEvent, type: fanout, durable"
+Declare exchange: "name: InnoClinic.Contracts.ServiceDeletedEvent:ServiceDeletedEvent, type: fanout, durable"
+Declare exchange: "name: InnoClinic.Contracts.ServiceUpdatedEvent:ServiceUpdatedEvent, type: fanout, durable"
+Bind queue: "source: service-deleted, destination: service-deleted"
+Bind queue: "source: service-created, destination: service-created"
+Bind queue: "source: service-updated, destination: service-updated"
+Bind queue: "source: service-status-changed, destination: service-status-changed"
+Using development certificate: "CN=localhost" (Thumbprint: "B190A8E0E6D9A00D8595829BBCB779D0E697AEDE")
+Bind exchange: "source: InnoClinic.Contracts.ServiceCreatedEvent:ServiceCreatedEvent, destination: service-created"
+Bind exchange: "source: InnoClinic.Contracts.ServiceDeletedEvent:ServiceDeletedEvent, destination: service-deleted"
+Bind exchange: "source: InnoClinic.Contracts.ServiceStatusChangedEvent:ServiceStatusChangedEvent, destination: service-status-changed"
+Bind exchange: "source: InnoClinic.Contracts.ServiceUpdatedEvent:ServiceUpdatedEvent, destination: service-updated"
+Consumer Ok: rabbitmq://rabbitmq.message-broker/service-deleted - "amq.ctag-WHPWmALB31mtj3QYMQXdfA"
+Consumer Ok: rabbitmq://rabbitmq.message-broker/service-updated - "amq.ctag-yMi_L7herQGMEYHWcjaTEQ"
+Consumer Ok: rabbitmq://rabbitmq.message-broker/service-status-changed - "amq.ctag-mtIULSyGGW5yeaL59M2zyw"
+Consumer Ok: rabbitmq://rabbitmq.message-broker/service-created - "amq.ctag-OebzAWzEpLwIjpkdOjuWBw"
+Endpoint Ready: rabbitmq://rabbitmq.message-broker/service-deleted
+Endpoint Ready: rabbitmq://rabbitmq.message-broker/service-updated
+Endpoint Ready: rabbitmq://rabbitmq.message-broker/service-status-changed
+Endpoint Ready: rabbitmq://rabbitmq.message-broker/service-created
+Bus started: rabbitmq://rabbitmq.message-broker/
+Now listening on: "http://[::]:8080"
+Now listening on: "https://[::]:8081"
+Loaded hosting startup assembly "Appointments.API"
+Application started. Press Ctrl+C to shut down.
+Hosting environment: "Development"
+Content root path: "/app"
+Hosting started
