@@ -1,4 +1,5 @@
-﻿using IdentityServer4.Models;
+﻿using IdentityModel;
+using IdentityServer4.Models;
 
 public static class Config
 {
@@ -25,6 +26,22 @@ public static class Config
             new ApiScope("gateway-api", "Gateway API")
         };
 
+    public static IEnumerable<ApiResource> GetApis() =>
+        new List<ApiResource>
+        {
+            new ApiResource
+            {
+                Name = "gateway-api",
+
+                ApiSecrets =
+                {
+                    new Secret(JwtSettings.Secret.Sha256())
+                },
+
+                UserClaims = {JwtClaimTypes.Name, JwtClaimTypes.Email, JwtClaimTypes.Id, JwtClaimTypes.Role},
+            }
+        };
+
     public static IEnumerable<Client> GetClients() =>
         new List<Client>
         {
@@ -33,7 +50,9 @@ public static class Config
                 ClientId = "client_id",
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                 ClientSecrets = { new Secret(JwtSettings.Secret.Sha256()) },
-                AllowedScopes = { "gateway-api" }
+                AllowedScopes = { "gateway-api" },
+                AllowOfflineAccess = true,
+                RefreshTokenExpiration = TokenExpiration.Sliding,
             }
         };
 }
