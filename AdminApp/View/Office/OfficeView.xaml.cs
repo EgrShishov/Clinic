@@ -13,16 +13,17 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace InnoClinic.AdminApp.View
+namespace AdminApp.View
 {
     /// <summary>
-    /// Логика взаимодействия для ServiceView.xaml
+    /// Логика взаимодействия для OfficeView.xaml
     /// </summary>
-    public partial class ServiceView : UserControl
+    public partial class OfficeView : UserControl
     {
-        public ServiceView()
+        public OfficeView()
         {
             InitializeComponent();
+            this.DataContext = this;
         }
     }
 }

@@ -15,13 +15,16 @@
                 <ResourceDictionary Source="Styles/NavigationMenuImageStyle.xaml" />
                 <ResourceDictionary Source="Styles/NavigationMenuButtonStyle.xaml" />
                 <ResourceDictionary Source="Styles/NavigationMenuTextStyle.xaml" />
-                
+                <ResourceDictionary Source="Styles/RoundedButtonStyle.xaml" />
+                <ResourceDictionary Source="Styles/FlatButtonStyle.xaml"/>
+
             </ResourceDictionary.MergedDictionaries>
             
             <!-- Converters -->
             <cv:BoolToActiveConverter x:Key="BoolToActiveConverter" />
             <cv:BoolToInactiveConverter x:Key="BoolToInactiveConverter" />
             <cv:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <cv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <!-- ViewModels -->
             <vm:OfficeViewModel x:Key="OfficeViewModel" />
             <vm:OfficeCreationViewModel x:Key="OfficeCreationViewModel" />

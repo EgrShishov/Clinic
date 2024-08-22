@@ -1,4 +1,4 @@
-﻿public class Appointment
+﻿public class AppointmentModel
 {
     public int Id { get; set; }
     public string PatientName { get; set; }

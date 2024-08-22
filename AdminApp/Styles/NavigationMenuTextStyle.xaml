@@ -4,16 +4,18 @@
     <Style x:Key="NaviTextStyle"
            TargetType="TextBlock">
 
-        <!--<Setter Property="FontFamily"
-                Value="/Fonts/#Rubik" /> -->
+        <Setter Property="FontFamily"
+                Value="Arial" />
         <Setter Property="VerticalAlignment"
                 Value="Center" />
         <Setter Property="HorizontalAlignment"
                 Value="Left" />
         <Setter Property="Foreground"
-                Value="#DBDBDB" />
+                Value="#212529" />
         <Setter Property="FontSize"
                 Value="18" />
+        <Setter Property="FontWeight"
+                Value="SemiBold"/>
         <Setter Property="Margin"
                 Value="70,0,0,0" />
 

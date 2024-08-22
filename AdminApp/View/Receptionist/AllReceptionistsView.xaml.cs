@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AdminApp.View
+namespace AdminApp.View.Receptionist
 {
     /// <summary>
-    /// Логика взаимодействия для Home.xaml
+    /// Логика взаимодействия для AllReceptionistsView.xaml
     /// </summary>
-    public partial class Home : Window
+    public partial class AllReceptionistsView : Window
     {
-        public Home()
+        public AllReceptionistsView()
         {
             InitializeComponent();
         }

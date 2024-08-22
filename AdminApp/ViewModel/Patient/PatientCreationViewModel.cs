@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdminApp.ViewModel
+namespace AdminApp.ViewModel.Patient
 {
-    internal class PatientProfileViewModel
+    internal class PatientCreationViewModel
     {
     }
 }

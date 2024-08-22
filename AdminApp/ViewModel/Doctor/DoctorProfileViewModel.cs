@@ -10,7 +10,7 @@ public partial class DoctorProfileViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private Doctor doctorsProfile;
+    private DoctorModel doctorsProfile;
 
     [RelayCommand]
     private async Task LoadDoctorsScheduleCommand(int doctorId)

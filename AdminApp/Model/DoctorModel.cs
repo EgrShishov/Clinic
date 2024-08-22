@@ -1,8 +1,8 @@
-﻿public class Patient
+﻿public class DoctorModel
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public DateTime DateOfBirth { get; set; }
+    public string Specialty { get; set; }
     public string PhoneNumber { get; set; }
-    public string Address { get; set; }
+    public string PhotoUrl { get; set; }
 }

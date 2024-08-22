@@ -10,23 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AdminApp.View
+namespace AdminApp.View.Receptionist
 {
     /// <summary>
-    /// Логика взаимодействия для CreateOfficeView.xaml
+    /// Логика взаимодействия для CreateReceptionistView.xaml
     /// </summary>
-    public partial class CreateOfficeView : Window
+    public partial class CreateReceptionistView : Window
     {
-        public CreateOfficeView()
+        public CreateReceptionistView()
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

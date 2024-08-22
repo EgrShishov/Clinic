@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style x:Key="NaviBtnStyle"
-           TargetType="Button">
+           TargetType="RadioButton">
 
         <Setter Property="HorizontalAlignment"
                 Value="Center" />
@@ -13,7 +13,7 @@
 
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="Button">
+                <ControlTemplate TargetType="RadioButton">
 
                     <Border x:Name="border"
                             Height="50"
@@ -60,8 +60,8 @@
                                 <Storyboard>
                                     <ColorAnimation Storyboard.TargetName="BorderBackground"
                                                     Storyboard.TargetProperty="Color"
-                                                    From="#272B2F"
-                                                    To="#3E434A"
+                                                    From="#f0f0f0"
+                                                    To="#FFFFFF"
                                                     Duration="0:0:0.3" />
                                 </Storyboard>
                             </BeginStoryboard>
@@ -75,20 +75,20 @@
                                 <Storyboard>
                                     <ColorAnimation Storyboard.TargetName="BorderBackground"
                                                     Storyboard.TargetProperty="Color"
-                                                    From="#3E434A"
-                                                    To="#272B2F"
+                                                    From="#FFFFFF"
+                                                    To="#f0f0f0"
                                                     Duration="0:0:0.3" />
                                 </Storyboard>
                             </BeginStoryboard>
 
                         </EventTrigger>
 
-                        <Trigger Property="IsEnabled"
+                        <Trigger Property="IsChecked"
                                  Value="True">
 
                             <Setter Property="Background"
                                     TargetName="border"
-                                    Value="#212529" />
+                                    Value="#FFFFFF" />
 
                             <Setter Property="Visibility"
                                     TargetName="Indicator"

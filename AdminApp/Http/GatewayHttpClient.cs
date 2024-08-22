@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 
-public class OfficesHttpClient : IOfficesHttpClient
+public class OfficesHttpClient : IGatewayHttpClient
 {
     private readonly IHttpClientFactory _factory;
     public OfficesHttpClient(IHttpClientFactory factory)

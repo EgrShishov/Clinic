@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace AdminApp.View
 {
     /// <summary>
-    /// Логика взаимодействия для OfficeView.xaml
+    /// Логика взаимодействия для ServiceView.xaml
     /// </summary>
-    public partial class OfficeView : UserControl
+    public partial class ServiceView : UserControl
     {
-        public OfficeView()
+        public ServiceView()
         {
             InitializeComponent();
         }

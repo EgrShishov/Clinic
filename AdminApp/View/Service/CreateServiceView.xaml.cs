@@ -12,17 +12,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AdminApp.ViewModel;
 
 namespace AdminApp.View
 {
     /// <summary>
-    /// Логика взаимодействия для Home.xaml
+    /// Логика взаимодействия для CreateServiceView.xaml
     /// </summary>
-    public partial class Home : Window
+    public partial class CreateServiceView : Window
     {
-        public Home()
+        public CreateServiceView()
         {
             InitializeComponent();
+            DataContext = new ServiceCreationViewModel();
         }
     }
 }
