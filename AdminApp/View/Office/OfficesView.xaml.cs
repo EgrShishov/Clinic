@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace InnoClinic.AdminApp.View
+namespace AdminApp.View
 {
     /// <summary>
-    /// Логика взаимодействия для DoctorProfileView.xaml
+    /// Логика взаимодействия для OfficesView.xaml
     /// </summary>
-    public partial class DoctorProfileView : UserControl
+    public partial class OfficesView : UserControl
     {
-        public DoctorProfileView()
+        public OfficesView()
         {
             InitializeComponent();
         }

@@ -1,14 +1,36 @@
 ﻿<Application x:Class="AdminApp.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:v="clr-namespace:AdminApp.View"
              xmlns:vm="clr-namespace:AdminApp.ViewModel"
              xmlns:cv="clr-namespace:AdminApp.Converters"
-             xmlns:local="clr-namespace:AdminApp"
-             StartupUri="MainWindow.xaml">
-    
+             xmlns:local="clr-namespace:AdminApp">
+
     <Application.Resources>
 
         <ResourceDictionary>
+
+            <!-- DataTemplates -->
+            <DataTemplate DataType="{x:Type vm:SignInViewModel}">
+                <v:SignInView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:HomeViewModel}">
+                <v:Home/>
+            </DataTemplate>            
+
+            <!-- Converters -->
+            <cv:BoolToActiveConverter x:Key="BoolToActiveConverter" />
+            <cv:BoolToInactiveConverter x:Key="BoolToInactiveConverter" />
+            <cv:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <cv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <cv:BoolToStatusConverter x:Key="BoolToStatusConverter" />
+            <cv:BoolToColorConverter x:Key="BoolToColorConverter" />
+            <cv:BoolToStringConverter x:Key="BoolToStringConverter" />
+
+            <!-- ViewModels -->
+            <vm:OfficeViewModel x:Key="OfficeViewModel" />
+            <vm:OfficeCreationViewModel x:Key="OfficeCreationViewModel" />
 
             <ResourceDictionary.MergedDictionaries>
 
@@ -16,21 +38,15 @@
                 <ResourceDictionary Source="Styles/NavigationMenuButtonStyle.xaml" />
                 <ResourceDictionary Source="Styles/NavigationMenuTextStyle.xaml" />
                 <ResourceDictionary Source="Styles/RoundedButtonStyle.xaml" />
-                <ResourceDictionary Source="Styles/FlatButtonStyle.xaml"/>
+                <ResourceDictionary Source="Styles/FlatButtonStyle.xaml" />
+                <ResourceDictionary Source="Styles/TextBlockSearch.xaml" />
+                <ResourceDictionary Source="Styles/DatePickerStyle.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
-            
-            <!-- Converters -->
-            <cv:BoolToActiveConverter x:Key="BoolToActiveConverter" />
-            <cv:BoolToInactiveConverter x:Key="BoolToInactiveConverter" />
-            <cv:InverseBoolConverter x:Key="InverseBoolConverter" />
-            <cv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-            <!-- ViewModels -->
-            <vm:OfficeViewModel x:Key="OfficeViewModel" />
-            <vm:OfficeCreationViewModel x:Key="OfficeCreationViewModel" />
 
         </ResourceDictionary>
 
+        
     </Application.Resources>
     
 </Application>

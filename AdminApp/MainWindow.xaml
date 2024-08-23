@@ -4,12 +4,30 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:AdminApp.ViewModel"
+        xmlns:v="clr-namespace:AdminApp.View"
         xmlns:local="clr-namespace:AdminApp"
         mc:Ignorable="d"
         AllowsTransparency="True"
+        WindowState="Maximized"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         Background="Transparent"
         Title="MainWindow">
+
+    <Grid>
+        <ContentControl Content="{Binding CurrentViewModel}">
+            <ContentControl.Resources>
+                <DataTemplate DataType="{x:Type vm:HomeViewModel}">
+                    <v:Home/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:SignInViewModel}">
+                    <v:SignInView/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:DoctorsScheduleViewModel}">
+                    <v:DoctorsScheduleView/>
+                </DataTemplate>
+            </ContentControl.Resources>
+        </ContentControl>
+    </Grid>
 
 </Window>

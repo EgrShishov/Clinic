@@ -1,15 +1,18 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using AdminApp.Common.Abstractions;
+using AdminApp.Stores;
+using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace AdminApp.ViewModel;
-public partial class SignInViewModel : ObservableObject, IDataErrorInfo
+public partial class SignInViewModel : BaseViewModel, IDataErrorInfo
 {
-    public SignInViewModel()
+    private readonly NavigationStore _navigationStore;
+    public SignInViewModel(NavigationStore navigationStore)
     {
-
+        _navigationStore = navigationStore;
     }
 
     [ObservableProperty]
@@ -102,6 +105,8 @@ public partial class SignInViewModel : ObservableObject, IDataErrorInfo
 
     private async Task WorkerSignIn(string email, string password)
     {
+        _navigationStore.CurrentViewModel = new HomeViewModel();
+
         if (Validate())
         {
             // await accountHttpClient.

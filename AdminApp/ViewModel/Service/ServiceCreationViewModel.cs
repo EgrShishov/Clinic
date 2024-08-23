@@ -50,7 +50,7 @@ public partial class ServiceCreationViewModel : ObservableObject
         IsConfirmEnabled = true;
         Validate();
 
-        if ()
+        if (true)
         {
             decimal.TryParse(ServicePrice, out decimal ServicePriceValue);
 

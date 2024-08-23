@@ -12,10 +12,6 @@
              AllowsTransparency="True"
              Background="White">
 
-    <Window.DataContext>
-        <vm:ReceptionistCreationViewModel/>
-    </Window.DataContext>
-
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

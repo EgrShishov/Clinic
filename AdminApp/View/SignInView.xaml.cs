@@ -19,12 +19,11 @@ namespace AdminApp.View
     /// <summary>
     /// Логика взаимодействия для SignInView.xaml
     /// </summary>
-    public partial class SignInView : Window
+    public partial class SignInView : UserControl
     {
         public SignInView()
         {
             InitializeComponent();
-            DataContext = new SignInViewModel();
         }
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)

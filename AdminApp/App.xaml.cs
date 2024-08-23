@@ -1,4 +1,8 @@
-﻿using AdminApp.View;
+﻿using AdminApp.Common.Abstractions;
+using AdminApp.Stores;
+using AdminApp.View;
+using AdminApp.ViewModel;
+using AdminApp.ViewModel.Appointment;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
@@ -10,31 +14,27 @@ namespace AdminApp
     /// </summary>
     public partial class App : Application
     {
-        public IServiceProvider ServiceProvider { get; private set; }
-        
+        public IServiceProvider _serviceProvider { get; private set; }
         protected override void OnStartup(StartupEventArgs e)
         {
+            NavigationStore navigationStore = new NavigationStore();
+
+            navigationStore.CurrentViewModel = new SignInViewModel(navigationStore);
+
+            MainWindow = new MainWindow
+            {
+                DataContext = new MainViewModel(navigationStore)
+            };
+            MainWindow.Show();
+
             base.OnStartup(e);
+        }
 
-            var signingWindow = new SignInView();
-
-            if (signingWindow.ShowDialog() == true)
-            {
-                var mainWindow = new MainWindow();
-                mainWindow.Show();
-            }
-            else
-            {
-                Shutdown();
-            }
-
-            var serviceCollection = new ServiceCollection();
-            //AddHttpClients(serviceCollection);
-
-            ServiceProvider = serviceCollection.BuildServiceProvider();
-
-            //var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
-            //mainWindow.Show();
+        private void ConfigureServices(IServiceCollection services)
+        {
+            services.AddSingleton<MainViewModel>()
+                    .AddSingleton<SignInViewModel>()
+                    .AddSingleton<HomeViewModel>();
         }
 
         private IServiceCollection AddHttpClients(IServiceCollection services, IConfiguration configuration)

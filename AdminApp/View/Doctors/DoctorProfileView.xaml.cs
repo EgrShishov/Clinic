@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace AdminApp.View
 {
     /// <summary>
-    /// Логика взаимодействия для Home.xaml
+    /// Логика взаимодействия для DoctorProfileView.xaml
     /// </summary>
-    public partial class Home : UserControl
+    public partial class DoctorProfileView : UserControl
     {
-        public Home()
+        public DoctorProfileView()
         {
             InitializeComponent();
         }

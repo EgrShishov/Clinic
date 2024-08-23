@@ -21,7 +21,6 @@ namespace AdminApp
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new NavigationViewModel();
         }
     }
 }

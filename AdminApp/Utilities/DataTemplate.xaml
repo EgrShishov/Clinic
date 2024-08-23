@@ -1,0 +1,26 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="clr-namespace:AdminApp.ViewModel"
+                    xmlns:view="clr-namespace:AdminApp.View">
+
+        <DataTemplate DataType="{x:Type vm:OfficeViewModel}">
+            <view:OfficeView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:OfficeCreationViewModel}">
+            <view:CreateOfficeView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:ServiceCreationViewModel}">
+            <view:CreateServiceView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:ServiceViewModel}">
+            <view:ServiceView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:OfficesViewModel}">
+            <view:OfficesView/>
+        </DataTemplate>
+
+</ResourceDictionary>
